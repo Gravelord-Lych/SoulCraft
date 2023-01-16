@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "side": "soulcraft:block/decayed_stone_bricks",
+    "bottom": "soulcraft:block/decayed_stone_bricks",
+    "top": "soulcraft:block/decayed_stone_bricks"
+  }
+}

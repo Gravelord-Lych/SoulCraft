@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "soulcraft:soul_stone_brick_slab"
+  },
+  "result": "soulcraft:cracked_soul_stone_brick_slab",
+  "experience": 0.1,
+  "cookingtime": 400
+}

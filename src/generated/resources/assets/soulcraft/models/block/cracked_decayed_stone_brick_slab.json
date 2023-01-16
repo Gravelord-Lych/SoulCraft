@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "side": "soulcraft:block/cracked_decayed_stone_bricks",
+    "bottom": "soulcraft:block/cracked_decayed_stone_bricks",
+    "top": "soulcraft:block/cracked_decayed_stone_bricks"
+  }
+}

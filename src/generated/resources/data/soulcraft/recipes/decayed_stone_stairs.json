@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "soulcraft:decayed_stone"
+    }
+  },
+  "result": {
+    "item": "soulcraft:decayed_stone_stairs",
+    "count": 4
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:arrow",
+    "minecraft:spectral_arrow",
+    "soulcraft:fangs_summoner",
+    "soulcraft:soul_arrow"
+  ]
+}

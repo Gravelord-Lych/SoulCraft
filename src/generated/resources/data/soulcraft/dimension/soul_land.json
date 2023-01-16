@@ -1,0 +1,12 @@
+{
+  "type": "soulcraft:soul_land",
+  "generator": {
+    "biome_source": {
+      "biome": "soulcraft:soul_plains",
+      "type": "minecraft:fixed"
+    },
+    "seed": 0,
+    "settings": "soulcraft:soul_land",
+    "type": "minecraft:noise"
+  }
+}

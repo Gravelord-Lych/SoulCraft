@@ -1,0 +1,12 @@
+{
+  "type": "soulcraft:the_ethereal",
+  "generator": {
+    "biome_source": {
+      "biome": "minecraft:plains",
+      "type": "minecraft:fixed"
+    },
+    "seed": 0,
+    "settings": "soulcraft:the_ethereal",
+    "type": "soulcraft:the_ethereal"
+  }
+}

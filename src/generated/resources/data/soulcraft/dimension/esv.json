@@ -1,0 +1,10 @@
+{
+  "type": "soulcraft:esv",
+  "generator": {
+    "biome_source": {
+      "biome": "soulcraft:esv",
+      "type": "minecraft:fixed"
+    },
+    "type": "soulcraft:esv"
+  }
+}

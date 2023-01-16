@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "soulcraft:soul_stone"
+    }
+  },
+  "result": {
+    "item": "soulcraft:soul_stone_stairs",
+    "count": 4
+  }
+}

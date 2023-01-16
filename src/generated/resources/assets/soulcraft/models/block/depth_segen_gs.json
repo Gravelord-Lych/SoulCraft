@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "side": "soulcraft:block/depth_segen_side",
+    "front": "soulcraft:block/depth_segen_side",
+    "top": "soulcraft:block/depth_segen_gs"
+  }
+}

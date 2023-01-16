@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "is_generating_se=false": {
+      "model": "soulcraft:block/nether_segen"
+    },
+    "is_generating_se=true": {
+      "model": "soulcraft:block/nether_segen_gs"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:blaze_rod"
+    },
+    {
+      "item": "soulcraft:soul_powder"
+    }
+  ],
+  "result": {
+    "item": "soulcraft:soul_blaze_rod"
+  }
+}

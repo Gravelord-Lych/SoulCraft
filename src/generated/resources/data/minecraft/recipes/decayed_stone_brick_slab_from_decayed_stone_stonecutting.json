@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "soulcraft:decayed_stone"
+  },
+  "result": "soulcraft:decayed_stone_brick_slab",
+  "count": 2
+}

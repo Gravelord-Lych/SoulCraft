@@ -1,0 +1,13 @@
+{
+  "type": "soulcraft:subworld",
+  "generator": {
+    "biome_source": {
+      "large_biomes": false,
+      "seed": 0,
+      "type": "minecraft:vanilla_layered"
+    },
+    "seed": 0,
+    "settings": "soulcraft:subworld",
+    "type": "soulcraft:subworld"
+  }
+}

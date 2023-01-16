@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "is_generating_se=false": {
+      "model": "soulcraft:block/solar_segen_l2"
+    },
+    "is_generating_se=true": {
+      "model": "soulcraft:block/solar_segen_l2_gs"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "soulcraft:refined_soul_metal_ingot"
+    }
+  },
+  "result": {
+    "item": "soulcraft:refined_soul_metal_boots"
+  }
+}

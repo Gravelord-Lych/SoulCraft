@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "soulcraft:soul_metal_nugget"
+    }
+  ],
+  "result": {
+    "item": "soulcraft:soul_metal_particle",
+    "count": 9
+  }
+}

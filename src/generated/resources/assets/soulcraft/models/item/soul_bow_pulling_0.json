@@ -1,0 +1,6 @@
+{
+  "parent": "soulcraft:item/soul_bow",
+  "textures": {
+    "layer0": "soulcraft:item/soul_bow_pulling_0"
+  }
+}

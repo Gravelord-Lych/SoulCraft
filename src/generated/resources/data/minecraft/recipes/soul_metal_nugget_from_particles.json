@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "soulcraft:soul_metal_particle"
+    }
+  },
+  "result": {
+    "item": "soulcraft:soul_metal_nugget"
+  }
+}

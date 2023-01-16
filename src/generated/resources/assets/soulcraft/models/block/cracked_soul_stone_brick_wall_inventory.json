@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "soulcraft:block/cracked_soul_stone_bricks"
+  }
+}

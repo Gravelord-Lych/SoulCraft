@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "soulcraft:soul_stone"
+  },
+  "result": "soulcraft:cracked_soul_stone_brick_slab",
+  "count": 2
+}

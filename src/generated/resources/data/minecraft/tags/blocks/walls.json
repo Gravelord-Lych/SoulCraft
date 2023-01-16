@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "soulcraft:cracked_decayed_stone_brick_wall",
+    "soulcraft:cracked_soul_stone_brick_wall",
+    "soulcraft:decayed_stone_brick_wall",
+    "soulcraft:decayed_stone_wall",
+    "soulcraft:smooth_soul_stone_wall",
+    "soulcraft:soul_stone_brick_wall",
+    "soulcraft:soul_stone_wall"
+  ]
+}

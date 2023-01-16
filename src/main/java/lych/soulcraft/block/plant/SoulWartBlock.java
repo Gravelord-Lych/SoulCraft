@@ -1,0 +1,25 @@
+package lych.soulcraft.block.plant;
+
+import lych.soulcraft.item.ModItems;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.NetherWartBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.PlantType;
+
+public class SoulWartBlock extends NetherWartBlock {
+    public SoulWartBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(IBlockReader reader, BlockPos pos, BlockState state) {
+        return new ItemStack(ModItems.SOUL_WART);
+    }
+
+    @Override
+    public PlantType getPlantType(IBlockReader world, BlockPos pos) {
+        return ModPlantTypes.SOUL;
+    }
+}
