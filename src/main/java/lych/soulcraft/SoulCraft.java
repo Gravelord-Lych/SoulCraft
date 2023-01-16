@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(SoulCraft.MOD_ID)
 public class SoulCraft {
-    public static final String LYCH233 = "Lych233";
     public static final String MOD_ID = "soulcraft";
     public static final String MOD_NAME = "Soul Craft";
     public static final String SHORTENED_MOD_ID = "sc";
