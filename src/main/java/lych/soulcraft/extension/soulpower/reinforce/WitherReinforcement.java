@@ -25,7 +25,7 @@ public class WitherReinforcement extends TickableReinforcement {
 
     @Override
     protected boolean isItemPosSuitable(ItemStack stack) {
-        return false;
+        return stack.getItem().canBeDepleted();
     }
 
     @Override
