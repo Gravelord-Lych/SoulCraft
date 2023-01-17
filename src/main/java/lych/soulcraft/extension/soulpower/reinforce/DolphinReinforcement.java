@@ -2,6 +2,7 @@ package lych.soulcraft.extension.soulpower.reinforce;
 
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
+import lych.soulcraft.util.Utils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -35,7 +36,7 @@ public class DolphinReinforcement extends AttributiveReinforcement {
     }
 
     private static AttributeModifier createModifier(int level) {
-        return new AttributeModifier(SWIM_SPEED_MODIFIER_UUID, "Dolphin reinforcement swim speed modifier", level * SWIM_SPEED_MULTIPLIER, AttributeModifier.Operation.ADDITION);
+        return new AttributeModifier(SWIM_SPEED_MODIFIER_UUID, "Dolphin reinforcement swim speed modifier", Utils.round(level * SWIM_SPEED_MULTIPLIER, 2), AttributeModifier.Operation.ADDITION);
     }
 
     @Override
