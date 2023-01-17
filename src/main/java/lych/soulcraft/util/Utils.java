@@ -1,5 +1,6 @@
 package lych.soulcraft.util;
 
+import com.google.common.base.Preconditions;
 import lych.soulcraft.world.CommandData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -8,6 +9,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -80,6 +83,24 @@ public final class Utils {
     public static float fade(float x) {
         x = MathHelper.clamp(x, 0, 1);
         return (6 * x * x - 15 * x + 10) * x * x * x;
+    }
+
+    public static float round(float value, int scale) {
+        return round(value, scale, RoundingMode.HALF_UP);
+    }
+
+    public static float round(float value, int scale, RoundingMode mode) {
+        BigDecimal d = new BigDecimal(Float.toString(value)).setScale(scale, mode);
+        return d.floatValue();
+    }
+
+    public static double round(double value, int scale) {
+        return round(value, scale, RoundingMode.HALF_UP);
+    }
+
+    public static double round(double value, int scale, RoundingMode mode) {
+        BigDecimal d = new BigDecimal(Double.toString(value)).setScale(scale, mode);
+        return d.doubleValue();
     }
 
     public static <T> T getOrDefault(@Nullable T obj, T defaultValue) {
