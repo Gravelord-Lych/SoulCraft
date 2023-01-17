@@ -14,10 +14,11 @@ import net.minecraftforge.fml.LogicalSide;
 import java.util.Set;
 
 public class WitherReinforcement extends TickableReinforcement {
+    private static final int STEAL_HEALTH_INTERVAL = 30;
     private static final double RANGE = 16;
     private static final int MAX_LEVEL = 5;
-    private static final float BASE_HEAL_AMOUNT = 0.5f;
-    private static final float HEAL_AMOUNT_STEP = 0.5f;
+    private static final float BASE_HEAL_AMOUNT = 0.25f;
+    private static final float HEAL_AMOUNT_STEP = 0.25f;
 
     public WitherReinforcement() {
         super(EntityType.WITHER);
@@ -30,11 +31,11 @@ public class WitherReinforcement extends TickableReinforcement {
 
     @Override
     protected void onLivingTick(ItemStack stack, LivingEntity entity, int level) {
-        if (!entity.level.isClientSide() && entity.tickCount % 20 == 0) {
+        if (!entity.level.isClientSide() && entity.tickCount % STEAL_HEALTH_INTERVAL == 0) {
             level = Math.min(level, MAX_LEVEL);
             boolean hurt = false;
             for (LivingEntity other : EntityUtils.getEntitiesInRange(LivingEntity.class, entity, RANGE, e -> e instanceof IMob)) {
-                if (other.hurt(DamageSource.WITHER, BASE_HEAL_AMOUNT + HEAL_AMOUNT_STEP * level)) {
+                if (other.hurt(DamageSource.WITHER, (BASE_HEAL_AMOUNT + HEAL_AMOUNT_STEP * level) * 2)) {
                     hurt = true;
                 }
             }
