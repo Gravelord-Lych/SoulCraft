@@ -3,6 +3,7 @@ package lych.soulcraft.util;
 import com.google.common.base.Preconditions;
 import lych.soulcraft.world.CommandData;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -116,5 +118,18 @@ public final class Utils {
 
     public static <T, U> U getOrDefault(@Nullable T obj, U defaultValue, Function<? super T, ? extends U> ifNonNull) {
         return obj == null ? defaultValue : ifNonNull.apply(obj);
+    }
+
+    public static String snakeToCamel(String s) {
+        String[] arr = s.split("_");
+        if (Arrays.stream(arr).anyMatch(String::isEmpty)) {
+            throw new IllegalArgumentException("Malformed string " + s);
+        }
+        StringBuilder builder = new StringBuilder();
+        Arrays.stream(arr).forEach(ss -> {
+            builder.append(ss.substring(0, 1).toUpperCase());
+            builder.append(ss.substring(1));
+        });
+        return builder.toString();
     }
 }

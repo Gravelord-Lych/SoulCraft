@@ -25,7 +25,7 @@ public class EnderDragonReinforcement extends AggressiveReinforcement {
 
     @Override
     protected void onAttack(ItemStack stack, LivingEntity attacker, LivingEntity target, int level, LivingAttackEvent event) {
-        double reachDistance = Math.min(attacker.getAttributeValue(ForgeMod.REACH_DISTANCE.get()), attacker.distanceTo(target));
+        double reachDistance = Math.min(attacker.getAttributeValue(ForgeMod.REACH_DISTANCE.get()), attacker.distanceTo(target) + 1);
         List<LivingEntity> entities = attacker.level.getEntitiesOfClass(LivingEntity.class, attacker.getBoundingBox().inflate(reachDistance, reachDistance, reachDistance));
         entities.removeIf(e -> e.distanceToSqr(attacker) > reachDistance * reachDistance);
         if (target instanceof IMob) {
