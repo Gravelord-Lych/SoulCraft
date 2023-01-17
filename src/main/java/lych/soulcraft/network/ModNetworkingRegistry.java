@@ -8,7 +8,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 public class ModNetworkingRegistry {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(KeyBindingNetwork::register);
+        event.enqueueWork(InvokableNetwork::register);
         event.enqueueWork(LaserNetwork::register);
+        event.enqueueWork(RecentlyInputNetwork::register);
     }
 }

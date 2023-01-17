@@ -1,6 +1,7 @@
 package lych.soulcraft.util.mixin;
 
 import lych.soulcraft.api.exa.IExtraAbility;
+import lych.soulcraft.util.AdditionalCooldownTracker;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -62,4 +63,6 @@ public interface IPlayerEntityMixin {
     List<ItemStack> getSavableItems();
 
     void restoreSavableItemsFrom(PlayerEntity old);
+
+    AdditionalCooldownTracker getAdditionalCooldowns();
 }

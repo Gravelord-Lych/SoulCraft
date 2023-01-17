@@ -26,6 +26,7 @@ import java.util.*;
 import static lych.soulcraft.SoulCraft.prefix;
 
 public class ExtraAbility implements IExtraAbility {
+    public static final IExtraAbility DRAGON_WIZARD = create(prefix(ModExaNames.DRAGON_WIZARD));
     public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(ModExaNames.ENHANCED_AUTO_JUMP));
     public static final IExtraAbility EXPLOSION_MASTER = create(prefix(ModExaNames.EXPLOSION_MASTER));
     public static final IExtraAbility FALLING_BUFFER = create(prefix(ModExaNames.FALLING_BUFFER));
@@ -57,6 +58,7 @@ public class ExtraAbility implements IExtraAbility {
     }
 
     static {
+        register(DRAGON_WIZARD, EntityType.ENDER_DRAGON);
         register(ENHANCED_AUTO_JUMP, EntityType.RABBIT);
         register(EXPLOSION_MASTER, ExplosionMasterBuff.INSTANCE, EntityType.CREEPER);
         register(FALLING_BUFFER, EntityType.CAT, EntityType.CHICKEN);

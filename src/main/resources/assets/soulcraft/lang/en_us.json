@@ -291,6 +291,10 @@
   "itemGroup.soulcraft": "Soul Craft",
   "itemGroup.soulcraft_machine": "SE Machines",
 
+  "key.category.soulcraft.exa": "Extra Abilities",
+  "key.message.soulcraft.dragon_wizard": "Dragon Wizard Key 2",
+  "key.message.soulcraft.dragon_wizard_r": "Dragon Wizard Key 1",
+
   "message.soulcraft.comma": ", ",
   "message.soulcraft.soul_enchantment_info.soul_boost.lack_of_energy": "Warning: All your Soul Energy Gems lack SE to boost damage",
   "message.soulcraft.soul_enchantment_info.soul_boost.low_total_energy": "SE remaining: %s",

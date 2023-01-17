@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Iterator;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerMixin implements IPlayerEntityMixin, IClientPlayerMixin {
+public abstract class ClientPlayerEntityMixin implements IPlayerEntityMixin, IClientPlayerMixin {
     @Unique
     private float enhancedJumpFlag = -1;
 

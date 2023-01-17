@@ -2,6 +2,7 @@ package lych.soulcraft.network;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.extension.key.InvokableManager;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -11,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class KeyBindingNetwork {
+public class InvokableNetwork {
     public static SimpleChannel INSTANCE;
     public static final String VERSION = "1.0";
     private static int id = 0;
@@ -21,7 +22,7 @@ public class KeyBindingNetwork {
     }
 
     public static void register() {
-        INSTANCE = NetworkRegistry.newSimpleChannel(SoulCraft.prefix("key_binding"), () -> VERSION, KeyBindingNetwork::isCorrectVersion, KeyBindingNetwork::isCorrectVersion);
+        INSTANCE = NetworkRegistry.newSimpleChannel(SoulCraft.prefix("invokable"), () -> VERSION, InvokableNetwork::isCorrectVersion, InvokableNetwork::isCorrectVersion);
         INSTANCE.messageBuilder(KeyPacket.class, nextID())
                 .encoder(KeyPacket::toBytes)
                 .decoder(KeyPacket::new)
@@ -49,9 +50,10 @@ public class KeyBindingNetwork {
         }
 
         public void handler(Supplier<NetworkEvent.Context> ctx) {
+            ServerPlayerEntity sender = Objects.requireNonNull(ctx.get().getSender(), "Packets that are sent from a client to the server must have a sender");
             ctx.get().enqueueWork(() -> InvokableManager
                     .get(invokableUUID)
-                    .onKeyPressed(Objects.requireNonNull(ctx.get().getSender(), "Packets that are sent from a client to the server must have a sender")));
+                    .onKeyPressed(sender, InvokableManager.getRecentlyPressedMap().getOrDefault(sender, -1)));
             ctx.get().setPacketHandled(true);
         }
     }

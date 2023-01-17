@@ -3,6 +3,7 @@ package lych.soulcraft.mixin;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.extension.ExtraAbility;
+import lych.soulcraft.util.AdditionalCooldownTracker;
 import lych.soulcraft.util.ModDataSerializers;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import net.minecraft.entity.EntityType;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -34,8 +36,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
     @Shadow @Final public PlayerInventory inventory;
     @SuppressWarnings("WrongEntityDataParameterClass")
     private static final DataParameter<Set<IExtraAbility>> DATA_EXTRA_ABILITIES = EntityDataManager.defineId(PlayerEntity.class, ModDataSerializers.EXA);
+    @Unique
     private final Map<EntityType<?>, Integer> bossTierMap = new HashMap<>();
+    @Unique
     private final List<ItemStack> savableItems = new ArrayList<>();
+    @Unique
+    private final AdditionalCooldownTracker additionalCooldowns = new AdditionalCooldownTracker();
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
@@ -104,6 +110,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
             }
             compoundNBT.put("StriderReinforcementSavableItems", savableItemNBT);
         }
+
+        compoundNBT.put("SCAdditionalCooldowns", getAdditionalCooldowns().save());
     }
 
     @SuppressWarnings("all")
@@ -147,6 +155,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
                 savableItems.add(ItemStack.of(savableItemNBT.getCompound(i)));
             }
         }
+
+        if (compoundNBT.contains("SCAdditionalCooldowns", Constants.NBT.TAG_COMPOUND)) {
+            additionalCooldowns.reloadFrom(compoundNBT.getCompound("SCAdditionalCooldowns"));
+        }
+    }
+
+    @Override
+    public AdditionalCooldownTracker getAdditionalCooldowns() {
+        return additionalCooldowns;
     }
 
     @Nullable

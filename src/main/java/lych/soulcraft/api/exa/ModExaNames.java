@@ -1,6 +1,7 @@
 package lych.soulcraft.api.exa;
 
 public final class ModExaNames {
+    public static final String DRAGON_WIZARD = "dragon_wizard";
     public static final String ENHANCED_AUTO_JUMP = "enhanced_auto_jump";
     public static final String EXPLOSION_MASTER = "explosion_master";
     public static final String FALLING_BUFFER = "falling_buffer";

@@ -32,7 +32,7 @@
   "client": [
     "SmallFireballEntityMixin",
     "client.BipedArmorLayerMixin",
-    "client.ClientPlayerMixin",
+    "client.ClientPlayerEntityMixin",
     "client.DisplayEffectsScreenMixin",
     "client.ElytraLayerMixin",
     "client.EntityRendererManagerMixin",

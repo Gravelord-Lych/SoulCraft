@@ -1,6 +1,8 @@
 package lych.soulcraft.listener;
 
 import com.google.common.collect.Streams;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.PlayerBuff;
@@ -19,6 +21,7 @@ import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
+import lych.soulcraft.extension.key.InvokableManager;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
 import lych.soulcraft.extension.soulpower.control.SoulManager;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
@@ -83,9 +86,27 @@ public final class CommonEventListener {
     }
 
     @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            for (Object2IntMap.Entry<PlayerEntity> entry : InvokableManager.getRecentlyPressedTimestamps().object2IntEntrySet()) {
+                if (entry.getKey().tickCount > entry.getIntValue()) {
+                    InvokableManager.setRecentlyPressedTimestamp(entry.getKey(), -1);
+                    InvokableManager.setRecentlyPressed(entry.getKey(), -1);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
         if (event.getSource().getEntity() instanceof SkeletonKingEntity && event.getEntity() instanceof AbstractSkeletonEntity) {
             event.setCanceled(true);
+        }
+        if (event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if (((IPlayerEntityMixin) player).hasExtraAbility(ExtraAbility.DRAGON_WIZARD) && event.getSource().isMagic()) {
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -225,6 +246,7 @@ public final class CommonEventListener {
             for (PlayerBuff buff : buffs) {
                 buff.tick(event.player, (ServerWorld) event.player.level);
             }
+            ((IPlayerEntityMixin) event.player).getAdditionalCooldowns().tick();
         }
     }
 

@@ -18,4 +18,8 @@ public final class ConfigHelper {
     public static boolean canSEBlocksLoot() {
         return !CommonConfig.DISABLE_SE_BLOCKS_LOOT.get();
     }
+
+    public static int getRecentlyPressCheckInterval() {
+        return CommonConfig.CHECK_RECENTLY_PRESS_TIME.get();
+    }
 }

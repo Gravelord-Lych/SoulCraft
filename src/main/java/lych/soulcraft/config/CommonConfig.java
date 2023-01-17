@@ -11,22 +11,23 @@ public class CommonConfig {
     static final ForgeConfigSpec.BooleanValue SHOW_BOSS_TIER;
     static final ForgeConfigSpec.BooleanValue STRICT_CHALLENGES;
     static final ForgeConfigSpec.BooleanValue TIERED_BOSSES;
+    static final ForgeConfigSpec.IntValue CHECK_RECENTLY_PRESS_TIME;
 
     static {
         ForgeConfigSpec.Builder commonBuilder = new ForgeConfigSpec.Builder();
 
         commonBuilder.push("Mob Settings");
         TIERED_BOSSES = commonBuilder
-                .comment("If true, all mod bosses will be tiered (When you defeat them, they'll become stronger)")
+                .comment("If true, all mod bosses will be tiered (When you defeat them, they'll become stronger).")
                 .define("tieredBosses", false);
         SHOW_BOSS_TIER = commonBuilder
-                .comment("If true, all boss-tier will be shown")
+                .comment("If true, all boss-tier will be shown.")
                 .define("showBossTier", false);
         commonBuilder.pop();
 
         commonBuilder.push("Challenge Settings");
         STRICT_CHALLENGES = commonBuilder
-                .comment("If true, cheats and unreasonable weapons will be disabled in the challenges")
+                .comment("If true, cheats and unreasonable weapons will be disabled in the challenges.")
                 .define("strictChallenges", false);
         commonBuilder.pop();
 
@@ -34,6 +35,13 @@ public class CommonConfig {
         DISABLE_SE_BLOCKS_LOOT = commonBuilder
                 .comment("If true, SE Generators and SE Storages will drop nothing when they are destroyed in Creative Mode, regardless of how much SE is inside them.")
                 .define("disableSEBlocksLootIfCreative", false);
+        commonBuilder.pop();
+
+        commonBuilder.push("Key Input Settings");
+        CHECK_RECENTLY_PRESS_TIME = commonBuilder
+                .comment("The interval to check recently pressed keys, used for Extra Abilities like Dragon Wizard.")
+                .defineInRange("checkRecentlyPressTime", 10, 1, 20);
+        commonBuilder.pop();
 
         COMMON_CONFIG = commonBuilder.build();
     }

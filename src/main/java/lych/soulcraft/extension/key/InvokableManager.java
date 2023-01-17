@@ -1,6 +1,10 @@
 package lych.soulcraft.extension.key;
 
 import com.google.common.collect.ImmutableMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -29,5 +33,25 @@ public class InvokableManager {
 
     public static IInvokable get(InvokableData data) {
         return getKeyInvokables().get(data);
+    }
+
+//  Server logics
+    private static final Object2IntMap<PlayerEntity> RECENTLY_PRESSED_MAP = new Object2IntOpenHashMap<>();
+    private static final Object2IntMap<PlayerEntity> RECENTLY_PRESSED_TIMESTAMPS = new Object2IntOpenHashMap<>();
+
+    public static Object2IntMap<PlayerEntity> getRecentlyPressedMap() {
+        return Object2IntMaps.unmodifiable(RECENTLY_PRESSED_MAP);
+    }
+
+    public static void setRecentlyPressed(PlayerEntity player, int recentlyPressed) {
+        RECENTLY_PRESSED_MAP.put(player, recentlyPressed);
+    }
+
+    public static Object2IntMap<PlayerEntity> getRecentlyPressedTimestamps() {
+        return RECENTLY_PRESSED_TIMESTAMPS;
+    }
+
+    public static void setRecentlyPressedTimestamp(PlayerEntity player, int recentlyPressedTimestamp) {
+        RECENTLY_PRESSED_TIMESTAMPS.put(player, recentlyPressedTimestamp);
     }
 }
