@@ -79,11 +79,13 @@ public class ExtraAbility implements IExtraAbility {
         return Optional.ofNullable(ABILITIES.get(registryName));
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public static IExtraAbility byEntity(EntityType<?> type) {
         return ENTITY_TO_EXA_MAP.get(type);
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public static IExtraAbility byReinforcement(Reinforcement reinforcement) {
         return ENTITY_TO_EXA_MAP.get(reinforcement.getType());
@@ -140,16 +142,22 @@ public class ExtraAbility implements IExtraAbility {
 
     @Override
     public boolean addTo(PlayerEntity player) {
-        PlayerBuffMap.getBuff(this).ifPresent(buff -> buff.startApplyingTo(player, player.level));
-        MobDebuffMap.getDebuff(this).ifPresent(debuff -> debuff.startApplyingTo(player, player.level));
-        return ((IPlayerEntityMixin) player).addExtraAbility(this);
+        boolean added = ((IPlayerEntityMixin) player).addExtraAbility(this);
+        if (added) {
+            PlayerBuffMap.getBuff(this).ifPresent(buff -> buff.startApplyingTo(player, player.level));
+            MobDebuffMap.getDebuff(this).ifPresent(debuff -> debuff.startApplyingTo(player, player.level));
+        }
+        return added;
     }
 
     @Override
     public boolean removeFrom(PlayerEntity player) {
-        PlayerBuffMap.getBuff(this).ifPresent(buff -> buff.stopApplyingTo(player, player.level));
-        MobDebuffMap.getDebuff(this).ifPresent(debuff -> debuff.stopApplyingTo(player, player.level));
-        return ((IPlayerEntityMixin) player).removeExtraAbility(this);
+        boolean removed = ((IPlayerEntityMixin) player).removeExtraAbility(this);
+        if (removed) {
+            PlayerBuffMap.getBuff(this).ifPresent(buff -> buff.stopApplyingTo(player, player.level));
+            MobDebuffMap.getDebuff(this).ifPresent(debuff -> debuff.stopApplyingTo(player, player.level));
+        }
+        return removed;
     }
 
     @Override
