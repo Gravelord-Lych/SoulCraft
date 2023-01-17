@@ -11,6 +11,7 @@ public final class ModExaNames {
     public static final String POISONER = "poisoner";
     public static final String PURIFICATION = "purification";
     public static final String RESTORATION = "restoration";
+    public static final String SPEEDUP = "speedup";
     public static final String SWIMMER = "swimmer";
     public static final String WATER_BREATHING = "water_breathing";
 

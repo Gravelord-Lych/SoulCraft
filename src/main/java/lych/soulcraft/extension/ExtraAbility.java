@@ -36,6 +36,7 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility POISONER = create(prefix(ModExaNames.POISONER));
     public static final IExtraAbility PURIFICATION = create(prefix(ModExaNames.PURIFICATION));
     public static final IExtraAbility RESTORATION = create(prefix(ModExaNames.RESTORATION));
+    public static final IExtraAbility SPEEDUP = create(prefix(ModExaNames.SPEEDUP));
     public static final IExtraAbility SWIMMER = create(prefix(ModExaNames.SWIMMER));
     public static final IExtraAbility WATER_BREATHING = create(prefix(ModExaNames.WATER_BREATHING));
 
@@ -66,6 +67,7 @@ public class ExtraAbility implements IExtraAbility {
         register(POISONER, PoisonerBuff.INSTANCE, EntityType.BEE, EntityType.CAVE_SPIDER);
         register(PURIFICATION, PurificationBuff.INSTANCE, EntityType.COW);
         register(RESTORATION, RestorationBuff.INSTANCE);
+        register(SPEEDUP, SpeedupBuff.INSTANCE, EntityType.HORSE, EntityType.DONKEY, EntityType.MULE);
         register(SWIMMER, SwimmerBuff.INSTANCE, EntityType.DOLPHIN, EntityType.DROWNED);
         register(WATER_BREATHING, WaterBreathingBuff.INSTANCE, EntityType.COD, EntityType.SALMON, EntityType.TROPICAL_FISH);
     }
