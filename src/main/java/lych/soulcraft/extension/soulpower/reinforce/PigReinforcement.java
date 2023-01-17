@@ -41,6 +41,11 @@ public class PigReinforcement extends TickableReinforcement {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 2;
+    }
+
+    @Override
     protected boolean onlyCalculateOnce() {
         return true;
     }
