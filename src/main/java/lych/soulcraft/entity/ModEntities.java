@@ -44,6 +44,7 @@ public final class ModEntities {
     public static final EntityType<FangsEntity> FANGS = Builder.<FangsEntity>of(FangsEntity::new, EntityClassification.MISC).sized(0.5f, 0.8f).clientTrackingRange(6).updateInterval(2).build(ModEntityNames.FANGS);
     public static final EntityType<FangsSummonerEntity> FANGS_SUMMONER = Builder.<FangsSummonerEntity>of(FangsSummonerEntity::new, EntityClassification.MISC).sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20).build(ModEntityNames.FANGS_SUMMONER);
     public static final EntityType<GiantXEntity> GIANT_X = Builder.of(GiantXEntity::new, EntityClassification.MONSTER).sized(3.6f, 12).clientTrackingRange(10).build(ModEntityNames.GIANT_X);
+    public static final EntityType<GravitationalDragonFireballEntity> GRAVITATIONAL_DRAGON_FIREBALL = Builder.<GravitationalDragonFireballEntity>of(GravitationalDragonFireballEntity::new, EntityClassification.MISC).sized(0.8f, 0.8f).clientTrackingRange(4).updateInterval(10).build(ModEntityNames.GRAVITATIONAL_DRAGON_FIREBALL);
     public static final EntityType<IllusoryHorseEntity> ILLUSORY_HORSE = Builder.of(IllusoryHorseEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.6F).clientTrackingRange(10).build(ModEntityNames.ILLUSORY_HORSE);
     public static final EntityType<Meta08Entity> META8 = Builder.of(Meta08Entity::new, EntityClassification.MONSTER).sized(1.2f, 3.9f).fireImmune().clientTrackingRange(12).build(ModEntityNames.META8);
     public static final EntityType<PursuerEntity> PURSUER = Builder.<PursuerEntity>of(PursuerEntity::new, EntityClassification.MISC).sized(0.3125f, 0.3125f).clientTrackingRange(24).build(ModEntityNames.PURSUER);
@@ -79,6 +80,7 @@ public final class ModEntities {
         registry.register(make(FANGS, ModEntityNames.FANGS));
         registry.register(make(FANGS_SUMMONER, ModEntityNames.FANGS_SUMMONER));
         registry.register(make(GIANT_X, ModEntityNames.GIANT_X));
+        registry.register(make(GRAVITATIONAL_DRAGON_FIREBALL, ModEntityNames.GRAVITATIONAL_DRAGON_FIREBALL));
         registry.register(make(ILLUSORY_HORSE, ModEntityNames.ILLUSORY_HORSE));
         registry.register(make(META8, ModEntityNames.META8));
         registry.register(make(PURSUER, ModEntityNames.PURSUER));

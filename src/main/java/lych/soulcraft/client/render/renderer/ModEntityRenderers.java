@@ -23,6 +23,7 @@ public final class ModEntityRenderers {
         registerEntityRenderingHandler(FANGS, FangsRenderer::new);
         registerEntityRenderingHandler(FANGS_SUMMONER, TippedArrowRenderer::new);
         registerEntityRenderingHandler(GIANT_X, GiantXRenderer::new);
+        registerEntityRenderingHandler(GRAVITATIONAL_DRAGON_FIREBALL, GravitationalDragonFireballRenderer::new);
         registerEntityRenderingHandler(ILLUSORY_HORSE, IllusoryHorseRenderer::new);
         registerEntityRenderingHandler(META8, Meta08Renderer::new);
         registerEntityRenderingHandler(PURSUER, PursuerRenderer::new);
