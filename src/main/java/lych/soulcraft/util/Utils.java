@@ -117,5 +117,4 @@ public final class Utils {
     public static <T, U> U getOrDefault(@Nullable T obj, U defaultValue, Function<? super T, ? extends U> ifNonNull) {
         return obj == null ? defaultValue : ifNonNull.apply(obj);
     }
-
 }
