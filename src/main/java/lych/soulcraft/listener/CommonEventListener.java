@@ -67,10 +67,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static lych.soulcraft.util.ModConstants.Exa.FALL_BUFFER_AMOUNT;
 
@@ -219,7 +216,13 @@ public final class CommonEventListener {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && event.side == LogicalSide.SERVER) {
-            for (PlayerBuff buff : PlayerBuffMap.values().stream().filter(buff -> PlayerBuffMap.getAbility(buff).orElseThrow(NullPointerException::new).isOn(event.player)).collect(Collectors.toList())) {
+            List<PlayerBuff> buffs = new ArrayList<>();
+            for (PlayerBuff playerBuff : PlayerBuffMap.values()) {
+                if (PlayerBuffMap.getAbility(playerBuff).orElseThrow(NullPointerException::new).isOn(event.player)) {
+                    buffs.add(playerBuff);
+                }
+            }
+            for (PlayerBuff buff : buffs) {
                 buff.tick(event.player, (ServerWorld) event.player.level);
             }
         }
