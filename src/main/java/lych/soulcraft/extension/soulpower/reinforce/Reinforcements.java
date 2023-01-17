@@ -211,7 +211,7 @@ public final class Reinforcements {
         setBaseEnergyCost(WANDERER, 800);
         setBaseEnergyCost(WANDERING_TRADER, 800);
         setBaseEnergyCost(WITCH, 800);
-        setBaseEnergyCost(WITHER, 10000);
+        setBaseEnergyCost(WITHER, 20000);
         setBaseEnergyCost(WITHER_SKELETON, 800);
         setBaseEnergyCost(WOLF, 300);
         setBaseEnergyCost(ZOGLIN, 800);
@@ -226,6 +226,7 @@ public final class Reinforcements {
         bind(reinforcement.getType(), reinforcement);
     }
 
+    @SuppressWarnings("unused")
     public static <T extends Reinforcement & OptionalReinforcement> void registerOptional(T reinforcement) {
         if (reinforcement.isPresent()) {
             bind(reinforcement.getType(), reinforcement);
