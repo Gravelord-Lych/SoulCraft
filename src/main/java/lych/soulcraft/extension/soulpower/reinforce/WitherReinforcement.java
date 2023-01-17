@@ -34,8 +34,9 @@ public class WitherReinforcement extends TickableReinforcement {
             level = Math.min(level, MAX_LEVEL);
             boolean hurt = false;
             for (LivingEntity other : EntityUtils.getEntitiesInRange(LivingEntity.class, entity, RANGE, e -> e instanceof IMob)) {
-                other.hurt(DamageSource.WITHER, BASE_HEAL_AMOUNT + HEAL_AMOUNT_STEP * level);
-                hurt = true;
+                if (other.hurt(DamageSource.WITHER, BASE_HEAL_AMOUNT + HEAL_AMOUNT_STEP * level)) {
+                    hurt = true;
+                }
             }
             if (hurt) {
                 entity.heal(BASE_HEAL_AMOUNT + HEAL_AMOUNT_STEP * level);
