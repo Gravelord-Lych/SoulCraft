@@ -298,6 +298,16 @@ public final class EntityUtils {
         return ("mob".equals(source.getMsgId()) || "player".equals(source.getMsgId())) && !(source instanceof IndirectEntityDamageSource);
     }
 
+    public static <T extends Entity> List<T> getEntitiesInRange(Class<T> type, Entity mainEntity, double range) {
+        return getEntitiesInRange(type, mainEntity, range, entity -> true);
+    }
+
+    public static <T extends Entity> List<T> getEntitiesInRange(Class<T> type, Entity mainEntity, double range, Predicate<? super Entity> predicate) {
+        List<T> entities = mainEntity.level.getEntitiesOfClass(type, mainEntity.getBoundingBox().inflate(range), predicate);
+        entities.removeIf(e -> e.distanceTo(mainEntity) > range);
+        return entities;
+    }
+
     public static void checkGoalInstantiationServerside(Entity entity) {
         Preconditions.checkState(!entity.level.isClientSide(), "Cannot instantiate a goal clientside");
     }
