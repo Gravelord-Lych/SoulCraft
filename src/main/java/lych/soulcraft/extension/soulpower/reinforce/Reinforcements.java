@@ -115,7 +115,7 @@ public final class Reinforcements {
         setCustomSoulPieceDropProbability(EntityType.ZOMBIFIED_PIGLIN, 0.24);
         setCustomSoulPieceDropProbability(EntityType.ENDERMAN, 0.25);
         setCustomSoulPieceDropProbability(EntityType.ENDERMITE, 0);
-        setCustomSoulPieceDropProbability(EntityType.WITHER, 3);
+        setCustomSoulPieceDropProbability(EntityType.WITHER, 2.5);
         setCustomSoulPieceDropProbability(EntityType.ENDER_DRAGON, 3);
         setCustomSoulPieceDropProbability(EntityType.VILLAGER, 0);
         setCustomSoulPieceDropProbability(EntityType.PANDA, 0);
@@ -169,7 +169,7 @@ public final class Reinforcements {
         setBaseEnergyCost(DONKEY, 300);
         setBaseEnergyCost(DROWNED, 500);
         setBaseEnergyCost(ELDER_GUARDIAN, 3000);
-        setBaseEnergyCost(ENDER_DRAGON, 5000);
+        setBaseEnergyCost(ENDER_DRAGON, 10000);
         setBaseEnergyCost(ENDERMAN, 800);
         setBaseEnergyCost(EVOKER, 2000);
         setBaseEnergyCost(FOX, 300);
