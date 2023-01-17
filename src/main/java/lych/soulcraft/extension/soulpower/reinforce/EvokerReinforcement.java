@@ -19,8 +19,8 @@ import java.util.List;
 
 public class EvokerReinforcement extends Reinforcement {
     private static final int DURABILITY_COST = 16;
-    private static final Int2IntMap GOLD_INGOT_COUNT_MAP = EntityUtils.intChoiceBuilder().range(1).value(24).range(2).value(20).range(3).value(16).build();
-    private static final Int2IntMap EMERALD_COUNT_MAP = EntityUtils.intChoiceBuilder().range(1).value(12).range(2).value(10).range(3).value(8).build();
+    private static final Int2IntMap GOLD_INGOT_COUNT_MAP = EntityUtils.intChoiceBuilder().range(1).value(16).range(2).value(10).range(3).value(6).build();
+    private static final Int2IntMap EMERALD_COUNT_MAP = EntityUtils.intChoiceBuilder().range(1).value(12).range(2).value(8).range(3).value(4).build();
 
     public EvokerReinforcement() {
         super(EntityType.EVOKER);
