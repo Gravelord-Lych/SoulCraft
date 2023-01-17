@@ -3,6 +3,7 @@ package lych.soulcraft.extension.soulpower.reinforce;
 import lych.soulcraft.util.EntityUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -27,6 +28,9 @@ public class EnderDragonReinforcement extends AggressiveReinforcement {
         double reachDistance = attacker.getAttributeValue(ForgeMod.REACH_DISTANCE.get());
         List<LivingEntity> entities = attacker.level.getEntitiesOfClass(LivingEntity.class, attacker.getBoundingBox().inflate(reachDistance, 0, reachDistance));
         entities.removeIf(e -> e.distanceToSqr(attacker) > reachDistance * reachDistance);
+        if (target instanceof IMob) {
+            entities.removeIf(e -> !(e instanceof IMob));
+        }
         entities.remove(attacker);
         entities.forEach(e -> e.addEffect(new EffectInstance(Effects.HARM, BASE_DURATION + level * DURATION_STEP, 0)));
         entities.remove(target);
