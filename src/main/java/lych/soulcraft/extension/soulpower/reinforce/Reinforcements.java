@@ -168,10 +168,10 @@ public final class Reinforcements {
         setBaseEnergyCost(DOLPHIN, 300);
         setBaseEnergyCost(DONKEY, 300);
         setBaseEnergyCost(DROWNED, 500);
-        setBaseEnergyCost(ELDER_GUARDIAN, 3000);
+        setBaseEnergyCost(ELDER_GUARDIAN, 5000);
         setBaseEnergyCost(ENDER_DRAGON, 10000);
         setBaseEnergyCost(ENDERMAN, 800);
-        setBaseEnergyCost(EVOKER, 2000);
+        setBaseEnergyCost(EVOKER, 5000);
         setBaseEnergyCost(FOX, 300);
         setBaseEnergyCost(GHAST, 800);
         setBaseEnergyCost(GUARDIAN, 800);
