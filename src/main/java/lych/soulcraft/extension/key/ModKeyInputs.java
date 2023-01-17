@@ -17,7 +17,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ModKeyInputs {
 //  TODO - remove
-    public static final KeyBinding DRAGON_WIZARD_KEY = createExtraAbilityKey(GLFW.GLFW_KEY_T, "dragon_wizard");
+    public static final KeyBinding DRAGON_WIZARD_KEY = createExtraAbilityKey(GLFW.GLFW_KEY_R, "dragon_wizard");
     public static final InvokableData DRAGON_WIZARD = new InvokableData(UUID.fromString("FEFFB414-DCF7-E7BB-878A-449A2D8F9740"), DRAGON_WIZARD_KEY);
 
     private ModKeyInputs() {}
