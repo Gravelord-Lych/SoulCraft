@@ -30,7 +30,7 @@ public class WitherReinforcement extends TickableReinforcement {
 
     @Override
     protected void onLivingTick(ItemStack stack, LivingEntity entity, int level) {
-        if (entity.tickCount % 20 == 0) {
+        if (!entity.level.isClientSide() && entity.tickCount % 20 == 0) {
             level = Math.min(level, MAX_LEVEL);
             boolean hurt = false;
             for (LivingEntity other : EntityUtils.getEntitiesInRange(LivingEntity.class, entity, RANGE, e -> e instanceof IMob)) {
