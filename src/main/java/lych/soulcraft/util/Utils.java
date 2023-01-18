@@ -70,7 +70,11 @@ public final class Utils {
     }
 
     public static ResourceLocation getRegistryName(IForgeRegistryEntry<?> entry) {
-        return Objects.requireNonNull(entry.getRegistryName(), "If you call this method, you must ensure that registry name is not null");
+        return getRegistryName(entry, "If you call this method, you must ensure that registry name is not null");
+    }
+
+    public static ResourceLocation getRegistryName(IForgeRegistryEntry<?> entry, String message) {
+        return Objects.requireNonNull(entry.getRegistryName(), message);
     }
 
     public static <T> Collector<T, ?, TreeSet<T>> toTreeSet() {
