@@ -1,6 +1,7 @@
 package lych.soulcraft.config;
 
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.util.ExtraAbilityConstants;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 
@@ -12,6 +13,7 @@ public class CommonConfig {
     static final ForgeConfigSpec.BooleanValue STRICT_CHALLENGES;
     static final ForgeConfigSpec.BooleanValue TIERED_BOSSES;
     static final ForgeConfigSpec.IntValue CHECK_RECENTLY_PRESS_TIME;
+    static final ForgeConfigSpec.IntValue ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT;
 
     static {
         ForgeConfigSpec.Builder commonBuilder = new ForgeConfigSpec.Builder();
@@ -40,8 +42,13 @@ public class CommonConfig {
         commonBuilder.push("Key Input Settings");
         CHECK_RECENTLY_PRESS_TIME = commonBuilder
                 .comment("The interval to check recently pressed keys, used for Extra Abilities like Dragon Wizard.")
-                .defineInRange("checkRecentlyPressTime", 10, 1, 20);
+                .defineInRange("checkRecentlyPressInterval (tick)", 10, 1, 20);
         commonBuilder.pop();
+
+        commonBuilder.push("Extra Ability Settings");
+        ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT = commonBuilder
+                .comment("The additional pickup delay for items that are thrown by a player who has Ultrareach Extra Ability.")
+                .defineInRange("ultrareachLengthenPickupDelayAmount (tick)", ExtraAbilityConstants.DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT, 0, ExtraAbilityConstants.DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT * 2);
 
         COMMON_CONFIG = commonBuilder.build();
     }

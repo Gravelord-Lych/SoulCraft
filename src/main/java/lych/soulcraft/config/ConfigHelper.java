@@ -22,4 +22,8 @@ public final class ConfigHelper {
     public static int getRecentlyPressCheckInterval() {
         return CommonConfig.CHECK_RECENTLY_PRESS_TIME.get();
     }
+
+    public static int getUltrareachLengthenPickupDelayAmount() {
+        return CommonConfig.ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT.get();
+    }
 }

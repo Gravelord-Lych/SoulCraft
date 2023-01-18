@@ -2,6 +2,7 @@ package lych.soulcraft.mixin;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.util.AdditionalCooldownTracker;
 import lych.soulcraft.util.ModDataSerializers;
@@ -17,6 +18,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ResourceLocationException;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -25,11 +27,13 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
+
+import static lych.soulcraft.util.ExtraAbilityConstants.ULTRAREACH_HORIZONTAL_BONUS;
+import static lych.soulcraft.util.ExtraAbilityConstants.ULTRAREACH_VERTICAL_BONUS;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerEntityMixin {
@@ -81,6 +85,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
     public void restoreSavableItemsFrom(PlayerEntity old) {
         ((IPlayerEntityMixin) old).getSavableItems().forEach(inventory::add);
         ((IPlayerEntityMixin) old).getSavableItems().clear();
+    }
+
+    @ModifyArg(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/AxisAlignedBB;)Ljava/util/List;"))
+    private AxisAlignedBB modifyTouchableRange(AxisAlignedBB bb) {
+        if (hasExtraAbility(ExtraAbility.ULTRAREACH)) {
+            return bb.inflate(ULTRAREACH_HORIZONTAL_BONUS, ULTRAREACH_VERTICAL_BONUS, ULTRAREACH_HORIZONTAL_BONUS);
+        }
+        return bb;
+    }
+
+    @ModifyConstant(method = "drop(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/item/ItemEntity;", constant = @Constant(intValue = 40))
+    private int lengthenPickupDelay(int oldPickupDelay, ItemStack stack, boolean randomlyDrop) {
+        if (!randomlyDrop && hasExtraAbility(ExtraAbility.ULTRAREACH)) {
+            return oldPickupDelay + ConfigHelper.getUltrareachLengthenPickupDelayAmount();
+        }
+        return oldPickupDelay;
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/FoodStats;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundNBT;)V"))
@@ -166,6 +186,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
         return additionalCooldowns;
     }
 
+    @SuppressWarnings("SameParameterValue")
     @Nullable
     private EntityType<?> getEntityTypeBy(CompoundNBT singleBossTierNBT, String name) {
         ResourceLocation registryName = new ResourceLocation(singleBossTierNBT.getString(name));
