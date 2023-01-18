@@ -4,9 +4,9 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.tag.ModFluidTags;
-import lych.soulcraft.util.ModConstants;
 import lych.soulcraft.util.ModDamageSources;
 import lych.soulcraft.util.ModDataSerializers;
+import lych.soulcraft.util.SoulLavaConstants;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -107,7 +107,7 @@ public abstract class EntityMixin implements IEntityMixin {
     @ModifyConstant(method = "lavaHurt", constant = @Constant(floatValue = 4))
     public float handleSoulLavaHurtDamage(float constant) {
         if (isInSoulLava()) {
-            constant *= ModConstants.SoulLava.SOUL_LAVA_DAMAGE_MULTIPLIER;
+            constant *= SoulLavaConstants.SOUL_LAVA_DAMAGE_MULTIPLIER;
         }
         return constant;
     }

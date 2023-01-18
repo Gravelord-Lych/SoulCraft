@@ -3,7 +3,7 @@ package lych.soulcraft.mixin;
 import lych.soulcraft.api.event.PostLivingHurtEvent;
 import lych.soulcraft.entity.ModAttributes;
 import lych.soulcraft.extension.soulpower.reinforce.FishReinforcement;
-import lych.soulcraft.util.ModConstants;
+import lych.soulcraft.util.ExtraAbilityConstants;
 import lych.soulcraft.util.mixin.IClientPlayerMixin;
 import lych.soulcraft.util.mixin.ILivingEntityMixin;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -28,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityMixin {
     @Shadow public abstract ItemStack getMainHandItem();
 
+    @Override
     @Shadow public abstract Iterable<ItemStack> getArmorSlots();
 
     @Shadow public abstract double getAttributeValue(Attribute p_233637_1_);
@@ -61,7 +62,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
         if ((Object) this instanceof ClientPlayerEntity) {
             float strength = ((IClientPlayerMixin) this).getEnhancedJumpStrength();
             if (strength > 0) {
-                return f + ModConstants.Exa.ENHANCED_AUTO_JUMP_COEFFICIENT * (strength - 1);
+                return f + ExtraAbilityConstants.ENHANCED_AUTO_JUMP_COEFFICIENT * (strength - 1);
             }
         }
         return f;
