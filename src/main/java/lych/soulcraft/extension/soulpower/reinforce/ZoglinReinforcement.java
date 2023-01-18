@@ -42,7 +42,7 @@ public class ZoglinReinforcement extends AggressiveReinforcement {
 
     @Override
     protected boolean isCompatibleWith(Reinforcement reinforcement) {
-//      Prevents too powerful knockback.
+//      Prevents too powerful knockback (Enchantment Knockback II + Hoglin III + Zoglin III).
         return super.isCompatibleWith(reinforcement) && reinforcement != Reinforcements.HOGLIN;
     }
 }

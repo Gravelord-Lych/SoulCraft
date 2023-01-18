@@ -36,6 +36,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
     private long sheepReinforcementTickCount;
     @Unique
     private long sheepReinforcementLastHurtByTimestamp;
+
     /**
      * Knockup strength will only be used when the entity is knockbacked
      */
