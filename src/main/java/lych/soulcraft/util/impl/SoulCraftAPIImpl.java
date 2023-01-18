@@ -11,12 +11,9 @@ import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
 import lych.soulcraft.extension.soulpower.debuff.MobDebuffMap;
-import lych.soulcraft.util.SoulFireHelper;
 import lych.soulcraft.util.SoulLandGenHelper;
-import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -61,23 +58,8 @@ public enum SoulCraftAPIImpl implements SoulCraftAPI {
     }
 
     @Override
-    public void registerSoulFire(Block block, int secondsOnSoulFire) {
-        SoulFireHelper.registerSoulFire(block, secondsOnSoulFire);
-    }
-
-    @Override
     public void registerSoulCaveCarverReplaceableBlock(Block block) {
         SoulLandGenHelper.registerReplaceableBlock(block);
-    }
-
-    @Override
-    public boolean isOnSoulFire(Entity entity) {
-        return ((IEntityMixin) entity).isOnSoulFire();
-    }
-
-    @Override
-    public void setOnSoulFire(Entity entity, boolean onSoulFire) {
-        ((IEntityMixin) entity).setOnSoulFire(onSoulFire);
     }
 
     @Override

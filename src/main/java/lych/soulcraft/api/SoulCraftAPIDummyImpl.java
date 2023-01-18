@@ -47,18 +47,7 @@ final class SoulCraftAPIDummyImpl implements SoulCraftAPI {
     }
 
     @Override
-    public void registerSoulFire(Block block, int secondsOnSoulFire) {}
-
-    @Override
     public void registerSoulCaveCarverReplaceableBlock(Block block) {}
-
-    @Override
-    public boolean isOnSoulFire(Entity entity) {
-        return false;
-    }
-
-    @Override
-    public void setOnSoulFire(Entity entity, boolean onSoulFire) {}
 
     @Override
     public boolean isDummy() {

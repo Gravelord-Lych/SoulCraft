@@ -3,8 +3,9 @@ package lych.soulcraft.api.exa;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
-public interface IExtraAbility {
+public interface IExtraAbility extends Comparable<IExtraAbility> {
     /**
      * @return The registry name of the <i>Extra Ability</i>.
      */
@@ -46,4 +47,16 @@ public interface IExtraAbility {
     static boolean removeExtraAbility(PlayerEntity player, IExtraAbility exa) {
         return exa.removeFrom(player);
     }
+
+    /**
+     * Indicates if the <i>Extra Ability</i> is special.
+     * @return True if the <i>Extra Ability</i> is special
+     */
+    boolean isSpecial();
+
+    /**
+     * Gets the text style to format the <i>Extra Ability</i>.
+     * @return The text style
+     */
+    TextFormatting getStyle();
 }

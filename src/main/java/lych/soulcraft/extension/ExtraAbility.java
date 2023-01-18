@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ import java.util.*;
 import static lych.soulcraft.SoulCraft.prefix;
 
 public class ExtraAbility implements IExtraAbility {
-    public static final IExtraAbility DRAGON_WIZARD = create(prefix(SCExaNames.DRAGON_WIZARD));
+    public static final IExtraAbility DRAGON_WIZARD = create(prefix(SCExaNames.DRAGON_WIZARD), 5);
     public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(SCExaNames.ENHANCED_AUTO_JUMP));
     public static final IExtraAbility EXPLOSION_MASTER = create(prefix(SCExaNames.EXPLOSION_MASTER));
     public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
@@ -42,17 +43,17 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER));
     public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
     public static final IExtraAbility ULTRAREACH = create(prefix(SCExaNames.ULTRAREACH));
-    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING));
+    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 5);
 
     private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>();
     private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>();
-
+    private static final int DEFAULT_COST = 3;
     @NotNull
     private final ResourceLocation registryName;
     private final int cost;
 
     private ExtraAbility(ResourceLocation registryName) {
-        this(registryName, 5);
+        this(registryName, DEFAULT_COST);
     }
 
     private ExtraAbility(ResourceLocation registryName, int cost) {
@@ -181,6 +182,16 @@ public class ExtraAbility implements IExtraAbility {
     }
 
     @Override
+    public boolean isSpecial() {
+        return getSoulContainerCost() > DEFAULT_COST;
+    }
+
+    @Override
+    public TextFormatting getStyle() {
+        return isSpecial() ? TextFormatting.DARK_PURPLE : TextFormatting.BLUE;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -198,5 +209,13 @@ public class ExtraAbility implements IExtraAbility {
         return MoreObjects.toStringHelper(this)
                 .add("registryName", registryName)
                 .toString();
+    }
+
+    @Override
+    public int compareTo(IExtraAbility o) {
+        if (isSpecial() != o.isSpecial()) {
+            return isSpecial() ? 1 : -1;
+        }
+        return getRegistryName().compareTo(o.getRegistryName());
     }
 }

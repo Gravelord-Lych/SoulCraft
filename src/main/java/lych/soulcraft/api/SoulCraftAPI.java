@@ -5,9 +5,7 @@ import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
 import lych.soulcraft.world.gen.carver.SoulCaveCarver;
-import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -72,36 +70,10 @@ public interface SoulCraftAPI {
     Map<ResourceLocation, IExtraAbility> getRegisteredExtraAbilities();
 
     /**
-     * Register a block that entities inside it will be on soul fire. This overload is mainly used for {@link AbstractFireBlock fires} as the entities inside the fire will be certainly on common fire.
-     * @param block The block which can cause soul fire
-     */
-    default void registerSoulFire(Block block) {
-        registerSoulFire(block, -1);
-    }
-
-    /**
-     * Register a block that entities inside it will be on soul fire.
-     * @param block The block which can cause soul fire
-     * @param secondsOnSoulFire How long will the fire last depends on it, if negative, the entity will not be ignited
-     */
-    void registerSoulFire(Block block, int secondsOnSoulFire);
-
-    /**
      * Register a block that is replaceable and can be replaced by air when {@link SoulCaveCarver} carves.
      * @param block The replaceable block
      */
     void registerSoulCaveCarverReplaceableBlock(Block block);
-
-    /**
-     * @return True if the entity is on soul fire.
-     */
-    boolean isOnSoulFire(Entity entity);
-
-    /**
-     * Set the entity on soul fire or not on soul fire.
-     * @param entity The entity
-     */
-    void setOnSoulFire(Entity entity, boolean onSoulFire);
 
     /**
      * @return True if the api is a dummy

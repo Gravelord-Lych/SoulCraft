@@ -23,7 +23,7 @@ public class ExtraAbilityArgument implements ArgumentType<IExtraAbility> {
     private static final Collection<String> EXAMPLES = Arrays.asList("monster_sabotage", "enhanced_auto_jump");
     private static final DynamicCommandExceptionType ERROR_UNKNOWN_EXA = new DynamicCommandExceptionType(exa -> new TranslationTextComponent(SoulCraft.prefixMsg("commands", "exa.exa_not_found"), exa));
 
-    public static IExtraAbility getExA(CommandContext<CommandSource> context, String name) {
+    public static IExtraAbility getExa(CommandContext<CommandSource> context, String name) {
         return context.getArgument(name, IExtraAbility.class);
     }
 
