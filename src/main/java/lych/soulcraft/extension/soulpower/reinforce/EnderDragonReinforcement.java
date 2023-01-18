@@ -32,7 +32,7 @@ public class EnderDragonReinforcement extends AggressiveReinforcement {
             entities.removeIf(e -> !(e instanceof IMob));
         }
         entities.remove(attacker);
-        entities.forEach(e -> e.addEffect(new EffectInstance(Effects.HARM, BASE_DURATION + level * DURATION_STEP, 0)));
+        entities.forEach(e -> e.addEffect(new EffectInstance(e.isInvertedHealAndHarm() ? Effects.HEAL : Effects.HARM, BASE_DURATION + level * DURATION_STEP, 0)));
         entities.remove(target);
         entities.forEach(e -> e.hurt(EntityUtils.livingAttack(attacker).setMagic(), event.getAmount()));
     }

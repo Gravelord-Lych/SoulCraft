@@ -2,7 +2,6 @@ package lych.soulcraft.listener;
 
 import com.google.common.collect.Streams;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.PlayerBuff;
@@ -32,8 +31,8 @@ import lych.soulcraft.item.SoulPieceItem;
 import lych.soulcraft.mixin.EntityDamageSourceAccessor;
 import lych.soulcraft.mixin.IndirectEntityDamageSourceAccessor;
 import lych.soulcraft.mixin.MobSpawnInfoAccessor;
-import lych.soulcraft.util.CollectionUtils;
-import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.network.ClickHandlerNetwork;
+import lych.soulcraft.util.*;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import lych.soulcraft.world.CommandData;
@@ -53,15 +52,20 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -71,6 +75,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 import static lych.soulcraft.util.ModConstants.Exa.FALL_BUFFER_AMOUNT;
 
@@ -219,6 +224,27 @@ public final class CommonEventListener {
                     if (event.getSource().getEntity() != null && event.getSource().getEntity().getCapability(NonAPICapabilities.CHALLENGE_MOB).map(cap -> Objects.equals(cap.getChallenge(), challenge)).orElse(false)) {
                         challenge.addDamageFor(player.getUUID(), event.getAmount());
                     }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEmptyClick(PlayerInteractEvent.RightClickEmpty event) {
+        ClickHandlerNetwork.INSTANCE.sendToServer(Utils.DUMMY);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void handleEmptyClickServerside(ServerPlayerEntity player) {
+        if (player.getMainHandItem().isEmpty() && ExtraAbility.TELEPORTATION.isOn(player)) {
+            int cooldown = ((IPlayerEntityMixin) player).getAdditionalCooldowns().getCooldownRemaining(ExtraAbility.TELEPORTATION.getRegistryName());
+            if (cooldown == 0) {
+                BlockRayTraceResult ray = (BlockRayTraceResult) player.pick(player.getAttributeValue(ForgeMod.REACH_DISTANCE.get()) + ModConstants.Exa.BASE_TELEPORTATION_RADIUS, 0, false);
+                BlockPos pos = ray.getBlockPos();
+                World world = player.getLevel();
+                if (world.getBlockState(pos).getMaterial().blocksMotion() && world.getBlockState(pos.above()).isAir() && world.getBlockState(pos.above().above()).isAir()) {
+                    player.teleportTo(ray.getLocation().x, ray.getLocation().y, ray.getLocation().z);
+                    ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(ExtraAbility.TELEPORTATION.getRegistryName(), ModConstants.Exa.TELEPORTATION_COOLDOWN);
                 }
             }
         }
@@ -374,6 +400,8 @@ public final class CommonEventListener {
         newPlayerM.setExtraAbilities(extraAbilities);
         Map<EntityType<?>, Integer> bossTierMap = oldPlayerM.getBossTierMap();
         CollectionUtils.refill(newPlayerM.getBossTierMap(), bossTierMap);
+        AdditionalCooldownTracker tracker = oldPlayerM.getAdditionalCooldowns();
+        newPlayerM.getAdditionalCooldowns().reloadFrom(tracker.save());
     }
 
     @SubscribeEvent
@@ -405,7 +433,7 @@ public final class CommonEventListener {
 
     private static void makeChallengesDefeated(ServerPlayerEntity player, boolean onlyStrictChallenges, Challenge.LoseReason reason) {
         ChallengeManager.all(player.getLevel()).stream()
-                .flatMap(Streams::stream)
+                .flatMap(manager -> StreamSupport.stream(manager.spliterator(), false))
                 .filter(challenge -> challenge.hasChallenger(player))
                 .filter(challenge -> !onlyStrictChallenges || challenge.isStrict())
                 .forEach(challenge -> challenge.lose(reason, reason, null));

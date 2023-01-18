@@ -69,14 +69,10 @@ public final class EntityUtils {
         return new Vector3d(entity.getX(0.5), entity.getEyeY(), entity.getZ(0.5));
     }
 
-    public static void createFangs(double x, double z, double minY, double maxY, float angle, int warmupDelayTicks, LivingEntity owner, World level) {
-        createFangs(x, z, minY, maxY, angle, warmupDelayTicks, owner, level, fangs -> {});
-    }
-
     /**
      * [VanillaCopy]
      */
-    public static void createFangs(double x, double z, double minY, double maxY, float angle, int warmupDelayTicks, LivingEntity owner, World level, Consumer<? super FangsEntity> consumer) {
+    public static boolean createFangs(double x, double z, double minY, double maxY, float angle, int warmupDelayTicks, LivingEntity owner, World level, Consumer<? super FangsEntity> consumer) {
         BlockPos blockPos = new BlockPos(x, maxY, z);
         boolean canSpawnFangs = false;
         double dyMax = 0.0D;
@@ -103,8 +99,9 @@ public final class EntityUtils {
         if (canSpawnFangs) {
             FangsEntity fangs = new FangsEntity(level, x, (double) blockPos.getY() + dyMax, z, angle, warmupDelayTicks, owner);
             consumer.accept(fangs);
-            level.addFreshEntity(fangs);
+            return level.addFreshEntity(fangs);
         }
+        return false;
     }
 
     public static <T> TierChoiceBuilder<T> choiceBuilder() {

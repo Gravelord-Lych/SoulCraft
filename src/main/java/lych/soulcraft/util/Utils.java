@@ -1,9 +1,7 @@
 package lych.soulcraft.util;
 
-import com.google.common.base.Preconditions;
 import lych.soulcraft.world.CommandData;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -29,6 +27,7 @@ public final class Utils {
     private static final Runnable DUMMY_RUNNABLE = () -> {};
     private static final Supplier<?> DUMMY_SUPPLIER = () -> null;
     private static final Function<?, ?> DUMMY_FUNCTION = o -> null;
+    public static final Object DUMMY = new Object();
 
     private Utils() {}
 

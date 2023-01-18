@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import static lych.soulcraft.network.LaserNetwork.*;
 
 public final class Lasers {
-    private static final Object DUMMY = new Object();
 
     private Lasers() {}
 
@@ -93,7 +92,7 @@ public final class Lasers {
     }
 
     public static BiFunction<? super Vector3d, ? super World, ?> any() {
-        return (vec, world) -> DUMMY;
+        return (vec, world) -> Utils.DUMMY;
     }
 
     public static boolean solid(BlockState state) {

@@ -4,7 +4,6 @@ import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.entity.GravitationalDragonFireballEntity;
 import lych.soulcraft.extension.ExtraAbility;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import org.lwjgl.glfw.GLFW;
 
 public enum DragonWizardInvokable implements IExtraAbilityRelatedInvokable {
     INSTANCE;

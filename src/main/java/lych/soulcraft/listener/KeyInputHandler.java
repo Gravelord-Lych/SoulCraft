@@ -4,6 +4,7 @@ import lych.soulcraft.SoulCraft;
 import lych.soulcraft.extension.key.InvokableManager;
 import lych.soulcraft.network.InvokableNetwork;
 import lych.soulcraft.network.RecentlyInputNetwork;
+import lych.soulcraft.world.event.manager.EventManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,6 +19,8 @@ public final class KeyInputHandler {
         InvokableManager.getKeyInvokables().keySet().stream()
                 .filter(invokable -> invokable.getKey().isDown())
                 .forEach(invokable -> InvokableNetwork.INSTANCE.sendToServer(new InvokableNetwork.KeyPacket(invokable.getUUID())));
-        RecentlyInputNetwork.INSTANCE.sendToServer(event.getKey());
+        if (RecentlyInputNetwork.INSTANCE != null && EventManager.canTick()) {
+            RecentlyInputNetwork.INSTANCE.sendToServer(event.getKey());
+        }
     }
 }

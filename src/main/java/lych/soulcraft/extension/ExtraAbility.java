@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.MobDebuff;
-import lych.soulcraft.api.exa.ModExaNames;
+import lych.soulcraft.api.exa.SCExaNames;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.extension.soulpower.buff.*;
 import lych.soulcraft.extension.soulpower.debuff.MobDebuffMap;
@@ -26,20 +26,22 @@ import java.util.*;
 import static lych.soulcraft.SoulCraft.prefix;
 
 public class ExtraAbility implements IExtraAbility {
-    public static final IExtraAbility DRAGON_WIZARD = create(prefix(ModExaNames.DRAGON_WIZARD));
-    public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(ModExaNames.ENHANCED_AUTO_JUMP));
-    public static final IExtraAbility EXPLOSION_MASTER = create(prefix(ModExaNames.EXPLOSION_MASTER));
-    public static final IExtraAbility FALLING_BUFFER = create(prefix(ModExaNames.FALLING_BUFFER));
-    public static final IExtraAbility FIRE_RESISTANCE = create(prefix(ModExaNames.FIRE_RESISTANCE));
-    public static final IExtraAbility INITIAL_ARMOR = create(prefix(ModExaNames.INITIAL_ARMOR));
-    public static final IExtraAbility MONSTER_SABOTAGE = create(prefix(ModExaNames.MONSTER_SABOTAGE));
-    public static final IExtraAbility MONSTER_VIEW = create(prefix(ModExaNames.MONSTER_VIEW));
-    public static final IExtraAbility POISONER = create(prefix(ModExaNames.POISONER));
-    public static final IExtraAbility PURIFICATION = create(prefix(ModExaNames.PURIFICATION));
-    public static final IExtraAbility RESTORATION = create(prefix(ModExaNames.RESTORATION));
-    public static final IExtraAbility SPEEDUP = create(prefix(ModExaNames.SPEEDUP));
-    public static final IExtraAbility SWIMMER = create(prefix(ModExaNames.SWIMMER));
-    public static final IExtraAbility WATER_BREATHING = create(prefix(ModExaNames.WATER_BREATHING));
+    public static final IExtraAbility DRAGON_WIZARD = create(prefix(SCExaNames.DRAGON_WIZARD));
+    public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(SCExaNames.ENHANCED_AUTO_JUMP));
+    public static final IExtraAbility EXPLOSION_MASTER = create(prefix(SCExaNames.EXPLOSION_MASTER));
+    public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
+    public static final IExtraAbility FANGS_SUMMONER = create(prefix(SCExaNames.FANGS_SUMMONER));
+    public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE));
+    public static final IExtraAbility INITIAL_ARMOR = create(prefix(SCExaNames.INITIAL_ARMOR));
+    public static final IExtraAbility MONSTER_SABOTAGE = create(prefix(SCExaNames.MONSTER_SABOTAGE));
+    public static final IExtraAbility MONSTER_VIEW = create(prefix(SCExaNames.MONSTER_VIEW));
+    public static final IExtraAbility POISONER = create(prefix(SCExaNames.POISONER));
+    public static final IExtraAbility PURIFICATION = create(prefix(SCExaNames.PURIFICATION));
+    public static final IExtraAbility RESTORATION = create(prefix(SCExaNames.RESTORATION));
+    public static final IExtraAbility SPEEDUP = create(prefix(SCExaNames.SPEEDUP));
+    public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER));
+    public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
+    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING));
 
     private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>();
     private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>();
@@ -62,6 +64,7 @@ public class ExtraAbility implements IExtraAbility {
         register(ENHANCED_AUTO_JUMP, EntityType.RABBIT);
         register(EXPLOSION_MASTER, ExplosionMasterBuff.INSTANCE, EntityType.CREEPER);
         register(FALLING_BUFFER, EntityType.CAT, EntityType.CHICKEN);
+        register(FANGS_SUMMONER, EntityType.EVOKER);
         register(FIRE_RESISTANCE, FireResistanceBuff.INSTANCE, EntityType.BLAZE);
         register(INITIAL_ARMOR, InitialArmorBuff.INSTANCE, EntityType.ZOMBIE);
         register(MONSTER_SABOTAGE, MonsterSabotageDebuff.INSTANCE, EntityType.ELDER_GUARDIAN);
@@ -71,6 +74,7 @@ public class ExtraAbility implements IExtraAbility {
         register(RESTORATION, RestorationBuff.INSTANCE);
         register(SPEEDUP, SpeedupBuff.INSTANCE, EntityType.HORSE, EntityType.DONKEY, EntityType.MULE);
         register(SWIMMER, SwimmerBuff.INSTANCE, EntityType.DOLPHIN, EntityType.DROWNED);
+        register(TELEPORTATION, EntityType.ENDERMAN);
         register(WATER_BREATHING, WaterBreathingBuff.INSTANCE, EntityType.COD, EntityType.SALMON, EntityType.TROPICAL_FISH);
     }
 
