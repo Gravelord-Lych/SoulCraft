@@ -1,6 +1,5 @@
 package lych.soulcraft.listener;
 
-import com.google.common.collect.Streams;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
@@ -77,7 +76,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
-import static lych.soulcraft.util.ModConstants.Exa.FALL_BUFFER_AMOUNT;
+import static lych.soulcraft.util.ExtraAbilityConstants.FALL_BUFFER_AMOUNT;
 
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID)
 public final class CommonEventListener {
@@ -239,12 +238,12 @@ public final class CommonEventListener {
         if (player.getMainHandItem().isEmpty() && ExtraAbility.TELEPORTATION.isOn(player)) {
             int cooldown = ((IPlayerEntityMixin) player).getAdditionalCooldowns().getCooldownRemaining(ExtraAbility.TELEPORTATION.getRegistryName());
             if (cooldown == 0) {
-                BlockRayTraceResult ray = (BlockRayTraceResult) player.pick(player.getAttributeValue(ForgeMod.REACH_DISTANCE.get()) + ModConstants.Exa.BASE_TELEPORTATION_RADIUS, 0, false);
+                BlockRayTraceResult ray = (BlockRayTraceResult) player.pick(player.getAttributeValue(ForgeMod.REACH_DISTANCE.get()) + ExtraAbilityConstants.BASE_TELEPORTATION_RADIUS, 0, false);
                 BlockPos pos = ray.getBlockPos();
                 World world = player.getLevel();
                 if (world.getBlockState(pos).getMaterial().blocksMotion() && world.getBlockState(pos.above()).isAir() && world.getBlockState(pos.above().above()).isAir()) {
                     player.teleportTo(ray.getLocation().x, ray.getLocation().y, ray.getLocation().z);
-                    ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(ExtraAbility.TELEPORTATION.getRegistryName(), ModConstants.Exa.TELEPORTATION_COOLDOWN);
+                    ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(ExtraAbility.TELEPORTATION.getRegistryName(), ExtraAbilityConstants.TELEPORTATION_COOLDOWN);
                 }
             }
         }
@@ -355,7 +354,6 @@ public final class CommonEventListener {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isClientSide() && event.getEntity() instanceof MobEntity) {
-            ServerWorld level = (ServerWorld) event.getWorld();
             MobEntity mob = (MobEntity) event.getEntity();
             if (mob instanceof CreatureEntity) {
                 mob.goalSelector.addGoal(100, Goals.of(new MoveTowardsRestrictionGoal((CreatureEntity) mob, 1)).executeIf(() -> event.getEntity().getCapability(NonAPICapabilities.CHALLENGE_MOB).map(cap -> cap.getChallenge() != null).orElse(false)).get());
