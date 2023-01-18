@@ -17,7 +17,7 @@ import java.util.UUID;
 public final class ModKeyInputs {
 //  TODO - remove
     public static final KeyBinding DRAGON_WIZARD_KEY = createExtraAbilityKey(GLFW.GLFW_KEY_R, "dragon_wizard");
-    public static final KeyBinding FANGS_SUMMONER_KEY = createExtraAbilityKey(GLFW.GLFW_KEY_F, "fangs_summoner");
+    public static final KeyBinding FANGS_SUMMONER_KEY = createExtraAbilityKey(GLFW.GLFW_KEY_G, "fangs_summoner");
     public static final InvokableData DRAGON_WIZARD = new InvokableData(UUID.fromString("FEFFB414-DCF7-E7BB-878A-449A2D8F9740"), DRAGON_WIZARD_KEY);
     public static final InvokableData FANGS_SUMMONER = new InvokableData(UUID.fromString("53B6EF2D-EFDD-49FA-842C-2674C2C7B9F2"), FANGS_SUMMONER_KEY);
 

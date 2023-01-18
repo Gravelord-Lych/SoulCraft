@@ -1,7 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-
-package lych.soulcraft.api.client.event;
+package lych.soulcraft.extension.fire;
 
 import mcp.MethodsReturnNonnullByDefault;
 

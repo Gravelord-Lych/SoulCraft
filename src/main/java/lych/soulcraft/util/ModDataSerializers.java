@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static net.minecraft.network.datasync.DataSerializers.registerSerializer;
 
@@ -41,6 +41,32 @@ public class ModDataSerializers {
         @Override
         public List<BlockPos> copy(List<BlockPos> list) {
             return new ArrayList<>(list);
+        }
+    };
+    public static final IDataSerializer<Set<IExtraAbility>> EXA = new IDataSerializer<Set<IExtraAbility>>() {
+        @Override
+        public void write(PacketBuffer buffer, Set<IExtraAbility> set) {
+            buffer.writeVarInt(set.size());
+            for (IExtraAbility exa : set) {
+                buffer.writeResourceLocation(exa.getRegistryName());
+            }
+        }
+
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        @Override
+        public Set<IExtraAbility> read(PacketBuffer buffer) {
+            int size = buffer.readVarInt();
+            Set<IExtraAbility> set = new LinkedHashSet<>();
+            for (int i = 0; i < size; i++) {
+                ResourceLocation location = buffer.readResourceLocation();
+                set.add(ExtraAbility.getOptional(location).get());
+            }
+            return set;
+        }
+
+        @Override
+        public Set<IExtraAbility> copy(Set<IExtraAbility> set) {
+            return new LinkedHashSet<>(set);
         }
     };
     public static final IDataSerializer<Long> LONG = new IDataSerializer<Long>() {
@@ -90,37 +116,11 @@ public class ModDataSerializers {
             return optional;
         }
     };
-    public static final IDataSerializer<Set<IExtraAbility>> EXA = new IDataSerializer<Set<IExtraAbility>>() {
-        @Override
-        public void write(PacketBuffer buffer, Set<IExtraAbility> set) {
-            buffer.writeVarInt(set.size());
-            for (IExtraAbility exa : set) {
-                buffer.writeResourceLocation(exa.getRegistryName());
-            }
-        }
-
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
-        @Override
-        public Set<IExtraAbility> read(PacketBuffer buffer) {
-            int size = buffer.readVarInt();
-            Set<IExtraAbility> set = new LinkedHashSet<>();
-            for (int i = 0; i < size; i++) {
-                ResourceLocation location = buffer.readResourceLocation();
-                set.add(ExtraAbility.getOptional(location).get());
-            }
-            return set;
-        }
-
-        @Override
-        public Set<IExtraAbility> copy(Set<IExtraAbility> set) {
-            return new LinkedHashSet<>(set);
-        }
-    };
 
     static {
         registerSerializer(BLOCK_POS_LIST);
+        registerSerializer(EXA);
         registerSerializer(LONG);
         registerSerializer(OPTIONAL_COLOR);
-        registerSerializer(EXA);
     }
 }

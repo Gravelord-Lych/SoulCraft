@@ -1,5 +1,6 @@
 package lych.soulcraft.util.mixin;
 
+import lych.soulcraft.extension.fire.Fire;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,7 @@ public interface IEntityMixin {
     @OnlyIn(Dist.CLIENT)
     boolean displaySoulFireAnimation();
 
+    @Deprecated
     void setOnSoulFire(boolean onSoulFire);
 
     boolean isReversed();
@@ -24,4 +26,8 @@ public interface IEntityMixin {
     void setHighlightColor(@Nullable Color highlightColor);
 
     boolean callGetSharedFlag(int flag);
+
+    Fire getFireOnSelf();
+
+    void setFireOnSelf(Fire fire);
 }

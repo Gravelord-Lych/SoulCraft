@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractArrowEntityMixin",
     "AbstractBlockMixin",
+    "AbstractFireBlockMixin",
     "ArrowEntityAccessor",
     "AttributesMixin",
     "BowItemMixin",
@@ -43,6 +44,7 @@
     "client.ItemRendererMixin",
     "client.ItemStackTileEntityRendererMixin",
     "client.LivingRendererMixin",
+    "client.OverlayRendererMixin",
     "client.RenderTypeBuffersMixin",
     "client.TridentRendererMixin",
     "client.WorldRendererMixin"

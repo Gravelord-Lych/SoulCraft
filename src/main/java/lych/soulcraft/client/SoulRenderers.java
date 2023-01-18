@@ -6,7 +6,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.blaze3d.vertex.MatrixApplyingVertexBuilder;
 import com.mojang.blaze3d.vertex.VertexBuilderUtils;
 import com.mojang.datafixers.util.Pair;
-import lych.soulcraft.util.SoulFireHelper;
+import lych.soulcraft.extension.fire.Fire;
+import lych.soulcraft.util.FireBlockHelper;
 import lych.soulcraft.util.mixin.IItemStackMixin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -74,14 +75,14 @@ public class SoulRenderers {
         }
     }
 
-    public static void renderSoulFireOnPlayer(Minecraft minecraft, MatrixStack stack) {
+    public static void renderSoulFireOnPlayer(Minecraft minecraft, Fire fire, MatrixStack stack) {
         BufferBuilder builder = Tessellator.getInstance().getBuilder();
         RenderSystem.depthFunc(519);
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableTexture();
-        TextureAtlasSprite sprite = SoulFireHelper.SOUL_FIRE_1.sprite();
+        TextureAtlasSprite sprite = FireBlockHelper.SOUL_FIRE_1.sprite();
         minecraft.getTextureManager().bind(sprite.atlas().location());
         float u0 = sprite.getU0();
         float u1 = sprite.getU1();

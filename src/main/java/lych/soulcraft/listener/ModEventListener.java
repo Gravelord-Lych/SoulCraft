@@ -5,6 +5,7 @@ import lych.soulcraft.api.capability.ISoulEnergyStorage;
 import lych.soulcraft.capability.IChallengeMob;
 import lych.soulcraft.dispenser.ModDispenserBehaviors;
 import lych.soulcraft.entity.ModEntities;
+import lych.soulcraft.extension.fire.Fires;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
 import lych.soulcraft.potion.ModPotions;
 import net.minecraft.nbt.INBT;
@@ -25,6 +26,7 @@ public class ModEventListener {
         ModPotions.registerBrewingRecipes();
         registerCapabilities(event);
         Reinforcements.init();
+        Fires.init();
     }
 
     private static void registerCapabilities(FMLCommonSetupEvent event) {

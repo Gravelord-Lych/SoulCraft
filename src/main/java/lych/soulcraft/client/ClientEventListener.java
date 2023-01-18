@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import lych.soulcraft.SoulCraft;
-import lych.soulcraft.api.client.event.RenderSoulFireOverlayEvent;
 import lych.soulcraft.block.ModBlocks;
 import lych.soulcraft.client.gui.screen.OptiFineWarningScreen;
 import lych.soulcraft.client.gui.screen.SEGeneratorScreen;
@@ -19,7 +18,6 @@ import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SoulBowItem;
 import lych.soulcraft.util.OptiFineHandler;
 import lych.soulcraft.util.SoulEnergies;
-import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.world.IChallengeTimeTextComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -40,8 +38,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -69,26 +65,6 @@ public final class ClientEventListener {
             if (false && !ModList.get().isLoaded("twilightforest") && OptiFineHandler.isOptiFineLoaded() && !optifineWarningShown && event.getGui() instanceof MainMenuScreen) {
                 optifineWarningShown = true;
                 Minecraft.getInstance().setScreen(new OptiFineWarningScreen(event.getGui()));
-            }
-        }
-
-        @SubscribeEvent
-        public static void onPlayerFireRendered(RenderBlockOverlayEvent event) {
-//            if (OptiFineHandler.isOptiFineLoaded()) {
-//                return;
-//            }
-            if (((IEntityMixin) event.getPlayer()).displaySoulFireAnimation()) {
-                RenderSoulFireOverlayEvent soul = new RenderSoulFireOverlayEvent(event.getPlayer(), event.getMatrixStack(), RenderSoulFireOverlayEvent.Type.PLAYER, null, event.getBlockForOverlay(), event.getBlockPos());
-                MinecraftForge.EVENT_BUS.post(soul);
-                Event.Result result = soul.getResult();
-                if (result == Event.Result.DEFAULT && ((IEntityMixin) event.getPlayer()).displaySoulFireAnimation()) {
-                    if (event.getOverlayType() == RenderBlockOverlayEvent.OverlayType.FIRE) {
-                        SoulRenderers.renderSoulFireOnPlayer(Minecraft.getInstance(), event.getMatrixStack());
-                        event.setCanceled(true);
-                    }
-                } else if (result == Event.Result.DENY) {
-                    event.setCanceled(true);
-                }
             }
         }
 
