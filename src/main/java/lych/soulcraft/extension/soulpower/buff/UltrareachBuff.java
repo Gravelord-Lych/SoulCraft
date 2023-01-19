@@ -13,7 +13,7 @@ public enum UltrareachBuff implements AttributiveBuff {
     INSTANCE;
 
     private static final UUID REACH_DISTANCE_MODIFIER_UUID = UUID.fromString("25642659-CFE9-E8F3-8367-AD3308983F68");
-    private static final AttributeModifier REACH_DISTANCE_MODIFIER = new AttributeModifier(REACH_DISTANCE_MODIFIER_UUID, "Ultrareach", ExtraAbilityConstants.ULTRAREACH_AMOUNT, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final AttributeModifier REACH_DISTANCE_MODIFIER = new AttributeModifier(REACH_DISTANCE_MODIFIER_UUID, "Ultrareach", ExtraAbilityConstants.ULTRAREACH_AMOUNT, AttributeModifier.Operation.ADDITION);
 
     @Override
     public Map<Attribute, AttributeModifier> getModifiers() {
