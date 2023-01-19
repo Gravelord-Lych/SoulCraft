@@ -25,10 +25,11 @@ public final class ExtraAbilityConstants {
     public static final double SPEEDUP_AMOUNT = 0.15;
     public static final double ULTRAREACH_AMOUNT = 1;
     public static final int RESTORATION_INTERVAL_TICKS = 200;
-    public static final EffectInstance POISONER_POISON_EFFECT = new EffectInstance(Effects.POISON, 20 * 4, 0);
+    public static final EffectInstance POISONER_POISON_EFFECT = new ImmutableEffectInstance(Effects.POISON, 20 * 4, 0);
     public static final double INITIAL_ARMOR_AMOUNT = 4;
     public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 14;
     public static final int OVERDRIVE_REGEN_INTERVAL = 60;
+    public static final double IMITATOR_VISIBILITY_MODIFIER = 0.75;
 
     private ExtraAbilityConstants() {}
 

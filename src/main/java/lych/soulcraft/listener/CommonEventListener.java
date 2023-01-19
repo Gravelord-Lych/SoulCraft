@@ -21,6 +21,7 @@ import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.fire.Fires;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
 import lych.soulcraft.extension.key.InvokableManager;
+import lych.soulcraft.extension.skull.ModSkulls;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
 import lych.soulcraft.extension.soulpower.control.SoulManager;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
@@ -47,6 +48,8 @@ import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -421,6 +424,21 @@ public final class CommonEventListener {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if (ExtraAbility.FALLING_BUFFER.isOn(player)) {
                 event.setDistance(Math.max(event.getDistance() - FALL_BUFFER_AMOUNT, 0));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCalculatingLivingVisibility(LivingEvent.LivingVisibilityEvent event) {
+        if (event.getLookingEntity() != null) {
+            ItemStack stack = event.getEntityLiving().getItemBySlot(EquipmentSlotType.HEAD);
+            Item item = stack.getItem();
+            EntityType<?> entityType = event.getLookingEntity().getType();
+            if (ModSkulls.matches(entityType, item)) {
+                event.modifyVisibility(0.5);
+            }
+            if (event.getEntityLiving() instanceof PlayerEntity && ExtraAbility.IMITATOR.isOn((PlayerEntity) event.getEntityLiving())) {
+                event.modifyVisibility(ExtraAbilityConstants.IMITATOR_VISIBILITY_MODIFIER);
             }
         }
     }
