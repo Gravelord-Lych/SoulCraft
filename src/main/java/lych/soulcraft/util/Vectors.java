@@ -36,10 +36,10 @@ public final class Vectors {
     }
 
     public static Vector3d rotate(Vector3d posToRotate, Vector3d center, double rad, boolean clockwise) {
-        if (rad == 0) {
-            return posToRotate;
-        }
         double distanceToCenter = posToRotate.distanceTo(center);
+        if (rad == 0) {
+            return new Vector3d(center.x, posToRotate.y, center.z - distanceToCenter);
+        }
         double radToCenter = radTo(posToRotate, center);
         return clockwise ? new Vector3d(MathHelper.sin((float) (radToCenter + rad)) * distanceToCenter + center.x, posToRotate.y, MathHelper.cos((float) (radToCenter + rad)) * distanceToCenter + center.z) : new Vector3d(MathHelper.sin((float) (radToCenter + Math.PI * 2 - rad)) * distanceToCenter + center.x, posToRotate.y, MathHelper.cos((float) (radToCenter + Math.PI * 2 - rad)) * distanceToCenter + center.z);
     }
