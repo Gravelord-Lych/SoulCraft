@@ -1,18 +1,20 @@
 package lych.soulcraft.extension.soulpower.reinforce;
 
+import lych.soulcraft.extension.ExtraAbility;
+import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.util.ExtraAbilityConstants;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class GuardianReinforcement extends DefensiveReinforcement {
     private static final float BASE_THORNS_DAMAGE = 1;
@@ -26,14 +28,6 @@ public class GuardianReinforcement extends DefensiveReinforcement {
         super(type);
     }
 
-    protected GuardianReinforcement(ResourceLocation typeName) {
-        super(typeName);
-    }
-
-    protected GuardianReinforcement(Supplier<EntityType<?>> type) {
-        super(type);
-    }
-
     @Override
     protected boolean isItemPosSuitable(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem && (((ArmorItem) stack.getItem()).getSlot() == EquipmentSlotType.CHEST || ((ArmorItem) stack.getItem()).getSlot() == EquipmentSlotType.LEGS);
@@ -44,9 +38,13 @@ public class GuardianReinforcement extends DefensiveReinforcement {
 
     @Override
     protected void onHurt(ItemStack stack, LivingEntity entity, DamageSource source, float amount, int level, LivingHurtEvent event) {
-        if (source.getEntity() instanceof LivingEntity) {
+        if (EntityUtils.isMelee(source) && !EntityUtils.isThorns(source) && source.getEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) source.getEntity();
-            attacker.hurt(DamageSource.thorns(entity), (BASE_THORNS_DAMAGE + level * THORNS_DAMAGE_STEP) * getThornsDamageMultiplier());
+            float thornsDamage = BASE_THORNS_DAMAGE + level * THORNS_DAMAGE_STEP;
+            if (entity instanceof PlayerEntity && ExtraAbility.THORNS_MASTER.isOn((PlayerEntity) entity)) {
+                thornsDamage += ExtraAbilityConstants.THORNS_MASTER_DAMAGE;
+            }
+            attacker.hurt(DamageSource.thorns(entity), thornsDamage * getThornsDamageMultiplier());
         }
     }
 

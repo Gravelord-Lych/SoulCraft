@@ -43,6 +43,7 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility SPEEDUP = create(prefix(SCExaNames.SPEEDUP));
     public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER));
     public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
+    public static final IExtraAbility THORNS_MASTER = create(prefix(SCExaNames.THORNS_MASTER));
     public static final IExtraAbility ULTRAREACH = create(prefix(SCExaNames.ULTRAREACH));
     public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING));
 
@@ -76,7 +77,8 @@ public class ExtraAbility implements IExtraAbility {
         register(SPEEDUP, SpeedupBuff.INSTANCE, EntityType.HORSE, EntityType.DONKEY, EntityType.MULE);
         register(SWIMMER, SwimmerBuff.INSTANCE, EntityType.DOLPHIN, EntityType.DROWNED);
         register(TELEPORTATION, EntityType.ENDERMAN);
-        register(ULTRAREACH, EntityType.FOX);
+        register(THORNS_MASTER, EntityType.GUARDIAN);
+        register(ULTRAREACH, UltrareachBuff.INSTANCE, EntityType.FOX);
         register(WATER_BREATHING, WaterBreathingBuff.INSTANCE, EntityType.COD, EntityType.SALMON, EntityType.TROPICAL_FISH);
     }
 

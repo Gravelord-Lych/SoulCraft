@@ -141,14 +141,18 @@ public final class CommonEventListener {
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
-//        if (!OptiFineHandler.isOptiFineLoaded()) {
         if (event.getSource() == DamageSource.ON_FIRE && ((IEntityMixin) event.getEntity()).isOnSoulFire()) {
             event.setAmount(event.getAmount() * 2);
         }
         if (event.getSource().getDirectEntity() instanceof SoulArrowEntity && ((IEntityMixin) event.getSource().getDirectEntity()).isOnSoulFire()) {
             ((IEntityMixin) event.getEntity()).setFireOnSelf(Fires.SOUL_FIRE);
         }
-//        }
+        if (event.getEntity() instanceof PlayerEntity && ExtraAbility.THORNS_MASTER.isOn((PlayerEntity) event.getEntity())) {
+            if (EntityUtils.isMelee(event.getSource()) && !EntityUtils.isThorns(event.getSource()) && event.getSource().getEntity() instanceof LivingEntity) {
+                LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
+                attacker.hurt(DamageSource.thorns(event.getEntity()), ExtraAbilityConstants.THORNS_MASTER_DAMAGE);
+            }
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

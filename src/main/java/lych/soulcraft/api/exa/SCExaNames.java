@@ -17,6 +17,7 @@ public final class SCExaNames {
     public static final String SWIMMER = "swimmer";
     public static final String ULTRAREACH = "ultrareach";
     public static final String TELEPORTATION = "teleportation";
+    public static final String THORNS_MASTER = "thorns_master";
     public static final String WATER_BREATHING = "water_breathing";
 
     private SCExaNames() {}
