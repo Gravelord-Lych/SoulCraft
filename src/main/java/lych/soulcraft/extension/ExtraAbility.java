@@ -28,7 +28,7 @@ import java.util.*;
 import static lych.soulcraft.SoulCraft.prefix;
 
 public class ExtraAbility implements IExtraAbility {
-    public static final IExtraAbility DRAGON_WIZARD = create(prefix(SCExaNames.DRAGON_WIZARD), 5);
+    public static final IExtraAbility DRAGON_WIZARD = create(prefix(SCExaNames.DRAGON_WIZARD));
     public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(SCExaNames.ENHANCED_AUTO_JUMP));
     public static final IExtraAbility EXPLOSION_MASTER = create(prefix(SCExaNames.EXPLOSION_MASTER));
     public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
@@ -44,7 +44,7 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER));
     public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
     public static final IExtraAbility ULTRAREACH = create(prefix(SCExaNames.ULTRAREACH));
-    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 8);
+    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING));
 
     private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>();
     private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>();
@@ -52,14 +52,12 @@ public class ExtraAbility implements IExtraAbility {
     @NotNull
     private final ResourceLocation registryName;
     private final int cost;
+    private final boolean special;
 
-    private ExtraAbility(ResourceLocation registryName) {
-        this(registryName, DEFAULT_COST);
-    }
-
-    private ExtraAbility(ResourceLocation registryName, int cost) {
+    private ExtraAbility(ResourceLocation registryName, int cost, boolean special) {
         this.registryName = registryName;
         this.cost = cost;
+        this.special = special;
     }
 
     static {
@@ -104,11 +102,15 @@ public class ExtraAbility implements IExtraAbility {
     }
 
     public static IExtraAbility create(ResourceLocation registryName) {
-        return new ExtraAbility(registryName);
+        return create(registryName, DEFAULT_COST, false);
     }
 
-    public static IExtraAbility create(ResourceLocation registryName, int cost) {
-        return new ExtraAbility(registryName, cost);
+    public static IExtraAbility createSpecial(ResourceLocation registryName) {
+        return create(registryName, DEFAULT_COST, true);
+    }
+
+    public static IExtraAbility create(ResourceLocation registryName, int cost, boolean special) {
+        return new ExtraAbility(registryName, cost, special);
     }
 
     public static void register(IExtraAbility exa) {
@@ -184,7 +186,7 @@ public class ExtraAbility implements IExtraAbility {
 
     @Override
     public boolean isSpecial() {
-        return getSoulContainerCost() > DEFAULT_COST;
+        return special;
     }
 
     @Override

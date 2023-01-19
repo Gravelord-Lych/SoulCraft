@@ -31,8 +31,8 @@ public enum SoulCraftAPIImpl implements SoulCraftAPI {
     INSTANCE;
 
     @Override
-    public IExtraAbility createExtraAbility(ResourceLocation registryName) {
-        return ExtraAbility.create(registryName);
+    public IExtraAbility createExtraAbility(ResourceLocation registryName, int cost, boolean special) {
+        return ExtraAbility.create(registryName, cost, special);
     }
 
     @Override

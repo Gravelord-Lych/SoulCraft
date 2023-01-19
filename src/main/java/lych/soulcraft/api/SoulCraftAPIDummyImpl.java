@@ -5,7 +5,6 @@ import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,7 +23,7 @@ final class SoulCraftAPIDummyImpl implements SoulCraftAPI {
 
     @Nullable
     @Override
-    public IExtraAbility createExtraAbility(ResourceLocation registryName) {
+    public IExtraAbility createExtraAbility(ResourceLocation registryName, int cost, boolean special) {
         return null;
     }
 

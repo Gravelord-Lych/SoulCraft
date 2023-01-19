@@ -39,10 +39,12 @@ public interface SoulCraftAPI {
     /**
      * Create an Extra Ability (for player). It was named "Extra" because there's a class called {@link net.minecraft.entity.player.PlayerAbilities PlayerAbilities}.
      * @param registryName The registry name of the Extra Ability
+     * @param cost The Soul Container cost to apply the Extra Ability
+     * @param special True if it's special
      * @return The Extra Ability created by the registry name. Null if the API is a dummy
      */
     @Nullable
-    IExtraAbility createExtraAbility(ResourceLocation registryName);
+    IExtraAbility createExtraAbility(ResourceLocation registryName, int cost, boolean special);
 
     /**
      * Gets an Extra Ability from the registry name.

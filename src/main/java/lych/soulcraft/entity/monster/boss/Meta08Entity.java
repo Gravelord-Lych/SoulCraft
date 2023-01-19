@@ -657,7 +657,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
             double y = getY() + 0.5 + random.nextDouble() * 1.5;
             double z = getRandomZ(1);
             Vector3d vector = new Vector3d(3, 1, 0);
-            vector = Vectors.rotateTo(vector, Vector3d.ZERO, random.nextDouble() * 2 * Math.PI, true).normalize().scale(2 + random.nextDouble() * 2);
+            vector = Vectors.rotateTo(vector, random.nextDouble() * 2 * Math.PI, true).normalize().scale(2 + random.nextDouble() * 2);
             x += vector.x;
             y += vector.y;
             z += vector.z;
