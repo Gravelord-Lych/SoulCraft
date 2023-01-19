@@ -33,7 +33,7 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility EXPLOSION_MASTER = create(prefix(SCExaNames.EXPLOSION_MASTER));
     public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
     public static final IExtraAbility FANGS_SUMMONER = create(prefix(SCExaNames.FANGS_SUMMONER));
-    public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE));
+    public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE), 4, false);
     public static final IExtraAbility INITIAL_ARMOR = create(prefix(SCExaNames.INITIAL_ARMOR));
     public static final IExtraAbility MONSTER_SABOTAGE = create(prefix(SCExaNames.MONSTER_SABOTAGE));
     public static final IExtraAbility MONSTER_VIEW = create(prefix(SCExaNames.MONSTER_VIEW));
@@ -222,7 +222,7 @@ public class ExtraAbility implements IExtraAbility {
             return isSpecial() ? -1 : 1;
         }
         String s1 = I18n.get(getDisplayName().getString());
-        String s2 = I18n.get(getDisplayName().getString());
+        String s2 = I18n.get(o.getDisplayName().getString());
         return s1.compareTo(s2);
     }
 }
