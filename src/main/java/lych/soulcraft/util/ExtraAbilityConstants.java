@@ -4,6 +4,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
 public final class ExtraAbilityConstants {
+//  Constant fields.
     public static final float ENHANCED_AUTO_JUMP_MAX_JUMP_HEIGHT_MULTIPLIER = 2;
     public static final float ENHANCED_AUTO_JUMP_COEFFICIENT = 0.19f;
     public static final float FALL_BUFFER_AMOUNT = 5;
@@ -25,6 +26,13 @@ public final class ExtraAbilityConstants {
     public static final int RESTORATION_INTERVAL_TICKS = 200;
     public static final EffectInstance POISONER_POISON_EFFECT = new EffectInstance(Effects.POISON, 20 * 4, 0);
     public static final double INITIAL_ARMOR_AMOUNT = 4;
+    public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 10;
+    public static final int OVERDRIVE_REGEN_INTERVAL = 60;
 
     private ExtraAbilityConstants() {}
+
+//  Functions.
+    public static float calculateNethermanAttackDamageMultiplier(float temperature, boolean onFire) {
+        return (1 + temperature / 5) * (onFire ? 1.25f : 1);
+    }
 }

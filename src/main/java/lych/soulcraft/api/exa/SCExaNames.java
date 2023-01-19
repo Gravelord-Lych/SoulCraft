@@ -10,7 +10,9 @@ public final class SCExaNames {
     public static final String INITIAL_ARMOR = "initial_armor";
     public static final String MONSTER_SABOTAGE = "monster_sabotage";
     public static final String MONSTER_VIEW = "monster_view";
+    public static final String OVERDRIVE = "overdrive";
     public static final String POISONER = "poisoner";
+    public static final String NETHERMAN = "netherman";
     public static final String PURIFICATION = "purification";
     public static final String RESTORATION = "restoration";
     public static final String SPEEDUP = "speedup";
