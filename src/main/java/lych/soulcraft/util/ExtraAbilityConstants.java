@@ -2,6 +2,7 @@ package lych.soulcraft.util;
 
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.math.MathHelper;
 
 public final class ExtraAbilityConstants {
 //  Constant fields.
@@ -26,13 +27,13 @@ public final class ExtraAbilityConstants {
     public static final int RESTORATION_INTERVAL_TICKS = 200;
     public static final EffectInstance POISONER_POISON_EFFECT = new EffectInstance(Effects.POISON, 20 * 4, 0);
     public static final double INITIAL_ARMOR_AMOUNT = 4;
-    public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 10;
+    public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 14;
     public static final int OVERDRIVE_REGEN_INTERVAL = 60;
 
     private ExtraAbilityConstants() {}
 
 //  Functions.
     public static float calculateNethermanAttackDamageMultiplier(float temperature, boolean onFire) {
-        return (1 + temperature / 5) * (onFire ? 1.25f : 1);
+        return MathHelper.clamp((1 + temperature / 5) * (onFire ? 1.25f : 1), 0.9f, 2);
     }
 }
