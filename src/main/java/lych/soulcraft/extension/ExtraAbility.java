@@ -66,7 +66,7 @@ public class ExtraAbility implements IExtraAbility {
         register(DRAGON_WIZARD, EntityType.ENDER_DRAGON);
         register(ENHANCED_AUTO_JUMP, EntityType.RABBIT);
         register(EXPLOSION_MASTER, ExplosionMasterBuff.INSTANCE, EntityType.CREEPER);
-        register(FALLING_BUFFER, EntityType.CAT, EntityType.CHICKEN);
+        register(FALLING_BUFFER, EntityType.CAT, EntityType.CHICKEN, EntityType.GHAST);
         register(FANGS_SUMMONER, EntityType.EVOKER);
         register(FIRE_RESISTANCE, FireResistanceBuff.INSTANCE, EntityType.BLAZE);
         register(INITIAL_ARMOR, InitialArmorBuff.INSTANCE, EntityType.ZOMBIE);
