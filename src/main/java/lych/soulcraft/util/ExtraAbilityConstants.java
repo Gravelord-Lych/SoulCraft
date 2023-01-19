@@ -1,5 +1,10 @@
 package lych.soulcraft.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
+import lych.soulcraft.extension.ExtraAbility;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.MathHelper;
@@ -29,12 +34,40 @@ public final class ExtraAbilityConstants {
     public static final double INITIAL_ARMOR_AMOUNT = 4;
     public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 14;
     public static final int OVERDRIVE_REGEN_INTERVAL = 60;
-    public static final double IMITATOR_VISIBILITY_MODIFIER = 0.75;
+    public static final double IMITATOR_VISIBILITY_MODIFIER = 0.6;
+    public static final float NUTRITIONIST_NUTRITION_AND_SATURATION_MODIFIER = 1.25f;
+    public static final ImmutableList<EffectInstance> GOLD_PREFERENCE_EFFECTS = ImmutableList.of(
+            new ImmutableEffectInstance(Effects.DIG_SPEED, 20, 1, false, false, true),
+            new ImmutableEffectInstance(Effects.MOVEMENT_SPEED, 20, 1, false, false, true));
+    public static final int FROST_RESISTANCE_MONSTER_EFFECT_DURATION = 5;
+    public static final int FROST_RESISTANCE_MONSTER_EFFECT_AMPLIFIER = 0;
+    public static final double FROST_RESISTANCE_SLOWDOWN_RADIUS = 4;
+    public static final int PILLAGER_LOOTING_LEVEL_BONUS = 1;
 
     private ExtraAbilityConstants() {}
 
 //  Functions.
     public static float calculateNethermanAttackDamageMultiplier(float temperature, boolean onFire) {
         return MathHelper.clamp((1 + temperature / 5) * (onFire ? 1.25f : 1), 0.9f, 2);
+    }
+
+    public static float calculateFrostResistanceDamageMultiplier(float temperature, boolean onFire) {
+        float damageMultiplier = MathHelper.clamp(0.5f + (temperature + 1) / 6, 0.5f, 1);
+        return onFire ? (damageMultiplier + 1) / 2 : damageMultiplier;
+    }
+
+    public static boolean shouldApplyGoldPreference(PlayerEntity player) {
+        return ExtraAbility.GOLD_PREFERENCE.isOn(player) && Streams.stream(player.getAllSlots()).anyMatch(ExtraAbilityConstants::isGold);
+    }
+
+    private static boolean isGold(ItemStack stack) {
+        Item item = stack.getItem();
+        if (item instanceof TieredItem && ((TieredItem) item).getTier() == ItemTier.GOLD) {
+            return true;
+        }
+        if (item instanceof ArmorItem && ((ArmorItem) item).getMaterial() == ArmorMaterial.GOLD) {
+            return true;
+        }
+        return Utils.getRegistryName(item).getPath().contains("gold");
     }
 }

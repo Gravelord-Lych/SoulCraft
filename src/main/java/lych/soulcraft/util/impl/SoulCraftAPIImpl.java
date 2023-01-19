@@ -46,10 +46,8 @@ public enum SoulCraftAPIImpl implements SoulCraftAPI {
     }
 
     @Override
-    public void registerExtraAbility(@Nullable IExtraAbility exa) {
-        if (exa != null) {
-            ExtraAbility.register(exa);
-        }
+    public void registerExtraAbility(IExtraAbility exa) {
+        ExtraAbility.register(exa);
     }
 
     @Override

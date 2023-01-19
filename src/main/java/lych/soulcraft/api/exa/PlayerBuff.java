@@ -1,6 +1,9 @@
 package lych.soulcraft.api.exa;
 
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -21,5 +24,7 @@ public interface PlayerBuff {
      */
     void stopApplyingTo(PlayerEntity player, World world);
 
-    void tick(PlayerEntity player, ServerWorld world);
+    void serverTick(ServerPlayerEntity player, ServerWorld world);
+
+    default void clientTick(ClientPlayerEntity player, ClientWorld world) {}
 }

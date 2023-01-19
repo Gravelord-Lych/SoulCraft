@@ -2,6 +2,7 @@ package lych.soulcraft.extension.soulpower.buff;
 
 import lych.soulcraft.api.event.PostLivingHurtEvent;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -27,8 +28,8 @@ public enum FireResistanceBuff implements DefenseBuff {
     public void onPostHurt(PlayerEntity player, PostLivingHurtEvent event) {}
 
     @Override
-    public void tick(PlayerEntity player, ServerWorld world) {
-        DefenseBuff.super.tick(player, world);
+    public void serverTick(ServerPlayerEntity player, ServerWorld world) {
+        DefenseBuff.super.serverTick(player, world);
         if (player.isOnFire()) {
             player.clearFire();
         }

@@ -2,12 +2,15 @@ package lych.soulcraft.extension.soulpower.buff;
 
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.util.ExtraAbilityConstants;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public enum RestorationBuff implements PlayerBuff {
+public enum GoldPreferenceBuff implements PlayerBuff {
     INSTANCE;
 
     @Override
@@ -18,8 +21,17 @@ public enum RestorationBuff implements PlayerBuff {
 
     @Override
     public void serverTick(ServerPlayerEntity player, ServerWorld world) {
-        if (player.tickCount % ExtraAbilityConstants.RESTORATION_INTERVAL_TICKS == 0) {
-            player.heal(1);
+        tick(player);
+    }
+
+    @Override
+    public void clientTick(ClientPlayerEntity player, ClientWorld world) {
+        tick(player);
+    }
+
+    private static void tick(PlayerEntity player) {
+        if (ExtraAbilityConstants.shouldApplyGoldPreference(player)) {
+            ExtraAbilityConstants.GOLD_PREFERENCE_EFFECTS.stream().map(EffectInstance::new).forEach(player::addEffect);
         }
     }
 }

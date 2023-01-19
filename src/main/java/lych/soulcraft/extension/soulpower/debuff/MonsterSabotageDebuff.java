@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.UUID;
 
@@ -35,5 +36,5 @@ public enum MonsterSabotageDebuff implements MobDebuff {
     public void stopApplyingTo(PlayerEntity player, World world) {}
 
     @Override
-    public void tick(MobEntity mob, World world) {}
+    public void serverTick(MobEntity mob, ServerWorld world) {}
 }

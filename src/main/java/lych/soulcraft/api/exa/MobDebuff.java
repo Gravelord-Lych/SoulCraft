@@ -3,6 +3,7 @@ package lych.soulcraft.api.exa;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public interface MobDebuff {
     /**
@@ -30,7 +31,7 @@ public interface MobDebuff {
      */
     void stopApplyingTo(PlayerEntity player, World world);
 
-    void tick(MobEntity mob, World world);
+    void serverTick(MobEntity mob, ServerWorld world);
 
     /**
      * Returns the max stack size of this debuff. For instance, debuff will be applied twice

@@ -3,7 +3,9 @@ package lych.soulcraft.api.exa;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import org.jetbrains.annotations.NotNull;
 
 public interface IExtraAbility extends Comparable<IExtraAbility> {
     /**
@@ -36,18 +38,6 @@ public interface IExtraAbility extends Comparable<IExtraAbility> {
      */
     int getSoulContainerCost();
 
-    static boolean hasExtraAbility(PlayerEntity player, IExtraAbility exa) {
-        return exa.isOn(player);
-    }
-
-    static boolean addExtraAbility(PlayerEntity player, IExtraAbility exa) {
-        return exa.addTo(player);
-    }
-
-    static boolean removeExtraAbility(PlayerEntity player, IExtraAbility exa) {
-        return exa.removeFrom(player);
-    }
-
     /**
      * Indicates if the <i>Extra Ability</i> is special.
      * @return True if the <i>Extra Ability</i> is special
@@ -59,4 +49,84 @@ public interface IExtraAbility extends Comparable<IExtraAbility> {
      * @return The text style
      */
     TextFormatting getStyle();
+
+    /**
+     * @return True if this is a dummy
+     */
+    default boolean isDummy() {
+        return this instanceof Dummy;
+    }
+
+    static IExtraAbility dummy() {
+        return Dummy.INSTANCE;
+    }
+
+    class Dummy implements IExtraAbility {
+        private static final IExtraAbility INSTANCE = new Dummy();
+
+        private Dummy() {}
+
+        private static final ResourceLocation DUMMY_REGISTRY_NAME = new ResourceLocation("dummy");
+        private static final ITextComponent DUMMY_DISPLAY_NAME = new StringTextComponent("Dummy");
+
+        @Override
+        public ResourceLocation getRegistryName() {
+            return DUMMY_REGISTRY_NAME;
+        }
+
+        @Override
+        public boolean isOn(PlayerEntity player) {
+            return false;
+        }
+
+        @Override
+        public boolean addTo(PlayerEntity player) {
+            return false;
+        }
+
+        @Override
+        public boolean removeFrom(PlayerEntity player) {
+            return false;
+        }
+
+        @Override
+        public ITextComponent getDisplayName() {
+            return DUMMY_DISPLAY_NAME;
+        }
+
+        @Override
+        public int getSoulContainerCost() {
+            return 0;
+        }
+
+        @Override
+        public boolean isSpecial() {
+            return false;
+        }
+
+        @Override
+        public TextFormatting getStyle() {
+            return TextFormatting.GRAY;
+        }
+
+        @Override
+        public int compareTo(@NotNull IExtraAbility o) {
+            return o.isDummy() ? getRegistryName().compareTo(o.getRegistryName()) : -1;
+        }
+
+        @Override
+        public String toString() {
+            return "DummyExtraAbility";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this == obj || obj instanceof IExtraAbility && ((IExtraAbility) obj).isDummy();
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
+        }
+    }
 }

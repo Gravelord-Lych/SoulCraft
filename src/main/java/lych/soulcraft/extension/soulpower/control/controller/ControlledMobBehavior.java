@@ -319,6 +319,9 @@ public abstract class ControlledMobBehavior<T extends ControlledMobBehavior.Inst
     static {
         BEHAVIOR_MAP = new HashMap<>();
         DUMMY = new Dummy();
+    }
+
+    public static void init() {
         DefaultControllers.init();
     }
 }

@@ -41,9 +41,8 @@ public interface SoulCraftAPI {
      * @param registryName The registry name of the Extra Ability
      * @param cost The Soul Container cost to apply the Extra Ability
      * @param special True if it's special
-     * @return The Extra Ability created by the registry name. Null if the API is a dummy
+     * @return The Extra Ability created by the registry name. {@link lych.soulcraft.api.exa.IExtraAbility.Dummy Dummy} if the API is a dummy
      */
-    @Nullable
     IExtraAbility createExtraAbility(ResourceLocation registryName, int cost, boolean special);
 
     /**
@@ -60,10 +59,10 @@ public interface SoulCraftAPI {
     Set<IExtraAbility> getExtraAbilitiesOnPlayer(PlayerEntity player);
 
     /**
-     * Register an Extra Ability.
+     * Register an Extra Ability. The method can be called during common set up
      * @param exa The Extra Ability that will be registered
      */
-    void registerExtraAbility(@Nullable IExtraAbility exa);
+    void registerExtraAbility(IExtraAbility exa);
 
     /**
      * Gets all registered Extra Abilities.

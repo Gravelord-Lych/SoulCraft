@@ -8,6 +8,7 @@ import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.exa.SCExaNames;
 import lych.soulcraft.extension.soulpower.buff.*;
+import lych.soulcraft.extension.soulpower.debuff.FrostResistanceDebuff;
 import lych.soulcraft.extension.soulpower.debuff.MobDebuffMap;
 import lych.soulcraft.extension.soulpower.debuff.MonsterSabotageDebuff;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
@@ -34,12 +35,16 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
     public static final IExtraAbility FANGS_SUMMONER = create(prefix(SCExaNames.FANGS_SUMMONER));
     public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE), 6, false);
+    public static final IExtraAbility FROST_RESISTANCE = create(prefix(SCExaNames.FROST_RESISTANCE));
+    public static final IExtraAbility GOLD_PREFERENCE = create(prefix(SCExaNames.GOLD_PREFERENCE));
     public static final IExtraAbility IMITATOR = create(prefix(SCExaNames.IMITATOR));
     public static final IExtraAbility INITIAL_ARMOR = create(prefix(SCExaNames.INITIAL_ARMOR));
     public static final IExtraAbility MONSTER_SABOTAGE = create(prefix(SCExaNames.MONSTER_SABOTAGE));
     public static final IExtraAbility MONSTER_VIEW = create(prefix(SCExaNames.MONSTER_VIEW));
     public static final IExtraAbility NETHERMAN = create(prefix(SCExaNames.NETHERMAN));
+    public static final IExtraAbility NUTRITIONIST = create(prefix(SCExaNames.NUTRITIONIST));
     public static final IExtraAbility OVERDRIVE = create(prefix(SCExaNames.OVERDRIVE));
+    public static final IExtraAbility PILLAGER = create(prefix(SCExaNames.PILLAGER));
     public static final IExtraAbility POISONER = create(prefix(SCExaNames.POISONER));
     public static final IExtraAbility PURIFICATION = create(prefix(SCExaNames.PURIFICATION), 6, false);
     public static final IExtraAbility RESTORATION = create(prefix(SCExaNames.RESTORATION));
@@ -71,19 +76,23 @@ public class ExtraAbility implements IExtraAbility {
         register(FALLING_BUFFER, EntityType.CAT, EntityType.OCELOT, EntityType.CHICKEN, EntityType.GHAST);
         register(FANGS_SUMMONER, EntityType.EVOKER);
         register(FIRE_RESISTANCE, FireResistanceBuff.INSTANCE, EntityType.BLAZE, EntityType.MAGMA_CUBE);
+        register(FROST_RESISTANCE, FrostResistanceBuff.INSTANCE, FrostResistanceDebuff.INSTANCE, EntityType.POLAR_BEAR);
+        register(GOLD_PREFERENCE, GoldPreferenceBuff.INSTANCE, EntityType.PIGLIN);
         register(IMITATOR, EntityType.PARROT);
         register(INITIAL_ARMOR, InitialArmorBuff.INSTANCE, EntityType.ZOMBIE);
         register(MONSTER_SABOTAGE, MonsterSabotageDebuff.INSTANCE, EntityType.ELDER_GUARDIAN);
         register(MONSTER_VIEW, MonsterViewBuff.INSTANCE, EntityType.BAT, EntityType.PHANTOM);
         register(NETHERMAN, NethermanBuff.INSTANCE, EntityType.HOGLIN, EntityType.ZOGLIN, EntityType.ZOMBIFIED_PIGLIN);
+        register(NUTRITIONIST, EntityType.PIG);
         register(OVERDRIVE, EntityType.HUSK);
+        register(PILLAGER, EntityType.PILLAGER);
         register(POISONER, PoisonerBuff.INSTANCE, EntityType.BEE, EntityType.CAVE_SPIDER);
         register(PURIFICATION, PurificationBuff.INSTANCE, EntityType.COW, EntityType.MOOSHROOM);
         register(RESTORATION, RestorationBuff.INSTANCE);
         register(SPEEDUP, SpeedupBuff.INSTANCE, EntityType.HORSE, EntityType.DONKEY, EntityType.MULE, EntityType.LLAMA, EntityType.TRADER_LLAMA);
         register(SWIMMER, SwimmerBuff.INSTANCE, EntityType.DOLPHIN, EntityType.DROWNED);
         register(TELEPORTATION, EntityType.ENDERMAN);
-        register(THORNS_MASTER, EntityType.GUARDIAN);
+        register(THORNS_MASTER, EntityType.GUARDIAN, EntityType.PUFFERFISH);
         register(ULTRAREACH, UltrareachBuff.INSTANCE, EntityType.FOX);
         register(WATER_BREATHING, WaterBreathingBuff.INSTANCE, EntityType.COD, EntityType.SALMON, EntityType.TROPICAL_FISH);
     }
@@ -123,6 +132,9 @@ public class ExtraAbility implements IExtraAbility {
 
     public static void register(IExtraAbility exa) {
         Objects.requireNonNull(exa, "Extra Ability should be non-null");
+        if (exa.isDummy()) {
+            return;
+        }
         Objects.requireNonNull(exa.getRegistryName(), "Registry name should be non-null");
         Preconditions.checkState(ABILITIES.put(exa.getRegistryName(), exa) == null, "Duplicate registry name: " + exa.getRegistryName());
     }

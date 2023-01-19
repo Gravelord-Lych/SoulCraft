@@ -3,6 +3,7 @@ package lych.soulcraft.extension.soulpower.buff;
 import lych.soulcraft.api.event.PostLivingHurtEvent;
 import lych.soulcraft.api.exa.PlayerBuff;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -25,5 +26,5 @@ public interface DamageBuff extends PlayerBuff {
     default void stopApplyingTo(PlayerEntity player, World world) {}
 
     @Override
-    default void tick(PlayerEntity player, ServerWorld world) {}
+    default void serverTick(ServerPlayerEntity player, ServerWorld world) {}
 }

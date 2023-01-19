@@ -43,6 +43,7 @@ import lych.soulcraft.world.event.challenge.SurvivalChallenge;
 import lych.soulcraft.world.event.manager.ChallengeManager;
 import lych.soulcraft.world.event.manager.EventManager;
 import lych.soulcraft.world.event.manager.WorldTickerManager;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
@@ -269,7 +270,7 @@ public final class CommonEventListener {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.side == LogicalSide.SERVER) {
+        if (event.phase == TickEvent.Phase.END) {
             List<PlayerBuff> buffs = new ArrayList<>();
             for (PlayerBuff playerBuff : PlayerBuffMap.values()) {
                 if (PlayerBuffMap.getAbility(playerBuff).orElseThrow(NullPointerException::new).isOn(event.player)) {
@@ -277,7 +278,11 @@ public final class CommonEventListener {
                 }
             }
             for (PlayerBuff buff : buffs) {
-                buff.tick(event.player, (ServerWorld) event.player.level);
+                if (event.side == LogicalSide.SERVER) {
+                    buff.serverTick((ServerPlayerEntity) event.player, ((ServerPlayerEntity) event.player).getLevel());
+                } else {
+                    buff.clientTick((ClientPlayerEntity) event.player, ((ClientPlayerEntity) event.player).clientLevel);
+                }
             }
             ((IPlayerEntityMixin) event.player).getAdditionalCooldowns().tick();
         }
@@ -333,6 +338,13 @@ public final class CommonEventListener {
                     break;
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCalculatingLootLevel(LootingLevelEvent event) {
+        if (event.getDamageSource().getEntity() instanceof PlayerEntity && ExtraAbility.PILLAGER.isOn((PlayerEntity) event.getDamageSource().getEntity())) {
+            event.setLootingLevel(event.getLootingLevel() + ExtraAbilityConstants.PILLAGER_LOOTING_LEVEL_BONUS);
         }
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -29,5 +30,5 @@ public enum InitialArmorBuff implements PlayerBuff {
     }
 
     @Override
-    public void tick(PlayerEntity player, ServerWorld world) {}
+    public void serverTick(ServerPlayerEntity player, ServerWorld world) {}
 }

@@ -11,6 +11,7 @@ import lych.soulcraft.util.Utils;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -47,7 +48,7 @@ public final class BuffHandler {
         }
         MobEntity mob = (MobEntity) event.getEntityLiving();
         for (MobDebuff debuff : MobDebuffMap.values().stream().filter(debuff -> getApplyTimes(event.getEntity().level, debuff) >= 1).collect(Collectors.toList())) {
-            debuff.tick(mob, event.getEntityLiving().level);
+            debuff.serverTick(mob, (ServerWorld) event.getEntityLiving().level);
         }
     }
 

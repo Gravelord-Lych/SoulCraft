@@ -1,11 +1,13 @@
 package lych.soulcraft.mixin;
 
+import com.mojang.authlib.GameProfile;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.util.AdditionalCooldownTracker;
 import lych.soulcraft.util.ModDataSerializers;
+import lych.soulcraft.util.mixin.IFoodStatsMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -16,9 +18,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ResourceLocationException;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -38,6 +42,7 @@ import static lych.soulcraft.util.ExtraAbilityConstants.ULTRAREACH_VERTICAL_BONU
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerEntityMixin {
     @Shadow @Final public PlayerInventory inventory;
+    @Shadow protected FoodStats foodData;
     @SuppressWarnings("WrongEntityDataParameterClass")
     private static final DataParameter<Set<IExtraAbility>> DATA_EXTRA_ABILITIES = EntityDataManager.defineId(PlayerEntity.class, ModDataSerializers.EXA);
     @Unique
@@ -85,6 +90,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
     public void restoreSavableItemsFrom(PlayerEntity old) {
         ((IPlayerEntityMixin) old).getSavableItems().forEach(inventory::add);
         ((IPlayerEntityMixin) old).getSavableItems().clear();
+    }
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void handleFoodData(World world, BlockPos pos, float yRot, GameProfile profile, CallbackInfo ci) {
+        ((IFoodStatsMixin) foodData).setPlayer((PlayerEntity) (Object) this);
     }
 
     @ModifyArg(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/AxisAlignedBB;)Ljava/util/List;"))

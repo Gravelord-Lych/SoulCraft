@@ -21,10 +21,9 @@ import java.util.function.Supplier;
 final class SoulCraftAPIDummyImpl implements SoulCraftAPI {
     SoulCraftAPIDummyImpl() {}
 
-    @Nullable
     @Override
     public IExtraAbility createExtraAbility(ResourceLocation registryName, int cost, boolean special) {
-        return null;
+        return IExtraAbility.dummy();
     }
 
     @Override
