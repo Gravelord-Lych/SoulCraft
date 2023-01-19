@@ -1,5 +1,8 @@
 package lych.soulcraft.util;
 
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+
 public final class ExtraAbilityConstants {
     public static final float ENHANCED_AUTO_JUMP_MAX_JUMP_HEIGHT_MULTIPLIER = 2;
     public static final float ENHANCED_AUTO_JUMP_COEFFICIENT = 0.19f;
@@ -16,6 +19,12 @@ public final class ExtraAbilityConstants {
     public static final int DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT = 20;
     public static final int WATER_BREATHING_TICKS = 300;
     public static final int WATER_BREATHING_TICKS_WITH_TURTLE_HELMET = 500;
+    public static final float THORNS_MASTER_DAMAGE = 3;
+    public static final double SPEEDUP_AMOUNT = 0.15;
+    public static final double ULTRAREACH_AMOUNT = 1;
+    public static final int RESTORATION_INTERVAL_TICKS = 200;
+    public static final EffectInstance POISONER_POISON_EFFECT = new EffectInstance(Effects.POISON, 20 * 4, 0);
+    public static final double INITIAL_ARMOR_AMOUNT = 4;
 
     private ExtraAbilityConstants() {}
 }
