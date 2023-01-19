@@ -18,6 +18,7 @@ import lych.soulcraft.entity.monster.boss.SkeletonKingEntity;
 import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.extension.ExtraAbility;
+import lych.soulcraft.extension.fire.Fires;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
 import lych.soulcraft.extension.key.InvokableManager;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
@@ -145,7 +146,7 @@ public final class CommonEventListener {
             event.setAmount(event.getAmount() * 2);
         }
         if (event.getSource().getDirectEntity() instanceof SoulArrowEntity && ((IEntityMixin) event.getSource().getDirectEntity()).isOnSoulFire()) {
-            ((IEntityMixin) event.getEntity()).setOnSoulFire(true);
+            ((IEntityMixin) event.getEntity()).setFireOnSelf(Fires.SOUL_FIRE);
         }
 //        }
     }

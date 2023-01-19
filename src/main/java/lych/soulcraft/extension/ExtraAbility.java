@@ -12,6 +12,7 @@ import lych.soulcraft.extension.soulpower.debuff.MobDebuffMap;
 import lych.soulcraft.extension.soulpower.debuff.MonsterSabotageDebuff;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -214,8 +215,10 @@ public class ExtraAbility implements IExtraAbility {
     @Override
     public int compareTo(IExtraAbility o) {
         if (isSpecial() != o.isSpecial()) {
-            return isSpecial() ? 1 : -1;
+            return isSpecial() ? -1 : 1;
         }
-        return getRegistryName().compareTo(o.getRegistryName());
+        String s1 = I18n.get(getDisplayName().getString());
+        String s2 = I18n.get(getDisplayName().getString());
+        return s1.compareTo(s2);
     }
 }

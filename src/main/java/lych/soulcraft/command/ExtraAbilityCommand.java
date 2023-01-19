@@ -79,7 +79,7 @@ public final class ExtraAbilityCommand {
         }
         int count = 0;
         context.getSource().sendSuccess(new TranslationTextComponent(SoulCraft.prefixMsg("commands", "exa.show_extra_abilities"), player.getDisplayName()), broadcastToAdmins);
-        for (IExtraAbility exa : ((IPlayerEntityMixin) player).getExtraAbilities().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
+        for (IExtraAbility exa : ((IPlayerEntityMixin) player).getExtraAbilities().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList())) {
             context.getSource().sendSuccess(exa.getDisplayName().copy().withStyle(exa.getStyle()), false);
             count++;
         }
