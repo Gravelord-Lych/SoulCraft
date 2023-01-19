@@ -94,12 +94,12 @@ public abstract class EntityMixin implements IEntityMixin {
     private boolean reversed;
     @Unique
     @NotNull
-    private Fire fireOnSelf = Fires.empty();
+    private Fire fireOnSelf = Fire.empty();
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void defineExtraData(CallbackInfo ci) {
         entityData.define(DATA_HIGHLIGHT_COLOR, Optional.empty());
-        entityData.define(DATA_FIRE_ID, Fires.empty().getId());
+        entityData.define(DATA_FIRE_ID, Fire.empty().getId());
         entityData.define(DATA_REVERSED, false);
         fluidHeight = new Object2DoubleArrayMap<>(4);
     }
@@ -149,7 +149,7 @@ public abstract class EntityMixin implements IEntityMixin {
     @Unique
     @Override
     public void setOnSoulFire(boolean onSoulFire) {
-        setFireOnSelf(onSoulFire ? Fires.SOUL_FIRE : Fires.empty());
+        setFireOnSelf(onSoulFire ? Fires.SOUL_FIRE : Fire.empty());
     }
 
     @Override
@@ -183,7 +183,7 @@ public abstract class EntityMixin implements IEntityMixin {
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isInLava()Z", ordinal = 1))
     private void synchronizeData(CallbackInfo ci) {
         if (getRemainingFireTicks() <= 0) {
-            setFireOnSelf(Fires.empty());
+            setFireOnSelf(Fire.empty());
         }
         adjustLava();
         getFireOnSelf().entityOnFire((Entity) (Object) this);

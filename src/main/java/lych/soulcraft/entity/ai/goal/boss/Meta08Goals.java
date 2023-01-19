@@ -206,7 +206,7 @@ public final class Meta08Goals {
             Vector3d targetPos = Vector3d.atBottomCenterOf(pos).add(0, 0, MathHelper.clamp(distance * 0.5, 5, 10));
 //          Summon 8 robots instead of 6 if creative.
             for (int degree = 0; degree < 360; degree += meta8.isCreative() ? 45 : 60) {
-                Vector3d rotated = Vectors.rotate(targetPos, srcPos, Math.toRadians(degree), true);
+                Vector3d rotated = Vectors.rotateTo(targetPos, srcPos, Math.toRadians(degree), true);
                 summonPositions.add(new Vector3d(rotated.x, level.getHeightmapPos(Heightmap.Type.WORLD_SURFACE, new BlockPos(rotated)).getY(), rotated.z));
             }
         }

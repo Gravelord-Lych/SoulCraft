@@ -44,11 +44,11 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER));
     public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
     public static final IExtraAbility ULTRAREACH = create(prefix(SCExaNames.ULTRAREACH));
-    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 5);
+    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 8);
 
     private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>();
     private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>();
-    private static final int DEFAULT_COST = 3;
+    private static final int DEFAULT_COST = 4;
     @NotNull
     private final ResourceLocation registryName;
     private final int cost;

@@ -31,11 +31,11 @@ public final class Vectors {
         return clockwise ? new Vector3d(center.x + posToRotate.z - center.z, posToRotate.y, center.z - posToRotate.x + center.x) : new Vector3d(center.x - posToRotate.z + center.z, posToRotate.y, center.z + posToRotate.x - center.x);
     }
 
-    public static Vector3d rotate(Vector3d posToRotate,  double rad, boolean clockwise) {
-        return rotate(posToRotate, Vector3d.ZERO, rad, clockwise);
+    public static Vector3d rotateTo(Vector3d posToRotate, double rad, boolean clockwise) {
+        return rotateTo(posToRotate, Vector3d.ZERO, rad, clockwise);
     }
 
-    public static Vector3d rotate(Vector3d posToRotate, Vector3d center, double rad, boolean clockwise) {
+    public static Vector3d rotateTo(Vector3d posToRotate, Vector3d center, double rad, boolean clockwise) {
         double distanceToCenter = posToRotate.distanceTo(center);
         if (rad == 0) {
             return new Vector3d(center.x, posToRotate.y, center.z - distanceToCenter);
@@ -50,7 +50,7 @@ public final class Vectors {
 
     public static Vector3d midpoint(Vector3d a, Vector3d b) {
         if (Objects.equals(a, b)) {
-            return a;
+            return copyOf(a);
         }
         return new Vector3d((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2);
     }
@@ -65,5 +65,9 @@ public final class Vectors {
 
     public static Vector3d randomVector(Random random, double length) {
         return randomVector(random).normalize().scale(length);
+    }
+
+    public static Vector3d copyOf(Vector3d vec) {
+        return new Vector3d(vec.x, vec.y, vec.z);
     }
 }

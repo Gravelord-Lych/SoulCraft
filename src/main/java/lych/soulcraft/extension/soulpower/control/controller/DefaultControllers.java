@@ -1,7 +1,7 @@
 package lych.soulcraft.extension.soulpower.control.controller;
 
 import lych.soulcraft.api.event.RegisterControlledMobBehaviorsEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import static lych.soulcraft.SoulCraft.prefix;
 import static lych.soulcraft.extension.soulpower.control.controller.ControlledMobBehavior.register;
@@ -13,6 +13,6 @@ public final class DefaultControllers {
     private DefaultControllers() {}
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.post(new RegisterControlledMobBehaviorsEvent());
+        FMLJavaModLoadingContext.get().getModEventBus().post(new RegisterControlledMobBehaviorsEvent());
     }
 }

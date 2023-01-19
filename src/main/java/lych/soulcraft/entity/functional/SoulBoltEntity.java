@@ -39,6 +39,7 @@ public class SoulBoltEntity extends Entity implements IHasOwner<LivingEntity> {
 
     public SoulBoltEntity(EntityType<? extends SoulBoltEntity> type, World world) {
         super(type, world);
+        noCulling = true;
     }
 
     @Override

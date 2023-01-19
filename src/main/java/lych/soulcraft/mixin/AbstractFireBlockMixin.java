@@ -1,10 +1,12 @@
 package lych.soulcraft.mixin;
 
+import lych.soulcraft.extension.fire.Fire;
 import lych.soulcraft.util.mixin.IAbstractFireBlockMixin;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractFireBlock.class)
 public abstract class AbstractFireBlockMixin implements IAbstractFireBlockMixin {
@@ -33,5 +36,16 @@ public abstract class AbstractFireBlockMixin implements IAbstractFireBlockMixin 
     @Inject(method = "entityInside", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;hurt(Lnet/minecraft/util/DamageSource;F)Z", shift = At.Shift.AFTER))
     private void handleEntityInside(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         getFireType().entityInsideFire(state, world, pos, entity);
+    }
+
+    @Inject(method = "getState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/IBlockReader;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"), cancellable = true)
+    private static void addMoreFireBlocks(IBlockReader reader, BlockPos pos, CallbackInfoReturnable<BlockState> cir) {
+        BlockState state = reader.getBlockState(pos.below());
+        for (Fire fire : Fire.getTrueFires()) {
+            if (fire.canSurviveOnBlock(reader, pos, state)) {
+                cir.setReturnValue(fire.getState(reader, pos));
+                break;
+            }
+        }
     }
 }

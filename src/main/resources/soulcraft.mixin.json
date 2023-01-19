@@ -9,6 +9,7 @@
     "AbstractFireBlockMixin",
     "ArrowEntityAccessor",
     "AttributesMixin",
+    "BlocksMixin",
     "BowItemMixin",
     "BrainMixin",
     "EntityDamageSourceAccessor",

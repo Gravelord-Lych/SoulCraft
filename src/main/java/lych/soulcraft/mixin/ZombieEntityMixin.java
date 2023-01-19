@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ZombieEntityMixin {
     @Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;setSecondsOnFire(I)V", shift = At.Shift.AFTER))
     private void makeTargetOnSoulFire(Entity target, CallbackInfoReturnable<Boolean> cir) {
-        if (((IEntityMixin) this).isOnSoulFire()) {
-            ((IEntityMixin) target).setOnSoulFire(true);
-        }
+        ((IEntityMixin) target).setFireOnSelf(((IEntityMixin) this).getFireOnSelf());
     }
 }

@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends AbstractArrowEntity implements ITridentEntityMixin {
     @Shadow @Final private static DataParameter<Boolean> ID_FOIL;
+    @SuppressWarnings("WrongEntityDataParameterClass")
     private static final DataParameter<Boolean> ID_SOUL_FOIL = EntityDataManager.defineId(TridentEntity.class, DataSerializers.BOOLEAN);
 
     private TridentEntityMixin(EntityType<? extends AbstractArrowEntity> type, World world) {
