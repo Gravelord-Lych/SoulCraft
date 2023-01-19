@@ -34,7 +34,7 @@ public class SoulBoltRenderer extends EntityRenderer<SoulBoltEntity> {
                 x2Offs = (float) ((double) x2Offs * ((double) k * 0.1D + 1.0D));
                 float xOffs = 0.1F + (float) i * 0.2F;
                 xOffs *= (float) (k - 1) * 0.1F + 1.0F;
-                float r = 0.6f;
+                float r = 0.5f;
                 float g = 0.9f;
                 float b = 0.95f;
                 quad(mat, builder, x, y, k, x, y, r, g, b, x2Offs, xOffs, false, false, true, false);
