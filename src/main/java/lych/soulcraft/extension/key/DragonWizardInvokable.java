@@ -14,13 +14,7 @@ public enum DragonWizardInvokable implements IExtraAbilityRelatedInvokable {
     }
 
     @Override
-    public int requiredRecentlyPressed() {
-//      Double-click
-        return ModKeyInputs.DRAGON_WIZARD_KEY.getKey().getValue();
-    }
-
-    @Override
-    public int getInvokeResult(ServerPlayerEntity player, int recentlyPressed) {
+    public int getInvokeResult(ServerPlayerEntity player) {
         GravitationalDragonFireballEntity fireball = new GravitationalDragonFireballEntity(player, player.level);
         fireball.shootFromRotation(player, player.xRot, player.yRot, 0, 0.75f, 1);
         if (player.getLevel().addFreshEntity(fireball)) {
@@ -30,7 +24,7 @@ public enum DragonWizardInvokable implements IExtraAbilityRelatedInvokable {
     }
 
     @Override
-    public int getCooldown(ServerPlayerEntity player, int recentlyPressed) {
+    public int getCooldown(ServerPlayerEntity player) {
         return 100;
     }
 }

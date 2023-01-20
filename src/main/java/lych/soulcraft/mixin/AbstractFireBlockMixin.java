@@ -30,12 +30,12 @@ public abstract class AbstractFireBlockMixin implements IAbstractFireBlockMixin 
 
     @Redirect(method = "entityInside", at = @At(value = "FIELD", target = "Lnet/minecraft/block/AbstractFireBlock;fireDamage:F"))
     private float hurtEntityInside(AbstractFireBlock instance, BlockState state, World world, BlockPos pos, Entity entity) {
-        return ((IAbstractFireBlockMixin) instance).getFireType().getFireDamage(entity, world);
+        return ((IAbstractFireBlockMixin) instance).getApplicableFire(entity).getFireDamage(entity, world);
     }
 
     @Inject(method = "entityInside", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;hurt(Lnet/minecraft/util/DamageSource;F)Z", shift = At.Shift.AFTER))
     private void handleEntityInside(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        getFireType().entityInsideFire(state, world, pos, entity);
+        getApplicableFire(entity).entityInsideFire(state, world, pos, entity);
     }
 
     @Inject(method = "getState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/IBlockReader;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"), cancellable = true)

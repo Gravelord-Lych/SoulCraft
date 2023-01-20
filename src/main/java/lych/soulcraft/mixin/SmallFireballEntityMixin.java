@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(SmallFireballEntity.class)
-public class SmallFireballEntityMixin extends AbstractFireballEntity {
+public abstract class SmallFireballEntityMixin extends AbstractFireballEntity {
     public SmallFireballEntityMixin(EntityType<? extends AbstractFireballEntity> type, World world) {
         super(type, world);
         throw new UnsupportedOperationException();

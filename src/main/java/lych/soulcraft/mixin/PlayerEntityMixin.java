@@ -39,12 +39,13 @@ import java.util.*;
 import static lych.soulcraft.util.ExtraAbilityConstants.ULTRAREACH_HORIZONTAL_BONUS;
 import static lych.soulcraft.util.ExtraAbilityConstants.ULTRAREACH_VERTICAL_BONUS;
 
+@SuppressWarnings("WrongEntityDataParameterClass")
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerEntityMixin {
     @Shadow @Final public PlayerInventory inventory;
     @Shadow protected FoodStats foodData;
-    @SuppressWarnings("WrongEntityDataParameterClass")
     private static final DataParameter<Set<IExtraAbility>> DATA_EXTRA_ABILITIES = EntityDataManager.defineId(PlayerEntity.class, ModDataSerializers.EXA);
+    private boolean isStatic = true;
     @Unique
     private final Map<EntityType<?>, Integer> bossTierMap = new HashMap<>();
     @Unique
@@ -57,7 +58,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void defineExaData(CallbackInfo ci) {
+    private void defineMoreData(CallbackInfo ci) {
         entityData.define(DATA_EXTRA_ABILITIES, new LinkedHashSet<>());
     }
 
@@ -155,7 +156,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
                 ResourceLocation registryName = ResourceLocation.tryParse(singleExa.getString("RegistryName"));
                 Objects.requireNonNull(registryName, "Registry name should be non-null");
                 if (!ExtraAbility.getOptional(registryName).isPresent()) {
-                    SoulCraft.LOGGER.warn(String.format("Found unknown Extra Ability: %s, ignored", registryName));
+                    SoulCraft.LOGGER.warn(ExtraAbility.MARKER, String.format("Found unknown Extra Ability: %s, ignored", registryName));
                 }
                 ExtraAbility.getOptional(registryName).ifPresent(set::add);
             }
@@ -207,5 +208,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
             return null;
         }
         return type;
+    }
+
+    @Override
+    @Unique
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    @Override
+    @Unique
+    public void setStatic(boolean isStatic) {
+        this.isStatic = isStatic;
     }
 }

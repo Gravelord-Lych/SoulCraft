@@ -9,23 +9,21 @@ public interface IExtraAbilityRelatedInvokable extends IConditionalInvokable {
     int FAILURE = 0;
 
     @Override
-    default void doAccept(ServerPlayerEntity player, int recentlyPressed) {
+    default void doAccept(ServerPlayerEntity player) {
         int cooldown = ((IPlayerEntityMixin) player).getAdditionalCooldowns().getCooldownRemaining(requiredAbility().getRegistryName());
-        if (cooldown == 0 && (requiredRecentlyPressed() == -1 || recentlyPressed == requiredRecentlyPressed()) && getInvokeResult(player, recentlyPressed) == SUCCESS) {
-            ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(requiredAbility().getRegistryName(), getCooldown(player, recentlyPressed));
+        if (cooldown == 0 && getInvokeResult(player) == SUCCESS) {
+            ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(requiredAbility().getRegistryName(), getCooldown(player));
         }
     }
 
     @Override
-    default boolean canUse(ServerPlayerEntity player, int recentlyPressed) {
+    default boolean canUse(ServerPlayerEntity player) {
         return requiredAbility().isOn(player);
     }
 
     IExtraAbility requiredAbility();
 
-    int requiredRecentlyPressed();
+    int getInvokeResult(ServerPlayerEntity player);
 
-    int getInvokeResult(ServerPlayerEntity player, int recentlyPressed);
-
-    int getCooldown(ServerPlayerEntity player, int recentlyPressed);
+    int getCooldown(ServerPlayerEntity player);
 }

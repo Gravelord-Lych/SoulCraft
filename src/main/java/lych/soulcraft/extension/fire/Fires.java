@@ -4,12 +4,15 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.event.RegisterFiresEvent;
+import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.tag.ModFluidTags;
 import lych.soulcraft.util.FireBlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoulFireBlock;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -49,6 +52,15 @@ public final class Fires {
         @Override
         public boolean canSurviveOnBlock(IBlockReader reader, BlockPos firePos, BlockState state, Fire fire) {
             return SoulFireBlock.canSurviveOnBlock(state.getBlock());
+        }
+
+        @Override
+        public Fire applyTo(Entity entity, Fire fire) {
+            return nonSoulInvulnerable(entity) ? fire : Fires.FIRE;
+        }
+
+        private static boolean nonSoulInvulnerable(Entity entity) {
+            return !(entity instanceof PlayerEntity && ExtraAbility.SOUL_INVULNERABILITY.isOn((PlayerEntity) entity));
         }
     }
 }

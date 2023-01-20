@@ -175,8 +175,12 @@ public final class Fire {
         try {
             return handler.getFireDamage(entity, world, this);
         } catch (UnableToHandleException e) {
-            return fireDamage;
+            return getDefaultFireDamage();
         }
+    }
+
+    public float getDefaultFireDamage() {
+        return fireDamage;
     }
 
     public void entityInsideFire(BlockState fireBlockState, World world, BlockPos pos, Entity entity) {
@@ -195,6 +199,22 @@ public final class Fire {
         return priority;
     }
 
+    public boolean canApplyTo(Entity entity) {
+        try {
+            return handler.canApplyTo(entity, this);
+        } catch (UnableToHandleException e) {
+            return true;
+        }
+    }
+
+    public Fire applyTo(Entity entity) {
+        try {
+            return handler.applyTo(entity, this);
+        } catch (UnableToHandleException e) {
+            return this;
+        }
+    }
+
     public boolean canReplace(Fire oldFire) {
         return canReplace(this, oldFire);
     }
@@ -207,17 +227,11 @@ public final class Fire {
     }
 
     public Pair<RenderMaterial, RenderMaterial> getFireOverlays() {
-        if (isRealFire()) {
-            return Utils.getOrDefault(fireOverlays, DEFAULT_FIRE_OVERLAYS);
-        }
-        throw new UnsupportedOperationException("Non-real fire cannot have overlays");
+        return Utils.getOrDefault(fireOverlays, DEFAULT_FIRE_OVERLAYS);
     }
 
     public ITag<Fluid> getLavaTag() {
-        if (isRealFire()) {
-            return Utils.getOrDefault(lavaTag, FluidTags.LAVA);
-        }
-        throw new UnsupportedOperationException("Non-real fire cannot have lavas");
+        return Utils.getOrDefault(lavaTag, FluidTags.LAVA);
     }
 
     @SuppressWarnings("unused")
@@ -231,6 +245,14 @@ public final class Fire {
         }
 
         default float getFireDamage(Entity entity, World world, Fire fire) throws UnableToHandleException {
+            throw new UnableToHandleException();
+        }
+
+        default boolean canApplyTo(Entity entity, Fire fire) throws UnableToHandleException {
+            throw new UnableToHandleException();
+        }
+
+        default Fire applyTo(Entity entity, Fire fire) throws UnableToHandleException {
             throw new UnableToHandleException();
         }
 

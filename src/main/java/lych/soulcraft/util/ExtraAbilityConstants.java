@@ -1,21 +1,19 @@
 package lych.soulcraft.util;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Streams;
-import lych.soulcraft.extension.ExtraAbility;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.math.MathHelper;
 
 public final class ExtraAbilityConstants {
-//  Constant fields.
     public static final float ENHANCED_AUTO_JUMP_MAX_JUMP_HEIGHT_MULTIPLIER = 2;
     public static final float ENHANCED_AUTO_JUMP_COEFFICIENT = 0.19f;
     public static final float FALL_BUFFER_AMOUNT = 5;
     public static final double MONSTER_VIEW_RANGE = 16;
     public static final double BASE_TELEPORTATION_RADIUS = 19;
+    public static final double BASE_WITHER_REACH_DISTANCE = 19;
+    public static final float WITHER_REACH_DAMAGE = 1.5f;
+    public static final int WITHER_REACH_DAMAGE_INTERVAL = 20;
     public static final int TELEPORTATION_COOLDOWN = 300;
     public static final float FANGS_DAMAGE = 4;
     public static final double FANGS_SPACING = 1.25;
@@ -37,37 +35,28 @@ public final class ExtraAbilityConstants {
     public static final double IMITATOR_VISIBILITY_MODIFIER = 0.6;
     public static final float NUTRITIONIST_NUTRITION_AND_SATURATION_MODIFIER = 1.25f;
     public static final ImmutableList<EffectInstance> GOLD_PREFERENCE_EFFECTS = ImmutableList.of(
-            new ImmutableEffectInstance(Effects.DIG_SPEED, 20, 1, false, false, true),
-            new ImmutableEffectInstance(Effects.MOVEMENT_SPEED, 20, 1, false, false, true));
+            new ImmutableEffectInstance(Effects.DIG_SPEED, 10, 1, false, false, true),
+            new ImmutableEffectInstance(Effects.MOVEMENT_SPEED, 10, 1, false, false, true));
     public static final int FROST_RESISTANCE_MONSTER_EFFECT_DURATION = 5;
     public static final int FROST_RESISTANCE_MONSTER_EFFECT_AMPLIFIER = 0;
     public static final double FROST_RESISTANCE_SLOWDOWN_RADIUS = 4;
     public static final int PILLAGER_LOOTING_LEVEL_BONUS = 1;
+    public static final float STATIC_DEFENDER_DAMAGE_MULTIPLIER = 0.6f;
+    public static final double BOW_EXPERT_DOUBLE_DURABILITY_COST_PROBABILITY = 0.5;
+    public static final double SLIME_POWER_STICKY_EFFECT_ADDITIONAL_KNOCKBACK_STRENGTH = 0.5;
+    public static final double SLIME_POWER_STICKY_EFFECT_SPEED_NERF = -0.07;
+    public static final double MONSTER_SABOTAGE_AMOUNT = -0.1;
+    public static final double PERMANENT_SLOWDOWN_AMOUNT = -0.1;
+    public static final double FAVORED_TRADER_DISCOUNT = 0.1;
+    public static final ImmutableList<EffectInstance> ESCAPER_EFFECTS = ImmutableList.of(
+            new ImmutableEffectInstance(Effects.WEAKNESS, 30, 1, false, false, true),
+            new ImmutableEffectInstance(Effects.MOVEMENT_SLOWDOWN, 30, 1));
+    public static final int CHEMIST_RANDOM_INTERVAL = 600;
+    public static final int CHEMIST_DURATION = 80;
+    public static final int CHEMIST_AMPLIFIER = 1;
+    public static final ImmutableList<Effect> CHEMIST_AVAILABLE_EFFECTS = ImmutableList.of(Effects.REGENERATION, Effects.DAMAGE_RESISTANCE, Effects.MOVEMENT_SPEED);
+    public static final double PURIFICATION_PROBABILITY = 0.5;
+    public static final float DESTROYER_SPEED_MULTIPLIER = 1.5f;
 
     private ExtraAbilityConstants() {}
-
-//  Functions.
-    public static float calculateNethermanAttackDamageMultiplier(float temperature, boolean onFire) {
-        return MathHelper.clamp((1 + temperature / 5) * (onFire ? 1.25f : 1), 0.9f, 2);
-    }
-
-    public static float calculateFrostResistanceDamageMultiplier(float temperature, boolean onFire) {
-        float damageMultiplier = MathHelper.clamp(0.5f + (temperature + 1) / 6, 0.5f, 1);
-        return onFire ? (damageMultiplier + 1) / 2 : damageMultiplier;
-    }
-
-    public static boolean shouldApplyGoldPreference(PlayerEntity player) {
-        return ExtraAbility.GOLD_PREFERENCE.isOn(player) && Streams.stream(player.getAllSlots()).anyMatch(ExtraAbilityConstants::isGold);
-    }
-
-    private static boolean isGold(ItemStack stack) {
-        Item item = stack.getItem();
-        if (item instanceof TieredItem && ((TieredItem) item).getTier() == ItemTier.GOLD) {
-            return true;
-        }
-        if (item instanceof ArmorItem && ((ArmorItem) item).getMaterial() == ArmorMaterial.GOLD) {
-            return true;
-        }
-        return Utils.getRegistryName(item).getPath().contains("gold");
-    }
 }

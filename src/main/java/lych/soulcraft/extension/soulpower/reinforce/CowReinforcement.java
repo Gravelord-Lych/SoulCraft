@@ -1,6 +1,7 @@
 package lych.soulcraft.extension.soulpower.reinforce;
 
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.EntityUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +40,7 @@ public class CowReinforcement extends Reinforcement {
 
     @SubscribeEvent
     public void onPotionApply(PotionEvent.PotionApplicableEvent event) {
-        if (EntityUtils.isHarmful(event.getPotionEffect())) {
+        if (ModEffectUtils.isHarmful(event.getPotionEffect())) {
             LivingEntity entity = event.getEntityLiving();
             ItemStack stack = entity.getItemInHand(Hand.MAIN_HAND);
             int level = getLevel(stack);

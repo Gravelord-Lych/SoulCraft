@@ -5,24 +5,23 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.block.ModBlocks;
-import lych.soulcraft.client.gui.screen.OptiFineWarningScreen;
 import lych.soulcraft.client.gui.screen.SEGeneratorScreen;
 import lych.soulcraft.client.gui.screen.SEStorageScreen;
 import lych.soulcraft.client.gui.screen.SoulReinforcementTableScreen;
 import lych.soulcraft.client.render.renderer.ModEntityRenderers;
 import lych.soulcraft.client.render.world.dimension.ModDimensionRenderers;
 import lych.soulcraft.client.shader.ModShaders;
-import lych.soulcraft.effect.ModEffects;
 import lych.soulcraft.gui.container.ModContainers;
 import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SoulBowItem;
-import lych.soulcraft.util.OptiFineHandler;
+import lych.soulcraft.network.StaticStatusHandler;
 import lych.soulcraft.util.SoulEnergies;
+import lych.soulcraft.util.mixin.IEntityMixin;
+import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import lych.soulcraft.world.IChallengeTimeTextComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -37,9 +36,11 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -57,16 +58,6 @@ public final class ClientEventListener {
     @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, value = Dist.CLIENT)
     public static class ForgeEventListener {
         private ForgeEventListener() {}
-
-        private static boolean optifineWarningShown;
-
-        @SubscribeEvent
-        public static void showOptiFineWarning(GuiScreenEvent.InitGuiEvent.Post event) {
-            if (false && !ModList.get().isLoaded("twilightforest") && OptiFineHandler.isOptiFineLoaded() && !optifineWarningShown && event.getGui() instanceof MainMenuScreen) {
-                optifineWarningShown = true;
-                Minecraft.getInstance().setScreen(new OptiFineWarningScreen(event.getGui()));
-            }
-        }
 
         @SubscribeEvent
         public static void renderLasers(RenderWorldLastEvent event) {
@@ -144,11 +135,13 @@ public final class ClientEventListener {
 
         @SubscribeEvent
         public static void onInputUpdate(InputUpdateEvent event) {
-            if (event.getPlayer().hasEffect(ModEffects.REVERSION)) {
-                MovementInput input = event.getMovementInput();
+            MovementInput input = event.getMovementInput();
+            if (((IEntityMixin) event.getPlayer()).isReversed()) {
                 input.leftImpulse = -input.leftImpulse;
                 input.forwardImpulse = -input.forwardImpulse;
             }
+            ((IPlayerEntityMixin) event.getPlayer()).setStatic(input.leftImpulse == 0 && input.forwardImpulse == 0 && !input.jumping);
+            StaticStatusHandler.INSTANCE.sendToServer(((IPlayerEntityMixin) event.getPlayer()).isStatic());
         }
 
         @SubscribeEvent

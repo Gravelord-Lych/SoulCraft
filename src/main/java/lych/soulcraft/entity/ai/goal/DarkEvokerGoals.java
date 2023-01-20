@@ -5,6 +5,7 @@ import lych.soulcraft.entity.iface.ISpellCastable;
 import lych.soulcraft.entity.Soul;
 import lych.soulcraft.entity.monster.raider.DarkEvokerEntity;
 import lych.soulcraft.util.CollectionUtils;
+import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.EntityUtils;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
@@ -118,8 +119,10 @@ public final class DarkEvokerGoals {
         private float clearEffect(List<? extends LivingEntity> list) {
             int effectValue = 0;
             for (LivingEntity entity : list) {
-                if (mob.isAlliedTo(entity) || entity instanceof VexEntity && mob.isAlliedTo(((VexEntity) entity).getOwner()) || entity instanceof IHasOwner<?> && mob.isAlliedTo(((IHasOwner<?>) entity).getOwner()))
-                effectValue += EntityUtils.removeEffect(entity, EntityUtils::isBeneficial);
+                if (mob.isAlliedTo(entity) || entity instanceof VexEntity && mob.isAlliedTo(((VexEntity) entity).getOwner()) || entity instanceof IHasOwner<?> && mob.isAlliedTo(((IHasOwner<?>) entity).getOwner())) {
+                    continue;
+                }
+                effectValue += EntityUtils.removeEffect(entity, ModEffectUtils::isBeneficial);
                 if (mob.level.getDifficulty() == Difficulty.NORMAL || mob.level.getDifficulty() == Difficulty.HARD) {
                     entity.addEffect(new EffectInstance(Effects.WITHER, 20 * (mob.level.getDifficulty() == Difficulty.HARD ? 15 : 7), 0));
                 }

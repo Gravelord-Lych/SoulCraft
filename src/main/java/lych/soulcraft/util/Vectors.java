@@ -70,4 +70,8 @@ public final class Vectors {
     public static Vector3d copyOf(Vector3d vec) {
         return new Vector3d(vec.x, vec.y, vec.z);
     }
+
+    public static Vector3d copyWithoutY(Vector3d vec) {
+        return new Vector3d(vec.x, 0, vec.z);
+    }
 }

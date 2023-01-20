@@ -14,19 +14,19 @@ public interface IExtraAbility extends Comparable<IExtraAbility> {
     ResourceLocation getRegistryName();
 
     /**
-     * @return True if the player has this <i>Extra Ability</i>.
+     * @return True if the player has this <i>Extra Ability</i>
      */
     boolean isOn(PlayerEntity player);
 
     /**
      * Add this <i>Extra Ability</i> to the specified player.
-     * @return True if successfully added. False if player had this <i>Extra Ability</i>.
+     * @return True if successfully added. False if player had this <i>Extra Ability</i>
      */
     boolean addTo(PlayerEntity player);
 
     /**
      * Remove this <i>Extra Ability</i> from the specified player.
-     * @return True if successfully removed. False if player did not have this <i>Extra Ability</i>.
+     * @return True if successfully removed. False if player did not have this <i>Extra Ability</i>
      */
     boolean removeFrom(PlayerEntity player);
 
@@ -37,6 +37,12 @@ public interface IExtraAbility extends Comparable<IExtraAbility> {
      * @return The count of <i>Soul Container</i>
      */
     int getSoulContainerCost();
+
+    /**
+     * Returns the count of <i>SE</i> needed to apply the <i>Extra Ability</i> to a player.
+     * @return The count of <i>SE</i>
+     */
+    int getSECost();
 
     /**
      * Indicates if the <i>Extra Ability</i> is special.
@@ -96,6 +102,11 @@ public interface IExtraAbility extends Comparable<IExtraAbility> {
 
         @Override
         public int getSoulContainerCost() {
+            return 0;
+        }
+
+        @Override
+        public int getSECost() {
             return 0;
         }
 

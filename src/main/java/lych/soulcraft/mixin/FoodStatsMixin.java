@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(FoodStats.class)
-public class FoodStatsMixin implements IFoodStatsMixin {
+public abstract class FoodStatsMixin implements IFoodStatsMixin {
     @Nullable
     private PlayerEntity player;
 

@@ -7,6 +7,7 @@ import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.exa.SCExaNames;
+import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.extension.soulpower.buff.*;
 import lych.soulcraft.extension.soulpower.debuff.FrostResistanceDebuff;
 import lych.soulcraft.extension.soulpower.debuff.MobDebuffMap;
@@ -21,6 +22,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,31 +32,45 @@ import java.util.*;
 import static lych.soulcraft.SoulCraft.prefix;
 
 public class ExtraAbility implements IExtraAbility {
-    public static final IExtraAbility DRAGON_WIZARD = create(prefix(SCExaNames.DRAGON_WIZARD));
+    public static final Marker MARKER = MarkerManager.getMarker("ExtraAbilities");
+    public static final IExtraAbility ARMOR_PIERCER = create(prefix(SCExaNames.ARMOR_PIERCER));
+    public static final IExtraAbility BOW_EXPERT = create(prefix(SCExaNames.BOW_EXPERT), 5);
+    public static final IExtraAbility CHEMIST = create(prefix(SCExaNames.CHEMIST));
+    public static final IExtraAbility CLIMBER = create(prefix(SCExaNames.CLIMBER), 6);
+    public static final IExtraAbility DESTROYER = create(prefix(SCExaNames.DESTROYER), 5);
+    public static final IExtraAbility DRAGON_WIZARD = createSpecial(prefix(SCExaNames.DRAGON_WIZARD));
     public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(SCExaNames.ENHANCED_AUTO_JUMP));
+    public static final IExtraAbility ESCAPER = create(prefix(SCExaNames.ESCAPER), 5);
     public static final IExtraAbility EXPLOSION_MASTER = create(prefix(SCExaNames.EXPLOSION_MASTER));
     public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
-    public static final IExtraAbility FANGS_SUMMONER = create(prefix(SCExaNames.FANGS_SUMMONER));
-    public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE), 6, false);
+    public static final IExtraAbility FANGS_SUMMONER = createSpecial(prefix(SCExaNames.FANGS_SUMMONER));
+    public static final IExtraAbility FAVORED_TRADER = create(prefix(SCExaNames.FAVORED_TRADER));
+    public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE), 6);
     public static final IExtraAbility FROST_RESISTANCE = create(prefix(SCExaNames.FROST_RESISTANCE));
     public static final IExtraAbility GOLD_PREFERENCE = create(prefix(SCExaNames.GOLD_PREFERENCE));
     public static final IExtraAbility IMITATOR = create(prefix(SCExaNames.IMITATOR));
     public static final IExtraAbility INITIAL_ARMOR = create(prefix(SCExaNames.INITIAL_ARMOR));
-    public static final IExtraAbility MONSTER_SABOTAGE = create(prefix(SCExaNames.MONSTER_SABOTAGE));
+    public static final IExtraAbility MONSTER_SABOTAGE = createSpecial(prefix(SCExaNames.MONSTER_SABOTAGE));
     public static final IExtraAbility MONSTER_VIEW = create(prefix(SCExaNames.MONSTER_VIEW));
     public static final IExtraAbility NETHERMAN = create(prefix(SCExaNames.NETHERMAN));
-    public static final IExtraAbility NUTRITIONIST = create(prefix(SCExaNames.NUTRITIONIST));
+    public static final IExtraAbility NUTRITIONIST = create(prefix(SCExaNames.NUTRITIONIST), 5);
     public static final IExtraAbility OVERDRIVE = create(prefix(SCExaNames.OVERDRIVE));
+    public static final IExtraAbility PERMANENT_SLOWDOWN = create(prefix(SCExaNames.PERMANENT_SLOWDOWN), 5);
     public static final IExtraAbility PILLAGER = create(prefix(SCExaNames.PILLAGER));
     public static final IExtraAbility POISONER = create(prefix(SCExaNames.POISONER));
-    public static final IExtraAbility PURIFICATION = create(prefix(SCExaNames.PURIFICATION), 6, false);
+    public static final IExtraAbility PURIFICATION = create(prefix(SCExaNames.PURIFICATION), 5);
     public static final IExtraAbility RESTORATION = create(prefix(SCExaNames.RESTORATION));
+    public static final IExtraAbility SLIME_POWER = create(prefix(SCExaNames.SLIME_POWER), 5);
+    public static final IExtraAbility SOUL_INVULNERABILITY = create(prefix(SCExaNames.SOUL_INVULNERABILITY));
     public static final IExtraAbility SPEEDUP = create(prefix(SCExaNames.SPEEDUP));
-    public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER), 6, false);
-    public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
+    public static final IExtraAbility STATIC_DEFENDER = create(prefix(SCExaNames.STATIC_DEFENDER), 5);
+    public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER), 6);
+    public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION), 5);
     public static final IExtraAbility THORNS_MASTER = create(prefix(SCExaNames.THORNS_MASTER));
+    public static final IExtraAbility TRANSFORMATION = create(prefix(SCExaNames.TRANSFORMATION), 5);
     public static final IExtraAbility ULTRAREACH = create(prefix(SCExaNames.ULTRAREACH));
-    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING));
+    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 5);
+    public static final IExtraAbility WITHER_REACH = createSpecial(prefix(SCExaNames.WITHER_REACH));
 
     private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>();
     private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>();
@@ -70,31 +87,44 @@ public class ExtraAbility implements IExtraAbility {
     }
 
     static {
+        register(ARMOR_PIERCER, ArmorPiercerBuff.INSTANCE, EntityType.VINDICATOR);
+        register(BOW_EXPERT, EntityType.SKELETON);
+        register(CHEMIST, ChemistBuff.INSTANCE, EntityType.WITCH);
+        register(CLIMBER, EntityType.SPIDER);
+        register(DESTROYER, EntityType.WOLF);
         register(DRAGON_WIZARD, EntityType.ENDER_DRAGON);
         register(ENHANCED_AUTO_JUMP, EntityType.RABBIT);
+        register(ESCAPER, EscaperBuff.INSTANCE, EntityType.SQUID);
         register(EXPLOSION_MASTER, ExplosionMasterBuff.INSTANCE, EntityType.CREEPER);
         register(FALLING_BUFFER, EntityType.CAT, EntityType.OCELOT, EntityType.CHICKEN, EntityType.GHAST);
         register(FANGS_SUMMONER, EntityType.EVOKER);
-        register(FIRE_RESISTANCE, FireResistanceBuff.INSTANCE, EntityType.BLAZE, EntityType.MAGMA_CUBE);
+        register(FAVORED_TRADER, EntityType.WANDERING_TRADER);
+        register(FIRE_RESISTANCE, FireResistanceBuff.INSTANCE, EntityType.BLAZE, EntityType.MAGMA_CUBE, EntityType.STRIDER);
         register(FROST_RESISTANCE, FrostResistanceBuff.INSTANCE, FrostResistanceDebuff.INSTANCE, EntityType.POLAR_BEAR);
         register(GOLD_PREFERENCE, GoldPreferenceBuff.INSTANCE, EntityType.PIGLIN);
         register(IMITATOR, EntityType.PARROT);
-        register(INITIAL_ARMOR, InitialArmorBuff.INSTANCE, EntityType.ZOMBIE);
-        register(MONSTER_SABOTAGE, MonsterSabotageDebuff.INSTANCE, EntityType.ELDER_GUARDIAN);
+        register(INITIAL_ARMOR, InitialArmorBuff.INSTANCE, EntityType.ZOMBIE, EntityType.SILVERFISH);
+        register(MONSTER_SABOTAGE, MonsterSabotageDebuff.INSTANCE, EntityType.ELDER_GUARDIAN, EntityType.RAVAGER);
         register(MONSTER_VIEW, MonsterViewBuff.INSTANCE, EntityType.BAT, EntityType.PHANTOM);
         register(NETHERMAN, NethermanBuff.INSTANCE, EntityType.HOGLIN, EntityType.ZOGLIN, EntityType.ZOMBIFIED_PIGLIN);
         register(NUTRITIONIST, EntityType.PIG);
         register(OVERDRIVE, EntityType.HUSK);
+        register(PERMANENT_SLOWDOWN, PermanentSlowdownBuff.INSTANCE, EntityType.STRAY);
         register(PILLAGER, EntityType.PILLAGER);
         register(POISONER, PoisonerBuff.INSTANCE, EntityType.BEE, EntityType.CAVE_SPIDER);
         register(PURIFICATION, PurificationBuff.INSTANCE, EntityType.COW, EntityType.MOOSHROOM);
-        register(RESTORATION, RestorationBuff.INSTANCE);
-        register(SPEEDUP, SpeedupBuff.INSTANCE, EntityType.HORSE, EntityType.DONKEY, EntityType.MULE, EntityType.LLAMA, EntityType.TRADER_LLAMA);
+        register(RESTORATION, RestorationBuff.INSTANCE, EntityType.SHEEP);
+        register(SLIME_POWER, SlimePowerBuff.INSTANCE, EntityType.SLIME);
+        register(SOUL_INVULNERABILITY, ModEntities.SOUL_SKELETON, ModEntities.WANDERER);
+        register(SPEEDUP, SpeedupBuff.INSTANCE, EntityType.HORSE, EntityType.DONKEY, EntityType.MULE, EntityType.LLAMA, EntityType.TRADER_LLAMA, EntityType.ZOMBIE_HORSE, EntityType.SKELETON_HORSE);
+        register(STATIC_DEFENDER, StaticDefenderBuff.INSTANCE, EntityType.SHULKER, EntityType.TURTLE);
         register(SWIMMER, SwimmerBuff.INSTANCE, EntityType.DOLPHIN, EntityType.DROWNED);
         register(TELEPORTATION, EntityType.ENDERMAN);
         register(THORNS_MASTER, EntityType.GUARDIAN, EntityType.PUFFERFISH);
+        register(TRANSFORMATION, TransformationBuff.INSTANCE, EntityType.WITHER_SKELETON);
         register(ULTRAREACH, UltrareachBuff.INSTANCE, EntityType.FOX);
         register(WATER_BREATHING, WaterBreathingBuff.INSTANCE, EntityType.COD, EntityType.SALMON, EntityType.TROPICAL_FISH);
+        register(WITHER_REACH, WitherReachBuff.INSTANCE, EntityType.WITHER);
     }
 
     @Nullable
@@ -124,6 +154,10 @@ public class ExtraAbility implements IExtraAbility {
 
     public static IExtraAbility createSpecial(ResourceLocation registryName) {
         return create(registryName, DEFAULT_COST, true);
+    }
+
+    public static IExtraAbility create(ResourceLocation registryName, int cost) {
+        return create(registryName, cost, false);
     }
 
     public static IExtraAbility create(ResourceLocation registryName, int cost, boolean special) {
@@ -202,6 +236,11 @@ public class ExtraAbility implements IExtraAbility {
     @Override
     public int getSoulContainerCost() {
         return cost;
+    }
+
+    @Override
+    public int getSECost() {
+        return getSoulContainerCost() * getSoulContainerCost() * 100 * (isSpecial() ? 10 : 1);
     }
 
     @Override

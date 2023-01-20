@@ -5,24 +5,20 @@ import lych.soulcraft.util.ModEffectUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public enum PurificationBuff implements PlayerBuff {
+public enum TransformationBuff implements PlayerBuff {
     INSTANCE;
 
     @Override
     public void startApplyingTo(PlayerEntity player, World world) {
-        List<EffectInstance> harmfulEffects = new ArrayList<>();
-        for (EffectInstance effect : player.getActiveEffects()) {
-            if (ModEffectUtils.isHarmful(effect)) {
-                harmfulEffects.add(effect);
-            }
+        EffectInstance witherEffect = player.getEffect(Effects.WITHER);
+        if (witherEffect != null) {
+            player.removeEffect(Effects.WITHER);
+            player.addEffect(ModEffectUtils.copyAttributes(Effects.REGENERATION, witherEffect));
         }
-        harmfulEffects.stream().map(EffectInstance::getEffect).forEach(player::removeEffect);
     }
 
     @Override

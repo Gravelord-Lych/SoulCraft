@@ -9,6 +9,7 @@ import lych.soulcraft.entity.ai.goal.wrapper.Goals;
 import lych.soulcraft.entity.iface.ESVMob;
 import lych.soulcraft.entity.monster.boss.esv.SoulControllerEntity;
 import lych.soulcraft.potion.ModPotions;
+import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.util.WeightedRandom;
 import net.minecraft.entity.*;
@@ -130,7 +131,7 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
 
     @Override
     public void doHealTarget(AbstractVoidwalkerEntity healTarget) {
-        Optional<EffectInstance> effect = healTarget.getActiveEffects().stream().filter(EntityUtils::isHarmful).reduce(VoidAlchemistEntity::findEffectToClear);
+        Optional<EffectInstance> effect = healTarget.getActiveEffects().stream().filter(ModEffectUtils::isHarmful).reduce(VoidAlchemistEntity::findEffectToClear);
         effect.map(EffectInstance::getEffect).ifPresent(healTarget::removeEffect);
     }
 
@@ -142,7 +143,7 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
 
     @Override
     public boolean canHeal(AbstractVoidwalkerEntity voidwalker) {
-        return voidwalker.getActiveEffects().stream().anyMatch(EntityUtils::isHarmful);
+        return voidwalker.getActiveEffects().stream().anyMatch(ModEffectUtils::isHarmful);
     }
 
     @Override
@@ -280,7 +281,7 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
 
     @Override
     public boolean canBeAffected(EffectInstance effect) {
-        if (EntityUtils.isHarmful(effect)) {
+        if (ModEffectUtils.isHarmful(effect)) {
             return false;
         }
         return super.canBeAffected(effect);

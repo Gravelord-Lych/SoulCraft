@@ -65,4 +65,8 @@ public interface IPlayerEntityMixin {
     void restoreSavableItemsFrom(PlayerEntity old);
 
     AdditionalCooldownTracker getAdditionalCooldowns();
+
+    boolean isStatic();
+
+    void setStatic(boolean isStatic);
 }

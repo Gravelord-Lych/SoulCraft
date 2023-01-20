@@ -11,6 +11,6 @@ public class ModNetworkingRegistry {
         event.enqueueWork(ClickHandlerNetwork::register);
         event.enqueueWork(InvokableNetwork::register);
         event.enqueueWork(LaserNetwork::register);
-        event.enqueueWork(RecentlyInputNetwork::register);
+        event.enqueueWork(StaticStatusHandler::register);
     }
 }

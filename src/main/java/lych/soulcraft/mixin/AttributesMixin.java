@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(Attributes.class)
-public class AttributesMixin {
+public abstract class AttributesMixin {
     private static final double NEW_MAX_HEALTH = 2147483647.0;
 
     @ModifyConstant(method = "<clinit>", constant = @Constant(doubleValue = 1024, ordinal = 0))

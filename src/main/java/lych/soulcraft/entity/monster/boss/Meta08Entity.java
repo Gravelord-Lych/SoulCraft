@@ -288,7 +288,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
 
     private void clearEffect(LivingEntity entity) {
         if (!level.isClientSide()) {
-            if (EntityUtils.removeEffect(entity, EntityUtils::isBeneficial) > 0) {
+            if (EntityUtils.removeEffect(entity, ModEffectUtils::isBeneficial) > 0) {
                 EntityUtils.addParticlesAroundSelfServerside(entity, (ServerWorld) level, ParticleTypes.HAPPY_VILLAGER, 4 + random.nextInt(3));
             }
         }
@@ -531,7 +531,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
 
     @Override
     public boolean canBeAffected(EffectInstance effect) {
-        if (EntityUtils.isHarmful(effect)) {
+        if (ModEffectUtils.isHarmful(effect)) {
             return level.getDifficulty() != Difficulty.HARD && EntityUtils.shouldApplyEffect(this, effect, false);
         }
         return super.canBeAffected(effect);

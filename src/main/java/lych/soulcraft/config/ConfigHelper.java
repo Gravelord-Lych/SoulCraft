@@ -19,10 +19,6 @@ public final class ConfigHelper {
         return !CommonConfig.DISABLE_SE_BLOCKS_LOOT.get();
     }
 
-    public static int getRecentlyPressCheckInterval() {
-        return CommonConfig.CHECK_RECENTLY_PRESS_TIME.get();
-    }
-
     public static int getUltrareachLengthenPickupDelayAmount() {
         return CommonConfig.ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT.get();
     }

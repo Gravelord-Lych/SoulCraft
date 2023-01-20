@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -29,13 +30,18 @@ public class RavagerReinforcement extends ToolReinforcement {
         if (level >= NO_DIG_SLOWDOWN_LEVEL) {
             event.setNewSpeed(Math.max(event.getNewSpeed(), player.inventory.getDestroySpeed(state)));
         }
-        if (state.getHarvestTool() == ToolType.SHOVEL && level >= INSTABREAK_DIRT_LEVEL) {
+        if (state.is(BlockTags.LEAVES) || state.getHarvestTool() == ToolType.SHOVEL && level >= INSTABREAK_DIRT_LEVEL) {
             event.setNewSpeed(1919810);
         }
     }
 
     @Override
     protected void onBreak(ItemStack stack, PlayerEntity player, BlockState state, int level, BlockEvent.BreakEvent event) {}
+
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
 
     @Override
     public int getMaxLevel() {

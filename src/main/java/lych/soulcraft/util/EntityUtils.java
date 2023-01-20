@@ -28,7 +28,6 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
@@ -209,16 +208,20 @@ public final class EntityUtils {
         return Objects.requireNonNull(entity.getAttribute(attribute), "If you call this method, you must ensure that your entity has the attribute");
     }
 
-    public static void addPermanentModifierIfAbsent(LivingEntity entity, Attribute attribute, AttributeModifier modifier) {
+    public static boolean addPermanentModifierIfAbsent(LivingEntity entity, Attribute attribute, AttributeModifier modifier) {
         if (!getAttribute(entity, attribute).hasModifier(modifier)) {
             getAttribute(entity, attribute).addPermanentModifier(modifier);
+            return true;
         }
+        return false;
     }
 
-    public static void addTransientModifierIfAbsent(LivingEntity entity, Attribute attribute, AttributeModifier modifier) {
+    public static boolean addTransientModifierIfAbsent(LivingEntity entity, Attribute attribute, AttributeModifier modifier) {
         if (!getAttribute(entity, attribute).hasModifier(modifier)) {
             getAttribute(entity, attribute).addTransientModifier(modifier);
+            return true;
         }
+        return false;
     }
 
     public static Comparator<EntityType<?>> comparingEntityType() {
@@ -289,7 +292,7 @@ public final class EntityUtils {
     }
 
     public static boolean isMelee(DamageSource source) {
-        if (source.isProjectile()) {
+        if (source.isProjectile() || !(source instanceof EntityDamageSource)) {
             return false;
         }
         return ("mob".equals(source.getMsgId()) || "player".equals(source.getMsgId())) && !(source instanceof IndirectEntityDamageSource);
@@ -402,26 +405,6 @@ public final class EntityUtils {
             return 0;
         }
         return effectInstancesToRemove.stream().mapToInt(effect -> effect.getDuration() * (effect.getAmplifier() + 1)).sum();
-    }
-
-    public static boolean isBeneficial(EffectInstance effect) {
-        return effect.getEffect().isBeneficial();
-    }
-
-    public static boolean isNeutral(EffectInstance effect) {
-        return isNeutral(effect.getEffect());
-    }
-
-    public static boolean isHarmful(EffectInstance effect) {
-        return isHarmful(effect.getEffect());
-    }
-
-    public static boolean isNeutral(Effect effect) {
-        return effect.getCategory() == EffectType.NEUTRAL;
-    }
-
-    public static boolean isHarmful(Effect effect) {
-        return effect.getCategory() == EffectType.HARMFUL;
     }
 
     public static void clearInvulnerableTime(Entity entity) {

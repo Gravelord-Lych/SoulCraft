@@ -1,6 +1,5 @@
 package lych.soulcraft.listener;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.PlayerBuff;
@@ -18,9 +17,7 @@ import lych.soulcraft.entity.monster.boss.SkeletonKingEntity;
 import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.extension.ExtraAbility;
-import lych.soulcraft.extension.fire.Fires;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
-import lych.soulcraft.extension.key.InvokableManager;
 import lych.soulcraft.extension.skull.ModSkulls;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
 import lych.soulcraft.extension.soulpower.control.SoulManager;
@@ -53,6 +50,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
@@ -91,18 +89,6 @@ public final class CommonEventListener {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide()) {
             EventManager.runEvents();
-        }
-    }
-
-    @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            for (Object2IntMap.Entry<PlayerEntity> entry : InvokableManager.getRecentlyPressedTimestamps().object2IntEntrySet()) {
-                if (entry.getKey().tickCount > entry.getIntValue()) {
-                    InvokableManager.setRecentlyPressedTimestamp(entry.getKey(), -1);
-                    InvokableManager.setRecentlyPressed(entry.getKey(), -1);
-                }
-            }
         }
     }
 
@@ -149,7 +135,7 @@ public final class CommonEventListener {
             event.setAmount(event.getAmount() * 2);
         }
         if (event.getSource().getDirectEntity() instanceof SoulArrowEntity && ((IEntityMixin) event.getSource().getDirectEntity()).isOnSoulFire()) {
-            ((IEntityMixin) event.getEntity()).setFireOnSelf(Fires.SOUL_FIRE);
+            ((IEntityMixin) event.getEntity()).setOnSoulFire(true);
         }
         if (event.getEntity() instanceof PlayerEntity && ExtraAbility.THORNS_MASTER.isOn((PlayerEntity) event.getEntity())) {
             if (EntityUtils.isMelee(event.getSource()) && !EntityUtils.isThorns(event.getSource()) && event.getSource().getEntity() instanceof LivingEntity) {
@@ -238,12 +224,22 @@ public final class CommonEventListener {
     }
 
     @SubscribeEvent
+    public void onPlayerDig(PlayerEvent.BreakSpeed event) {
+        if (ExtraAbility.DESTROYER.isOn(event.getPlayer())) {
+            event.setNewSpeed(event.getNewSpeed() * ExtraAbilityConstants.DESTROYER_SPEED_MULTIPLIER);
+        }
+    }
+
+    @SubscribeEvent
     public static void onEmptyClick(PlayerInteractEvent.RightClickEmpty event) {
         ClickHandlerNetwork.INSTANCE.sendToServer(Utils.DUMMY);
     }
 
     @SuppressWarnings("deprecation")
     public static void handleEmptyClickServerside(ServerPlayerEntity player) {
+        if (player.isSpectator()) {
+            return;
+        }
         if (player.getMainHandItem().isEmpty() && ExtraAbility.TELEPORTATION.isOn(player)) {
             int cooldown = ((IPlayerEntityMixin) player).getAdditionalCooldowns().getCooldownRemaining(ExtraAbility.TELEPORTATION.getRegistryName());
             if (cooldown == 0) {
@@ -258,11 +254,21 @@ public final class CommonEventListener {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onEffectFirstlyApply(PotionEvent.PotionApplicableEvent event) {
+        if (event.getEntity() instanceof PlayerEntity && ExtraAbility.TRANSFORMATION.isOn((PlayerEntity) event.getEntity())) {
+            if (event.getPotionEffect().getEffect() == Effects.WITHER) {
+                event.getEntityLiving().addEffect(ModEffectUtils.copyAttributes(Effects.REGENERATION, event.getPotionEffect()));
+                event.setResult(Event.Result.DENY);
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void onEffectApply(PotionEvent.PotionApplicableEvent event) {
         if (event.getEntity() instanceof PlayerEntity && ExtraAbility.PURIFICATION.isOn((PlayerEntity) event.getEntity())) {
-            boolean harmful = EntityUtils.isHarmful(event.getPotionEffect());
-            if (harmful) {
+            boolean harmful = ModEffectUtils.isHarmful(event.getPotionEffect());
+            if (harmful && ((PlayerEntity) event.getEntity()).getRandom().nextDouble() < ExtraAbilityConstants.PURIFICATION_PROBABILITY) {
                 event.setResult(Event.Result.DENY);
             }
         }

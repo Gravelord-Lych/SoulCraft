@@ -24,7 +24,9 @@ public abstract class AbstractBlockMixin {
             Block thisBlock = (Block) (Object) this;
             if (FireBlockHelper.isSoulFire(thisBlock)) {
                 Fire fire = FireBlockHelper.getFireBlocks().get(thisBlock);
-                ((IEntityMixin) entity).setFireOnSelf(fire);
+                if (fire.canApplyTo(entity)) {
+                    ((IEntityMixin) entity).setFireOnSelf(fire);
+                }
             }
         }
     }

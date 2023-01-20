@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(OverlayRenderer.class)
-public class OverlayRendererMixin {
+public abstract class OverlayRendererMixin {
     @Redirect(method = "renderFire", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/model/ModelBakery;FIRE_1:Lnet/minecraft/client/renderer/model/RenderMaterial;"))
     private static RenderMaterial findFireOverlay(Minecraft minecraft) {
         if (minecraft.player != null) {

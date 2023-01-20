@@ -1,6 +1,7 @@
 package lych.soulcraft.extension.soulpower.debuff;
 
 import lych.soulcraft.api.exa.MobDebuff;
+import lych.soulcraft.util.ExtraAbilityConstants;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -16,7 +17,7 @@ public enum MonsterSabotageDebuff implements MobDebuff {
     INSTANCE;
 
     private static final UUID MONSTER_SABOTAGE_UUID = UUID.fromString("53A004B3-95AC-13C7-58E2-0802809E02D5");
-    private static final AttributeModifier MONSTER_SABOTAGE = new AttributeModifier(MONSTER_SABOTAGE_UUID, "Monster sabotage", -0.1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    private static final AttributeModifier MONSTER_SABOTAGE = new AttributeModifier(MONSTER_SABOTAGE_UUID, "Monster sabotage", ExtraAbilityConstants.MONSTER_SABOTAGE_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     @Override
     public void doWhenMobJoinWorld(MobEntity mob, World world) {

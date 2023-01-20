@@ -14,7 +14,6 @@ public interface IEntityMixin {
     @OnlyIn(Dist.CLIENT)
     boolean displaySoulFireAnimation();
 
-    @Deprecated
     void setOnSoulFire(boolean onSoulFire);
 
     boolean isReversed();

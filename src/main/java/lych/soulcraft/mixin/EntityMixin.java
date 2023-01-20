@@ -135,7 +135,7 @@ public abstract class EntityMixin implements IEntityMixin {
         if (firstTick) {
             return;
         }
-        Fire.getTrueFires().stream().filter(fire -> fluidHeight.getDouble(fire.getLavaTag()) > 0).findFirst().ifPresent(this::setFireOnSelf);
+        Fire.getTrueFires().stream().filter(fire -> fire.canApplyTo((Entity) (Object) this)).filter(fire -> fluidHeight.getDouble(fire.getLavaTag()) > 0).findFirst().ifPresent(this::setFireOnSelf);
     }
 
     @Unique
@@ -159,6 +159,7 @@ public abstract class EntityMixin implements IEntityMixin {
 
     @Override
     public void setFireOnSelf(Fire fire) {
+        fire = fire.applyTo((Entity) (Object) this);
         if (fire.canReplace(getFireOnSelf())) {
             fireOnSelf = fire;
             if (fire.isRealFire()) {

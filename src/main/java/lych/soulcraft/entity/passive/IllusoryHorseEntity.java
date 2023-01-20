@@ -5,6 +5,7 @@ import lych.soulcraft.entity.ai.controller.VoidwalkerMovementController;
 import lych.soulcraft.entity.iface.ESVMob;
 import lych.soulcraft.entity.iface.IEtherealable;
 import lych.soulcraft.entity.monster.voidwalker.AbstractVoidwalkerEntity;
+import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.EntityUtils;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
@@ -158,7 +159,7 @@ public class IllusoryHorseEntity extends AbstractHorseEntity implements ESVMob, 
 
     @Override
     public boolean canBeAffected(EffectInstance effect) {
-        if (EntityUtils.isHarmful(effect)) {
+        if (ModEffectUtils.isHarmful(effect)) {
             return false;
         }
         return super.canBeAffected(effect);

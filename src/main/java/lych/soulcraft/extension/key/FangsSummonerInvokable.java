@@ -19,12 +19,7 @@ public enum FangsSummonerInvokable implements IExtraAbilityRelatedInvokable {
     }
 
     @Override
-    public int requiredRecentlyPressed() {
-        return -1;
-    }
-
-    @Override
-    public int getInvokeResult(ServerPlayerEntity player, int recentlyPressed) {
+    public int getInvokeResult(ServerPlayerEntity player) {
         double minY = player.getY() - ExtraAbilityConstants.FANGS_MAX_Y_OFFSET;
         double maxY = player.getY() + ExtraAbilityConstants.FANGS_MAX_Y_OFFSET;
         Vector3d lookAngle = player.getLookAngle();
@@ -47,7 +42,7 @@ public enum FangsSummonerInvokable implements IExtraAbilityRelatedInvokable {
     }
 
     @Override
-    public int getCooldown(ServerPlayerEntity player, int recentlyPressed) {
+    public int getCooldown(ServerPlayerEntity player) {
         return 40;
     }
 }

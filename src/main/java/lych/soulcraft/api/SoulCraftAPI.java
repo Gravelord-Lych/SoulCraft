@@ -59,6 +59,22 @@ public interface SoulCraftAPI {
     Set<IExtraAbility> getExtraAbilitiesOnPlayer(PlayerEntity player);
 
     /**
+     * This method should only be called to check Soulcraft Extra Abilities.
+     * @param path The path of the Extra Ability's registryName
+     * @return True if the player has this <i>Extra Ability</i>
+     */
+    default boolean hasSCExtraAbility(PlayerEntity player, String path) {
+        return hasExtraAbility(player, new ResourceLocation(MOD_ID, path));
+    }
+
+    /**
+     * @return True if the player has this <i>Extra Ability</i>
+     */
+    default boolean hasExtraAbility(PlayerEntity player, ResourceLocation registryName) {
+        return getExtraAbilityByRegistryName(registryName).map(exa -> exa.isOn(player)).orElse(false);
+    }
+
+    /**
      * Register an Extra Ability. The method can be called during common set up
      * @param exa The Extra Ability that will be registered
      */

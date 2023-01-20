@@ -58,10 +58,10 @@ public final class Reinforcements {
     public static final Reinforcement SKELETON_HORSE = new HorseReinforcement(EntityType.SKELETON_HORSE).setSpecial();
     public static final Reinforcement SILVERFISH = new SilverfishReinforcement();
     public static final Reinforcement SLIME = new SlimeReinforcement();
+    public static final Reinforcement SOUL_SKELETON = new SoulSkeletonReinforcement();
     public static final Reinforcement SPIDER = new SpiderReinforcement();
     public static final Reinforcement STRAY = new StrayReinforcement();
     public static final Reinforcement STRIDER = new StriderReinforcement();
-    public static final Reinforcement SOUL_SKELETON = new SoulSkeletonReinforcement();
     public static final Reinforcement SQUID = new SquidReinforcement();
     public static final Reinforcement TRADER_LLAMA = new HorseReinforcement(EntityType.TRADER_LLAMA);
     public static final Reinforcement TROPICAL_FISH = new FishReinforcement(EntityType.TROPICAL_FISH);

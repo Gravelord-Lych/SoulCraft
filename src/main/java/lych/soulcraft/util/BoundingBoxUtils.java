@@ -6,7 +6,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public final class BoundingBoxUtils {
     private BoundingBoxUtils() {}
@@ -25,6 +27,10 @@ public final class BoundingBoxUtils {
             }
         }
         return list;
+    }
+
+    public static Optional<AxisAlignedBB> minmax(Collection<AxisAlignedBB> bbs) {
+        return bbs.stream().reduce(AxisAlignedBB::minmax);
     }
 
     public static double getVolumeOf(AxisAlignedBB bb) {

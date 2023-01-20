@@ -53,7 +53,7 @@ public class InvokableNetwork {
             ServerPlayerEntity sender = Objects.requireNonNull(ctx.get().getSender(), "Packets that are sent from a client to the server must have a sender");
             ctx.get().enqueueWork(() -> InvokableManager
                     .get(invokableUUID)
-                    .onKeyPressed(sender, InvokableManager.getRecentlyPressedMap().getOrDefault(sender, -1)));
+                    .onKeyPressed(sender));
             ctx.get().setPacketHandled(true);
         }
     }

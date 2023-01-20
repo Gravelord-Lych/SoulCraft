@@ -6,6 +6,8 @@ import lych.soulcraft.api.ItemSEContainer;
 import lych.soulcraft.api.capability.ISoulEnergyStorage;
 import lych.soulcraft.api.event.ArrowSpawnEvent;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
+import lych.soulcraft.extension.ExtraAbility;
+import lych.soulcraft.util.ExtraAbilityConstants;
 import lych.soulcraft.util.InventoryUtils;
 import lych.soulcraft.util.SoulEnergies;
 import lych.soulcraft.util.mixin.IEntityMixin;
@@ -34,6 +36,7 @@ public class SoulBowItem extends BowItem {
         super(properties.fireResistant().durability(384));
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void releaseUsing(ItemStack bow, World world, LivingEntity entity, int useItemRemainingTicks) {
         if (entity instanceof PlayerEntity) {
@@ -42,6 +45,16 @@ public class SoulBowItem extends BowItem {
             ItemStack arrowOrEmpty = arrows.isEmpty() ? ItemStack.EMPTY : arrows.get(0);
 
             boolean infinity = player.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0;
+            boolean shouldDoubleDurabilityCost = false;
+            boolean bowExpert = infinity;
+
+            if (!infinity && !world.isClientSide() && ExtraAbility.BOW_EXPERT.isOn(player)) {
+                if (player.getRandom().nextDouble() < ExtraAbilityConstants.BOW_EXPERT_DOUBLE_DURABILITY_COST_PROBABILITY) {
+                    shouldDoubleDurabilityCost = true;
+                }
+                infinity = true;
+                bowExpert = true;
+            }
 
             int energy = SoulEnergies.getSEContainers(player).stream().mapToInt(stack -> SoulEnergies.of(stack).map(ISoulEnergyStorage::getSoulEnergyStored).orElse(0)).sum();
 
@@ -58,8 +71,7 @@ public class SoulBowItem extends BowItem {
             float power = getPowerForTime(charge);
 
             if (power >= 0.1) {
-                boolean noArrowCost = player.abilities.instabuild || arrowOrEmpty.isEmpty();
-
+                boolean noArrowCost = player.abilities.instabuild || arrowOrEmpty.isEmpty() || bowExpert;
                 if (!world.isClientSide) {
                     SoulArrowEntity arrow = new SoulArrowEntity(world, player);
                     arrow.shootFromRotation(player, player.xRot, player.yRot, 0, power * 3, 1);
@@ -83,7 +95,7 @@ public class SoulBowItem extends BowItem {
                         ((IEntityMixin) arrow).setOnSoulFire(true);
                     }
 
-                    bow.hurtAndBreak(1, player, playerIn -> playerIn.broadcastBreakEvent(player.getUsedItemHand()));
+                    bow.hurtAndBreak(shouldDoubleDurabilityCost ? 2 : 1, player, playerIn -> playerIn.broadcastBreakEvent(player.getUsedItemHand()));
 
                     if (noArrowCost) {
                         arrow.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
@@ -99,7 +111,7 @@ public class SoulBowItem extends BowItem {
                     if (arrowOrEmpty.isEmpty()) {
                         player.inventory.removeItem(arrowOrEmpty);
                     }
-                } else if (!player.abilities.instabuild) {
+                } else if (!infinity) {
                     costSE(SoulEnergies.getSEContainers(player));
                 }
 

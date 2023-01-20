@@ -12,7 +12,6 @@ public class CommonConfig {
     static final ForgeConfigSpec.BooleanValue SHOW_BOSS_TIER;
     static final ForgeConfigSpec.BooleanValue STRICT_CHALLENGES;
     static final ForgeConfigSpec.BooleanValue TIERED_BOSSES;
-    static final ForgeConfigSpec.IntValue CHECK_RECENTLY_PRESS_TIME;
     static final ForgeConfigSpec.IntValue ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT;
 
     static {
@@ -37,12 +36,6 @@ public class CommonConfig {
         DISABLE_SE_BLOCKS_LOOT = commonBuilder
                 .comment("If true, SE Generators and SE Storages will drop nothing when they are destroyed in Creative Mode, regardless of how much SE is inside them.")
                 .define("disableSEBlocksLootIfCreative", false);
-        commonBuilder.pop();
-
-        commonBuilder.push("Key Input Settings");
-        CHECK_RECENTLY_PRESS_TIME = commonBuilder
-                .comment("The interval to check recently pressed keys, used for Extra Abilities like Dragon Wizard.")
-                .defineInRange("checkRecentlyPressInterval (tick)", 10, 1, 20);
         commonBuilder.pop();
 
         commonBuilder.push("Extra Ability Settings");

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(Blocks.class)
-public class BlocksMixin {
+public abstract class BlocksMixin {
     @ModifyArg(method = "<clinit>",
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;FIRE:Lnet/minecraft/block/Block;")),
             at = @At(value = "INVOKE",

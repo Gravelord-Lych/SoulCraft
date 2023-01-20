@@ -1,7 +1,7 @@
 package lych.soulcraft.extension.soulpower.reinforce;
 
 import lych.soulcraft.util.CollectionUtils;
-import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -53,7 +53,7 @@ public class ZombieReinforcement extends AggressiveReinforcement {
                 ((IEntityMixin) target).setOnSoulFire(true);
             }
         }
-        EffectInstance effect = CollectionUtils.getRandom(attacker.getActiveEffects().stream().filter(EntityUtils::isHarmful).collect(Collectors.toList()), attacker.getRandom());
+        EffectInstance effect = CollectionUtils.getRandom(attacker.getActiveEffects().stream().filter(ModEffectUtils::isHarmful).collect(Collectors.toList()), attacker.getRandom());
         if (effect != null) {
             target.addEffect(new EffectInstance(effect.getEffect(), Math.min(effect.getDuration() / 2, 100) * level, 0));
         }

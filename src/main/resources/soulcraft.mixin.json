@@ -29,6 +29,7 @@
     "RaidMixin",
     "TargetGoalAccessor",
     "TridentEntityMixin",
+    "VillagerEntityMixin",
     "WaveMemberAccessor",
     "ZombieEntityMixin"
   ],
