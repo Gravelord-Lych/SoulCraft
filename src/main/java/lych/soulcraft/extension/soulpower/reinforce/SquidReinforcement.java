@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 public class SquidReinforcement extends AggressiveReinforcement {
-    private static final int BASE_EFFECT_TICKS = 20;
+    private static final int BASE_EFFECT_TICKS = 10;
     private static final int EFFECT_TICKS_STEP = 10;
 
     public SquidReinforcement() {
