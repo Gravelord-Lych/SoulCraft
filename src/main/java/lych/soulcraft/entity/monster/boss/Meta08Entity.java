@@ -1149,7 +1149,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
             }
         },
         SPEEDY(caseInsensitive("AJAYA")) {
-            private final AttributeModifier speedBonus = new AttributeModifier(UUID.fromString("D1776DE7-6453-891C-9903-8B6C358CEF6F"), "Speedy Meta8 speed bonus", 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            private final AttributeModifier speedBonus = new AttributeModifier(UUID.fromString("D1776DE7-6453-891C-9903-8B6C358CEF6F"), "Speedy Meta8 movement speed bonus", 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
             private final AttributeModifier followRangeBonus = new AttributeModifier(UUID.fromString("7A6FC8E6-6C48-A12A-A093-F48B628B1993"), "Speedy Meta8 follow range bonus", 15, AttributeModifier.Operation.ADDITION);
 
             @Override
