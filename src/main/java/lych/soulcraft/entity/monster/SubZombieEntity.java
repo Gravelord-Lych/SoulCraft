@@ -1,7 +1,7 @@
 package lych.soulcraft.entity.monster;
 
-import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.ai.goal.CopyOwnerTargetGoal;
+import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.monster.boss.GiantXEntity;
 import lych.soulcraft.util.EntityUtils;
 import net.minecraft.entity.EntityType;

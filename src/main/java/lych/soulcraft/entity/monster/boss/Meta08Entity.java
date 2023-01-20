@@ -72,8 +72,7 @@ import static lych.soulcraft.util.StringRedirector.caseInsensitive;
 
 /**
  * <b>Meta08 the Conceptor</b> (shortened as Meta8) is a large robot that is full of creativity.
- * It uses high-tech weapons such as lasers and also summon robots to attack enemies.
- * Meta8 is not tiered. That is different from most bosses in the mod.<br>
+ * It uses high-tech weapons such as lasers and also summon robots to attack enemies.<br>
  * <br>
  * Abilities:
  * <li><b>Laser Attack (high health): </b>Meta8 uses laser to attack its enemies:<br>
