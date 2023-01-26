@@ -1,19 +1,13 @@
 package lych.soulcraft.util.mixin;
 
 import lych.soulcraft.extension.fire.Fire;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Optional;
 
 public interface IEntityMixin {
-    boolean isOnSoulFire();
-
-    @OnlyIn(Dist.CLIENT)
-    boolean displaySoulFireAnimation();
-
     void setOnSoulFire(boolean onSoulFire);
 
     boolean isReversed();
@@ -28,5 +22,15 @@ public interface IEntityMixin {
 
     Fire getFireOnSelf();
 
-    void setFireOnSelf(Fire fire);
+    boolean doSetFireOnSelf(Fire fire);
+
+    default void setFireOnSelf(Fire fire) {
+        if (fire.isRealFire()) {
+            Fire oldFire = getFireOnSelf();
+            if (doSetFireOnSelf(fire)) {
+                oldFire.stopApplyingTo((Entity) this, fire);
+                fire.startApplyingTo((Entity) this, oldFire);
+            }
+        }
+    }
 }

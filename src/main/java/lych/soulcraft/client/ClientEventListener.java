@@ -29,6 +29,8 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -36,10 +38,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -164,7 +163,7 @@ public final class ClientEventListener {
     }
 
     @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ModEventListener {
+    public static final class ModEventListener {
         private ModEventListener() {}
 
         @SubscribeEvent
@@ -173,6 +172,13 @@ public final class ClientEventListener {
             ModDimensionRenderers.registerDimensionRenderers();
             ModEntityRenderers.registerEntityRenderers();
             ModShaders.registerShaders();
+        }
+
+        @SubscribeEvent
+        public static void onColorHandle(ColorHandlerEvent.Item event) {
+            event.getItemColors().register((stack, p_210238_1_) -> {
+                return p_210238_1_ > 0 ? -1 : PotionUtils.getColor(stack);
+            }, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
         }
 
         private static void run() {
@@ -195,6 +201,9 @@ public final class ClientEventListener {
 
         private static void registerRenderLayers() {
             RenderTypeLookup.setRenderLayer(ModBlocks.SOUL_WART, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.INFERNO, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.POISONOUS_FIRE, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.PURE_SOUL_FIRE, RenderType.cutout());
         }
 
         private static void bindScreens() {

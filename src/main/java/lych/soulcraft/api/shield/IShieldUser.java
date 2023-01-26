@@ -52,6 +52,10 @@ public interface IShieldUser {
         return true;
     }
 
+    /**
+     * @see ISharedShield#canBeConsumed() canBeConsumed
+     * @return True if the entity has a consumable shield
+     */
     default boolean hasConsumableShield() {
         return getSharedShield() != null && getSharedShield().canBeConsumed();
     }

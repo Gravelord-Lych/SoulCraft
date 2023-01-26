@@ -8,11 +8,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import lych.soulcraft.block.ModBlocks;
 
 import java.util.Objects;
+import java.util.function.Function;
 
+import static lych.soulcraft.block.ModBlocks.*;
 import static lych.soulcraft.data.ModDataGens.registryNameToString;
+import static net.minecraft.block.Blocks.SOUL_SOIL;
 
 public class BlockModelDataGen extends BlockModelProvider {
     static final ModelFile CUBE_ALL = new ModelFile.UncheckedModelFile("block/cube_all");
@@ -24,6 +26,8 @@ public class BlockModelDataGen extends BlockModelProvider {
     static final String SIMPLE_MACHINE_SIDE = "simple_soul_machine_side";
     static final String L2_MACHINE_SIDE = "soul_machine_side";
     static final String SIMPLE_L2_MACHINE_SIDE = "simple_l2_soul_machine_side";
+    private static String name;
+    private static Function<? super String, ? extends ResourceLocation> prefixFunction;
 
     public BlockModelDataGen(DataGenerator generator, ExistingFileHelper existingFileHelper) {
         super(generator, SoulCraft.MOD_ID, existingFileHelper);
@@ -31,23 +35,28 @@ public class BlockModelDataGen extends BlockModelProvider {
 
     @Override
     protected void registerModels() {
-        getBuilder(registryNameToString(ModBlocks.CHISELED_SOUL_STONE_BRICKS)).parent(CUBE_COLUMN).texture("end", prefix(ModBlocks.SMOOTH_SOUL_STONE)).texture("side", prefix(ModBlocks.CHISELED_SOUL_STONE_BRICKS));
-        getBuilder(registryNameToString(ModBlocks.CRACKED_DECAYED_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS));
-        wallInventory(wallInventoryToString(ModBlocks.CRACKED_DECAYED_STONE_BRICK_WALL), prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS));
-        getBuilder(registryNameToString(ModBlocks.CRACKED_SOUL_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
-        wallInventory(wallInventoryToString(ModBlocks.CRACKED_SOUL_STONE_BRICK_WALL), prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
-        getBuilder(registryNameToString(ModBlocks.DECAYED_STONE)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.DECAYED_STONE));
-        wallInventory(wallInventoryToString(ModBlocks.DECAYED_STONE_BRICK_WALL), prefix(ModBlocks.DECAYED_STONE_BRICKS));
-        getBuilder(registryNameToString(ModBlocks.DECAYED_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.DECAYED_STONE_BRICKS));
-        wallInventory(wallInventoryToString(ModBlocks.DECAYED_STONE_WALL), prefix(ModBlocks.DECAYED_STONE));
-        getBuilder(registryNameToString(ModBlocks.REFINED_SOUL_METAL_BLOCK)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.REFINED_SOUL_METAL_BLOCK));
-        wallInventory(wallInventoryToString(ModBlocks.SMOOTH_SOUL_STONE_WALL), prefix(ModBlocks.SMOOTH_SOUL_STONE));
-        getBuilder(registryNameToString(ModBlocks.SOUL_LAVA_FLUID_BLOCK)).texture(PARTICLE, SoulCraft.prefix("block/soul_lava_still"));
-        getBuilder(registryNameToString(ModBlocks.SOUL_METAL_BLOCK)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.SOUL_METAL_BLOCK));
-        getBuilder(registryNameToString(ModBlocks.SOUL_STONE)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.SOUL_STONE));
-        wallInventory(wallInventoryToString(ModBlocks.SOUL_STONE_BRICK_WALL), prefix(ModBlocks.SOUL_STONE_BRICKS));
-        getBuilder(registryNameToString(ModBlocks.SOUL_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(ModBlocks.SOUL_STONE_BRICKS));
-        wallInventory(wallInventoryToString(ModBlocks.SOUL_STONE_WALL), prefix(ModBlocks.SOUL_STONE));
+        getBuilder(registryNameToString(CHISELED_SOUL_STONE_BRICKS)).parent(CUBE_COLUMN).texture("end", prefix(SMOOTH_SOUL_STONE)).texture("side", prefix(CHISELED_SOUL_STONE_BRICKS));
+        getBuilder(registryNameToString(CRACKED_DECAYED_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(CRACKED_DECAYED_STONE_BRICKS));
+        wallInventory(wallInventoryToString(CRACKED_DECAYED_STONE_BRICK_WALL), prefix(CRACKED_DECAYED_STONE_BRICKS));
+        getBuilder(registryNameToString(CRACKED_SOUL_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(CRACKED_SOUL_STONE_BRICKS));
+        wallInventory(wallInventoryToString(CRACKED_SOUL_STONE_BRICK_WALL), prefix(CRACKED_SOUL_STONE_BRICKS));
+        cubeBottomTop(registryNameToString(CRIMSON_HYPHAL_SOIL), side(CRIMSON_HYPHAL_SOIL), vanillaBottom(SOUL_SOIL), top(CRIMSON_HYPHAL_SOIL));
+        getBuilder(registryNameToString(DECAYED_STONE)).parent(CUBE_ALL).texture(ALL, prefix(DECAYED_STONE));
+        wallInventory(wallInventoryToString(DECAYED_STONE_BRICK_WALL), prefix(DECAYED_STONE_BRICKS));
+        getBuilder(registryNameToString(DECAYED_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(DECAYED_STONE_BRICKS));
+        wallInventory(wallInventoryToString(DECAYED_STONE_WALL), prefix(DECAYED_STONE));
+        getBuilder(registryNameToString(PARCHED_SOIL)).parent(CUBE_ALL).texture(ALL, prefix(PARCHED_SOIL));
+        getBuilder(registryNameToString(REFINED_SOUL_METAL_BLOCK)).parent(CUBE_ALL).texture(ALL, prefix(REFINED_SOUL_METAL_BLOCK));
+        getBuilder(registryNameToString(REFINED_SOUL_SAND)).parent(CUBE_ALL).texture(ALL, prefix(REFINED_SOUL_SAND));
+        getBuilder(registryNameToString(REFINED_SOUL_SOIL)).parent(CUBE_ALL).texture(ALL, prefix(REFINED_SOUL_SOIL));
+        wallInventory(wallInventoryToString(SMOOTH_SOUL_STONE_WALL), prefix(SMOOTH_SOUL_STONE));
+        getBuilder(registryNameToString(SOUL_LAVA_FLUID_BLOCK)).texture(PARTICLE, SoulCraft.prefix("block/soul_lava_still"));
+        getBuilder(registryNameToString(SOUL_METAL_BLOCK)).parent(CUBE_ALL).texture(ALL, prefix(SOUL_METAL_BLOCK));
+        getBuilder(registryNameToString(SOUL_STONE)).parent(CUBE_ALL).texture(ALL, prefix(SOUL_STONE));
+        wallInventory(wallInventoryToString(SOUL_STONE_BRICK_WALL), prefix(SOUL_STONE_BRICKS));
+        getBuilder(registryNameToString(SOUL_STONE_BRICKS)).parent(CUBE_ALL).texture(ALL, prefix(SOUL_STONE_BRICKS));
+        wallInventory(wallInventoryToString(SOUL_STONE_WALL), prefix(SOUL_STONE));
+        cubeBottomTop(registryNameToString(WARPED_HYPHAL_SOIL), side(WARPED_HYPHAL_SOIL), vanillaBottom(SOUL_SOIL), top(WARPED_HYPHAL_SOIL));
     }
 
     private static String wallInventoryToString(WallBlock block) {
@@ -55,11 +64,45 @@ public class BlockModelDataGen extends BlockModelProvider {
     }
 
     static ResourceLocation prefix(Block block) {
+        return prefix(block, "");
+    }
+
+    static ResourceLocation prefix(Block block, String addition) {
+        return prefix(block, addition, SoulCraft::prefix);
+    }
+
+    static ResourceLocation prefix(Block block, String addition, Function<? super String, ? extends ResourceLocation> prefixFunction) {
         Objects.requireNonNull(block.getRegistryName(), "Registry name should be non-null");
-        return prefix(block.getRegistryName().getPath());
+        return prefix(block.getRegistryName().getPath() + addition, prefixFunction);
     }
 
     static ResourceLocation prefix(String name) {
-        return SoulCraft.prefix("block/" + name);
+        return prefix(name, SoulCraft::prefix);
+    }
+
+    static ResourceLocation prefix(String name, Function<? super String, ? extends ResourceLocation> prefixFunction) {
+        BlockModelDataGen.name = name;
+        BlockModelDataGen.prefixFunction = prefixFunction;
+        return prefixFunction.apply("block/" + name);
+    }
+
+    static ResourceLocation side(Block block) {
+        return prefix(block, "_side");
+    }
+
+    static ResourceLocation front(Block block) {
+        return prefix(block, "_front");
+    }
+
+    static ResourceLocation bottom(Block block) {
+        return prefix(block, "_bottom");
+    }
+
+    static ResourceLocation vanillaBottom(Block block) {
+        return prefix(block, "", ResourceLocation::new);
+    }
+
+    static ResourceLocation top(Block block) {
+        return prefix(block, "_top");
     }
 }

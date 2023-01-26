@@ -34,16 +34,19 @@ public class SEGeneratorBlock extends SimpleTileEntityBlock {
                 AbstractSEGeneratorTileEntity segen = (AbstractSEGeneratorTileEntity) entity;
                 ItemStack itemInHand = player.getItemInHand(hand);
                 ItemStack inside = segen.getSEStorageInside();
-                if (player.isShiftKeyDown()) {
-                    if (itemInHand.getItem() instanceof ItemSEContainer) {
-                        segen.getInventory().setItem(0, itemInHand);
-                        player.setItemInHand(hand, inside);
-                    } else if (!inside.isEmpty() && itemInHand.isEmpty()) {
-                        player.setItemInHand(hand, inside);
-                        segen.getInventory().setItem(0, ItemStack.EMPTY);
-                    }
+                boolean putGem = false;
+                if (itemInHand.getItem() instanceof ItemSEContainer && ((ItemSEContainer) itemInHand.getItem()).isTransferable(itemInHand)) {
+                    segen.getInventory().setItem(0, itemInHand);
+                    player.setItemInHand(hand, inside);
+                    putGem = true;
+                } else if (!inside.isEmpty() && itemInHand.isEmpty()) {
+                    player.setItemInHand(hand, inside);
+                    segen.getInventory().setItem(0, ItemStack.EMPTY);
+                    putGem = true;
                 }
-                NetworkHooks.openGui((ServerPlayerEntity) player, segen, packerBuffer -> packerBuffer.writeBlockPos(entity.getBlockPos()));
+                if (!putGem) {
+                    NetworkHooks.openGui((ServerPlayerEntity) player, segen, packerBuffer -> packerBuffer.writeBlockPos(entity.getBlockPos()));
+                }
             }
         }
         return ActionResultType.SUCCESS;

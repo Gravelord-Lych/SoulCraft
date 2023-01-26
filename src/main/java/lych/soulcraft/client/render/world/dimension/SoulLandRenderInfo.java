@@ -1,6 +1,5 @@
 package lych.soulcraft.client.render.world.dimension;
 
-import lych.soulcraft.client.render.world.sky.ModSkyRenderers;
 import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,7 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class SoulLandRenderInfo extends DimensionRenderInfo {
     public SoulLandRenderInfo() {
         super(Float.NaN, true, FogType.NONE, false, false);
-        setSkyRenderHandler(ModSkyRenderers.SOUL_LAND);
     }
 
     @Override

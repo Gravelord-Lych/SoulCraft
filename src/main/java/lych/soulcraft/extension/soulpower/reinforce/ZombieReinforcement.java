@@ -49,9 +49,7 @@ public class ZombieReinforcement extends AggressiveReinforcement {
             if (attacker.isOnFire()) {
                 target.setSecondsOnFire(2 + level);
             }
-            if (((IEntityMixin) attacker).isOnSoulFire()) {
-                ((IEntityMixin) target).setOnSoulFire(true);
-            }
+            ((IEntityMixin) target).setFireOnSelf(((IEntityMixin) attacker).getFireOnSelf());
         }
         EffectInstance effect = CollectionUtils.getRandom(attacker.getActiveEffects().stream().filter(ModEffectUtils::isHarmful).collect(Collectors.toList()), attacker.getRandom());
         if (effect != null) {

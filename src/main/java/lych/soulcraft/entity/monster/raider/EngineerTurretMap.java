@@ -3,6 +3,7 @@ package lych.soulcraft.entity.monster.raider;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.util.Utils;
 import net.minecraft.entity.EntityType;
@@ -102,6 +103,9 @@ public class EngineerTurretMap {
                 try {
                     turretType = (EntityType<? extends AbstractRedstoneTurretEntity>) type;
                 } catch (ClassCastException e) {
+                    if (ConfigHelper.shouldFailhard()) {
+                        throw new RuntimeException(typeName + " is not a turret", e);
+                    }
                     SoulCraft.LOGGER.error("{} is not a turret", typeName);
                     continue;
                 }

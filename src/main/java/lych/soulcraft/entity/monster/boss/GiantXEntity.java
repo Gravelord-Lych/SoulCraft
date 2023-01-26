@@ -494,7 +494,7 @@ public class GiantXEntity extends ZombieEntity implements ITieredBoss {
     }
 
     private void destroyBlockAt(BlockPos pos) {
-        if (EntityUtils.canMobGrief(this)) {
+        if (EntityUtils.canMobGrief(this, pos)) {
             BlockState state = level.getBlockState(pos);
             if (state.getDestroySpeed(level, pos) >= 0) {
                 level.destroyBlock(pos, !state.getMaterial().isReplaceable());

@@ -41,6 +41,11 @@ public class VoidArcherEntity extends SpellCastingVoidwalkerEntity implements IS
     }
 
     @Override
+    public ItemStack createWeapon() {
+        return new ItemStack(ModItems.SOUL_BOW);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         goalSelector.addGoal(2, new SpawnRainOfArrowGoal(this));
@@ -79,7 +84,7 @@ public class VoidArcherEntity extends SpellCastingVoidwalkerEntity implements IS
 
     @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
-        setItemInHand(Hand.MAIN_HAND, new ItemStack(ModItems.SOUL_BOW));
+        setItemInHand(Hand.MAIN_HAND, createWeapon());
     }
 
     @Override
@@ -111,7 +116,7 @@ public class VoidArcherEntity extends SpellCastingVoidwalkerEntity implements IS
     }
 
     @Override
-    protected void strengthenSelf(VoidwalkerTier tier, DifficultyInstance difficulty, SpawnReason reason) {
+    protected void doStrengthenSelf(VoidwalkerTier tier, VoidwalkerTier oldTier, DifficultyInstance difficulty) {
         strengthenSelfByDefault(tier);
         switch (tier) {
             case PARAGON:

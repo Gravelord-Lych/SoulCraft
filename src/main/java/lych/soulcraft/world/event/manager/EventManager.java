@@ -3,6 +3,7 @@ package lych.soulcraft.world.event.manager;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.world.event.WorldEvent;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -86,6 +87,9 @@ public abstract class EventManager<T extends WorldEvent> extends WorldSavedData 
             } catch (UnknownObjectException e) {
                 SoulCraft.LOGGER.warn(EVENTS, "Unknown Event: {}, ignored", e.getUnknownLocation());
             } catch (NotLoadedException e) {
+                if (ConfigHelper.shouldFailhard()) {
+                    throw new IllegalStateException("Event not loaded", e);
+                }
                 SoulCraft.LOGGER.error(EVENTS, StringUtils.isBlank(e.getMessage()) ? "Event not loaded, ignored" : String.format("Event not loaded because %s, ignored", e.getMessage()));
             }
             if (event != null) {

@@ -40,7 +40,7 @@ public class SEGemItem extends Item implements ItemSEContainer {
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (!world.isClientSide() && hand == Hand.MAIN_HAND) {
+        if (!world.isClientSide() && hand == Hand.MAIN_HAND && !player.isShiftKeyDown()) {
             ItemStack stack = player.getItemInHand(hand);
             if (getMode(stack) == TransferMode.OUT) {
                 setMode(stack, TransferMode.NORMAL);

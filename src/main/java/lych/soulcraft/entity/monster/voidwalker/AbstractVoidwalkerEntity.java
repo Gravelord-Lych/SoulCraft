@@ -1,6 +1,7 @@
 package lych.soulcraft.entity.monster.voidwalker;
 
 import com.google.common.base.Preconditions;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.ai.ModCreatureAttributes;
 import lych.soulcraft.entity.ai.controller.VoidwalkerMovementController;
 import lych.soulcraft.entity.ai.goal.AttackMainTargetGoal;
@@ -21,6 +22,7 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -38,7 +40,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DifficultyInstance;
@@ -77,6 +78,8 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
     private Vector3d sneakTarget;
     private boolean adjustTarget;
     private VoidwalkerTier tier;
+    @Nullable
+    private VoidwalkerTier strengthenedTo;
 
     protected AbstractVoidwalkerEntity(EntityType<? extends AbstractVoidwalkerEntity> type, World world) {
         super(type, world);
@@ -86,7 +89,7 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         Objects.requireNonNull(getMaxTier(), "Max tier should be non-null");
         Preconditions.checkState(!getBaseTier().strongerThan(getMaxTier()), "BaseTier must not be stronger than MaxTier");
         entityData.define(DATA_TIER, getBaseTier().getId());
-        setTier(getBaseTier());
+        setTier(getBaseTier(), true);
     }
 
     @Override
@@ -110,7 +113,13 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         super.removeVehicle();
     }
 
+    public boolean isPrimary() {
+        return true;
+    }
+
     public abstract boolean isMeleeAttacker();
+
+    public abstract ItemStack createWeapon();
 
     public static AttributeModifierMap.MutableAttribute createVoidwalkerAttributes() {
         return MonsterEntity.createMonsterAttributes()
@@ -394,6 +403,9 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
             compoundNBT.putUUID("MainTarget", getMainTarget());
         }
         compoundNBT.putInt("Tier", getTier().getId());
+        if (strengthenedTo != null) {
+            compoundNBT.putInt("StrengthenedTo", strengthenedTo.getId());
+        }
     }
 
     @Override
@@ -415,7 +427,10 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
             setMainTarget(compoundNBT.getUUID("MainTarget"));
         }
         if (compoundNBT.contains("Tier")) {
-            setTier(VoidwalkerTier.byId(compoundNBT.getInt("Tier"), false));
+            setTier(VoidwalkerTier.byId(compoundNBT.getInt("Tier"), false), true);
+        }
+        if (compoundNBT.contains("StrengthenedTo")) {
+            strengthenedTo = VoidwalkerTier.byId(compoundNBT.getInt("StrengthenedTo"));
         }
     }
 
@@ -483,10 +498,6 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         return level.getBlockState(blockPosition()).isAir();
     }
 
-    public RayTraceResult getHitResult(LivingEntity target) {
-        return EntityUtils.getHitResult(this, position().vectorTo(target.position()), e -> e.isAlive() && !e.isSpectator());
-    }
-
     @Override
     public boolean causeFallDamage(float distance, float multiplier) {
         return false;
@@ -550,11 +561,27 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         data = super.finalizeSpawn(world, difficulty, reason, data, compoundNBT);
         populateDefaultEquipmentSlots(difficulty);
         populateDefaultEquipmentEnchantments(difficulty);
-        strengthenSelf(getTier(), difficulty, reason);
+        strengthenSelf(getTier(), getTier(), difficulty);
         return data;
     }
 
-    protected void strengthenSelf(VoidwalkerTier tier, DifficultyInstance difficulty, SpawnReason reason) {
+    public final boolean strengthenSelf(VoidwalkerTier tier, VoidwalkerTier oldTier, DifficultyInstance difficulty) {
+        if (strengthenedTo != null && !strengthenedTo.weakerThan(tier)) {
+            return false;
+        }
+        if (tier.weakerThan(oldTier)) {
+            if (ConfigHelper.shouldFailhard()) {
+                throw new IllegalArgumentException(String.format("The method must not be used to weaken self. OldTier is %s, but newTier is %s", oldTier, tier));
+            } else {
+                return false;
+            }
+        }
+        doStrengthenSelf(tier, oldTier, difficulty);
+        strengthenedTo = tier;
+        return true;
+    }
+
+    protected void doStrengthenSelf(VoidwalkerTier tier, VoidwalkerTier oldTier, DifficultyInstance difficulty) {
         strengthenSelfByDefault(tier);
     }
 
@@ -593,7 +620,7 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         return false;
     }
 
-    private void forceUpgrade() {
+    protected void forceUpgrade() {
         setTier(tier.upgraded());
     }
 
@@ -605,10 +632,18 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
     }
 
     public void setTier(VoidwalkerTier tier) {
+        setTier(tier, false);
+    }
+
+    protected void setTier(VoidwalkerTier tier, boolean initialSet) {
         Objects.requireNonNull(tier, "Tier cannot be null");
         Preconditions.checkArgument(tier.isInRangeClosed(getBaseTier(), getMaxTier()), String.format("Tier %s is not in range [%s, %s]", tier, getBaseTier(), getMaxTier()));
+        VoidwalkerTier oldTier = getTier();
         this.tier = tier;
         entityData.set(DATA_TIER, tier.getId());
+        if (!level.isClientSide() && !initialSet && tier.strongerThan(oldTier)) {
+            strengthenSelf(tier, oldTier, level.getCurrentDifficultyAt(blockPosition()));
+        }
     }
 
     public static void updateBodyAngles(double tx, double ty, double tz, LivingEntity entity, RotlerpFunction function) {

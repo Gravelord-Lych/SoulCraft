@@ -25,6 +25,9 @@ public class MonsterViewHighlighter extends AbstractHighlighter {
         if (entity instanceof LivingEntity) {
             LivingEntity living = (LivingEntity) entity;
             float hue = MathHelper.lerp(living.getHealth() / living.getMaxHealth(), 0, 0.05f);
+            if (living.getAbsorptionAmount() > 0) {
+                hue += Math.min(MathHelper.lerp(living.getAbsorptionAmount() / living.getMaxHealth(), 0, 0.05f), 0.1f);
+            }
             if (living instanceof IShieldUser && ((IShieldUser) living).getSharedShield() != null && ((IShieldUser) living).isShieldValid()) {
                 ISharedShield shield = ((IShieldUser) living).getSharedShield();
                 hue = periodicallyLerp(1 - shield.getHealth() / shield.getPassiveDefense(), 0.5833333f, hue);

@@ -112,6 +112,7 @@ public class ItemModelDataGen extends ItemModelProvider {
         blockItem(ModItems.CRACKED_SOUL_STONE_BRICK_STAIRS);
         blockItem(ModItems.CRACKED_SOUL_STONE_BRICK_WALL);
         blockItem(ModItems.CRACKED_SOUL_STONE_BRICKS);
+        blockItem(ModItems.CRIMSON_HYPHAL_SOIL);
         blockItem(ModItems.DECAYED_STONE);
         blockItem(ModItems.DECAYED_STONE_BRICK_SLAB);
         blockItem(ModItems.DECAYED_STONE_BRICK_STAIRS);
@@ -126,7 +127,10 @@ public class ItemModelDataGen extends ItemModelProvider {
         segenBlockItem(ModItems.HEAT_SEGEN_II);
         segenBlockItem(ModItems.NETHER_SEGEN);
         segenBlockItem(ModItems.NETHER_SEGEN_II);
+        blockItem(ModItems.PARCHED_SOIL);
         blockItem(ModItems.REFINED_SOUL_METAL_BLOCK);
+        blockItem(ModItems.REFINED_SOUL_SAND);
+        blockItem(ModItems.REFINED_SOUL_SOIL);
         segenBlockItem(ModItems.SEGEN);
         segenBlockItem(ModItems.SEGEN_II);
         segenBlockItem(ModItems.SKY_SEGEN);
@@ -150,6 +154,7 @@ public class ItemModelDataGen extends ItemModelProvider {
         blockItem(ModItems.SOUL_STONE_STAIRS);
         blockItem(ModItems.SOUL_STONE_WALL);
         simple(registryNameToString(ModItems.SOUL_WART), GENERATED, prefix(ModItems.SOUL_WART));
+        blockItem(ModItems.WARPED_HYPHAL_SOIL);
     }
 
     private void registerSpawnEggModels() {

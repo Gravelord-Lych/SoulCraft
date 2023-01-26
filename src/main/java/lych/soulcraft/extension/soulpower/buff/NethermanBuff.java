@@ -11,9 +11,9 @@ public enum NethermanBuff implements DamageBuff {
     INSTANCE;
 
     //  Functions.
-        private static float calculateNethermanAttackDamageMultiplier(float temperature, boolean onFire) {
-            return MathHelper.clamp((1 + temperature / 5) * (onFire ? 1.25f : 1), 0.9f, 2);
-        }
+    private static float calculateNethermanAttackDamageMultiplier(float temperature, boolean onFire) {
+        return MathHelper.clamp((1 + temperature / 5) * (onFire ? 1.25f : 1), 0.9f, 2);
+    }
 
     @Override
     public void onPlayerAttack(PlayerEntity player, LivingAttackEvent event) {}

@@ -1,30 +1,14 @@
 {
   "replace": false,
   "values": [
-    "soulcraft:cracked_soul_stone_brick_slab",
-    "soulcraft:cracked_soul_stone_brick_stairs",
-    "soulcraft:cracked_soul_stone_brick_wall",
     "soulcraft:cracked_soul_stone_bricks",
     "soulcraft:decayed_stone",
-    "soulcraft:decayed_stone_brick_slab",
-    "soulcraft:decayed_stone_brick_stairs",
-    "soulcraft:decayed_stone_brick_wall",
-    "soulcraft:decayed_stone_slab",
-    "soulcraft:decayed_stone_stairs",
-    "soulcraft:decayed_stone_wall",
+    "soulcraft:decayed_stone_bricks",
     "soulcraft:refined_soul_metal_block",
     "soulcraft:smooth_soul_stone",
-    "soulcraft:smooth_soul_stone_slab",
-    "soulcraft:smooth_soul_stone_stairs",
-    "soulcraft:smooth_soul_stone_wall",
     "soulcraft:soul_metal_block",
+    "soulcraft:soul_reinforcement_table",
     "soulcraft:soul_stone",
-    "soulcraft:soul_stone_brick_slab",
-    "soulcraft:soul_stone_brick_stairs",
-    "soulcraft:soul_stone_brick_wall",
-    "soulcraft:soul_stone_bricks",
-    "soulcraft:soul_stone_slab",
-    "soulcraft:soul_stone_stairs",
-    "soulcraft:soul_stone_wall"
+    "soulcraft:soul_stone_bricks"
   ]
 }

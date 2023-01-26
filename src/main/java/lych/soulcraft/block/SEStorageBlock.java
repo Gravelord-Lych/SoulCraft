@@ -36,16 +36,19 @@ public class SEStorageBlock extends SimpleTileEntityBlock {
                 SEStorageTileEntity storage = (SEStorageTileEntity) entity;
                 ItemStack itemInHand = player.getItemInHand(hand);
                 ItemStack inside = storage.getItemInside();
-                if (player.isShiftKeyDown()) {
-                    if (itemInHand.getItem() instanceof ItemSEContainer) {
-                        storage.getInventory().setItem(0, itemInHand);
-                        player.setItemInHand(hand, inside);
-                    } else if (!inside.isEmpty() && itemInHand.isEmpty()) {
-                        player.setItemInHand(hand, inside);
-                        storage.getInventory().setItem(0, ItemStack.EMPTY);
-                    }
+                boolean putGem = false;
+                if (inside.isEmpty() && itemInHand.getItem() instanceof ItemSEContainer && ((ItemSEContainer) itemInHand.getItem()).isTransferable(itemInHand)) {
+                    storage.getInventory().setItem(0, itemInHand.copy());
+                    player.setItemInHand(hand, inside.copy());
+                    putGem = true;
+                } else if (!inside.isEmpty() && itemInHand.isEmpty()) {
+                    player.setItemInHand(hand, inside.copy());
+                    storage.getInventory().setItem(0, ItemStack.EMPTY);
+                    putGem = true;
                 }
-                NetworkHooks.openGui((ServerPlayerEntity) player, storage, packerBuffer -> packerBuffer.writeBlockPos(entity.getBlockPos()));
+                if (!putGem) {
+                    NetworkHooks.openGui((ServerPlayerEntity) player, storage, packerBuffer -> packerBuffer.writeBlockPos(entity.getBlockPos()));
+                }
             }
         }
         return ActionResultType.SUCCESS;

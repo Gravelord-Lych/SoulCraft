@@ -42,7 +42,7 @@ public abstract class AbstractFireBlockMixin implements IAbstractFireBlockMixin 
     private static void addMoreFireBlocks(IBlockReader reader, BlockPos pos, CallbackInfoReturnable<BlockState> cir) {
         BlockState state = reader.getBlockState(pos.below());
         for (Fire fire : Fire.getTrueFires()) {
-            if (fire.canSurviveOnBlock(reader, pos, state)) {
+            if (fire.canBlockCatchFire(reader, pos, state)) {
                 cir.setReturnValue(fire.getState(reader, pos));
                 break;
             }

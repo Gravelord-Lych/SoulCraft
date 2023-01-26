@@ -3,16 +3,19 @@ package lych.soulcraft.config;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.util.ExtraAbilityConstants;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID)
 public class CommonConfig {
     public static final ForgeConfigSpec COMMON_CONFIG;
-    static final ForgeConfigSpec.BooleanValue DISABLE_SE_BLOCKS_LOOT;
-    static final ForgeConfigSpec.BooleanValue SHOW_BOSS_TIER;
-    static final ForgeConfigSpec.BooleanValue STRICT_CHALLENGES;
-    static final ForgeConfigSpec.BooleanValue TIERED_BOSSES;
-    static final ForgeConfigSpec.IntValue ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT;
+    static final BooleanValue DISABLE_SE_BLOCKS_LOOT;
+    static final BooleanValue SHOW_BOSS_TIER;
+    static final BooleanValue STRICT_CHALLENGES;
+    static final BooleanValue TIERED_BOSSES;
+    static final IntValue ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT;
+    static final BooleanValue FAILHARD;
 
     static {
         ForgeConfigSpec.Builder commonBuilder = new ForgeConfigSpec.Builder();
@@ -41,7 +44,14 @@ public class CommonConfig {
         commonBuilder.push("Extra Ability Settings");
         ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT = commonBuilder
                 .comment("The additional pickup delay for items that are thrown by a player who has Ultrareach Extra Ability.")
-                .defineInRange("ultrareachLengthenPickupDelayAmount (tick)", ExtraAbilityConstants.DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT, 0, ExtraAbilityConstants.DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT * 2);
+                .defineInRange("ultrareachLengthenPickupDelayAmount(tick)", ExtraAbilityConstants.DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT, 0, ExtraAbilityConstants.DEFAULT_ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT * 2);
+        commonBuilder.pop();
+
+        commonBuilder.push("Other Settings");
+        FAILHARD = commonBuilder
+                .comment("If true, Fail-hard behavior will be enabled for " + SoulCraft.MOD_NAME + " Mod.", "This behavior makes the program throw an exception instead of logging an error when something went wrong. May cause more crashes but is useful for finding out bugs.")
+                .define("failhard", false);
+        commonBuilder.pop();
 
         COMMON_CONFIG = commonBuilder.build();
     }

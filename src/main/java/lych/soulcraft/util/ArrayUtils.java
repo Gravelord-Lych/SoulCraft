@@ -48,4 +48,12 @@ public final class ArrayUtils {
         }
         return a;
     }
+
+    public static <T> T last(T[] array) {
+        Objects.requireNonNull(array, "Array cannot be null");
+        if (array.length == 0) {
+            throw new IllegalArgumentException("Array cannot be empty");
+        }
+        return array[array.length - 1];
+    }
 }

@@ -1,6 +1,7 @@
 package lych.soulcraft.extension.soulpower.reinforce;
 
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.util.DefaultValues;
 import lych.soulcraft.util.EnumConstantNotFoundException;
 import lych.soulcraft.util.IIdentifiableEnum;
 import lych.soulcraft.util.Utils;
@@ -214,7 +215,7 @@ public final class ReinforcementHelper {
         }
 
         public ITextComponent getErrorText() {
-            return Utils.getOrDefault(text, Utils.dummyTextComponent()).copy().withStyle(TextFormatting.RED);
+            return Utils.getOrDefault(text, DefaultValues.dummyTextComponent()).copy().withStyle(TextFormatting.RED);
         }
 
         public boolean isOk() {

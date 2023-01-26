@@ -3,6 +3,7 @@ package lych.soulcraft.extension.fire;
 import com.google.common.base.MoreObjects;
 import com.mojang.datafixers.util.Pair;
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.block.IExtendedFireBlock;
 import lych.soulcraft.util.Utils;
 import lych.soulcraft.util.mixin.IAbstractFireBlockMixin;
 import net.minecraft.block.AbstractFireBlock;
@@ -14,7 +15,6 @@ import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -23,8 +23,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class Fire {
@@ -34,19 +36,23 @@ public final class Fire {
     @Nullable
     private final Pair<RenderMaterial, RenderMaterial> fireOverlays;
     private final Block fireBlock;
+    private final Block[] additionalFireBlocks;
     @Nullable
     private final ITag<Fluid> lavaTag;
     private final Handler handler;
     private final float fireDamage;
     private final int priority;
+    private final int specialDegree;
 
-    Fire(Block fireBlock, @Nullable Pair<RenderMaterial, RenderMaterial> fireOverlays, @Nullable ITag<Fluid> lavaTag, Handler handler, float fireDamage, int priority) {
+    Fire(Block fireBlock, @Nullable Pair<RenderMaterial, RenderMaterial> fireOverlays, Block[] additionalFireBlocks, @Nullable ITag<Fluid> lavaTag, Handler handler, float fireDamage, int priority, int specialDegree) {
         this.fireBlock = fireBlock;
         this.fireOverlays = fireOverlays;
+        this.additionalFireBlocks = additionalFireBlocks;
         this.lavaTag = lavaTag;
         this.handler = handler;
         this.fireDamage = fireDamage;
         this.priority = priority;
+        this.specialDegree = specialDegree;
     }
 
     public static Handler noHandlerNeeded() {
@@ -54,20 +60,14 @@ public final class Fire {
     }
 
     static Fire noFire() {
-        Fire noFire = new Fire(Blocks.AIR, null, null, noHandlerNeeded(), 0, Integer.MAX_VALUE);
+        Fire noFire = new Fire(Blocks.AIR, null, new Block[]{}, null, noHandlerNeeded(), 0, Integer.MAX_VALUE, 0);
         Fires.FIRES.put(noFire.getBlock(), noFire);
         Fires.FIRE_IDS.put(0, noFire);
         return noFire;
     }
 
-    static Fire createAndRegister(FireProperties properties) {
-        Fire fire = create(properties);
-        register(fire);
-        return fire;
-    }
-
     public static Fire create(FireProperties properties) {
-        return new Fire(properties.fireBlock, properties.fireOverlays, properties.lavaTag, properties.handler, properties.fireDamage, properties.priority);
+        return new Fire(properties.fireBlock, properties.fireOverlays, properties.additionalFireBlocks, properties.lavaTag, properties.handler, properties.fireDamage, properties.priority, properties.specialDegree);
     }
 
     public static void register(Fire fire) {
@@ -83,14 +83,15 @@ public final class Fire {
     }
 
     public static List<Fire> getTrueFires() {
-        return Fires.FIRES.values().stream().filter(Fire::isRealFire).sorted(Comparator.comparingInt(Fire::getPriority)).collect(Collectors.toList());
+        return Fires.FIRES.values().stream().filter(Fire::isRealFire).sorted(Comparator.comparingInt(Fire::getSpecialDegree).reversed().thenComparing(Fire::getPriority)).collect(Collectors.toList());
     }
 
     @Nullable
     private static Fire registerFireType(Block block, Fire fire) {
-        Fire oldFire = Fires.FIRES.put(block, fire);
+        Fire oldFire = Fires.FIRES.putIfAbsent(block, fire);
         if (oldFire == null) {
             Fires.FIRE_IDS.put(Fires.nextID(), fire);
+            Arrays.stream(fire.getAdditionalFireBlocks()).forEach(blockIn -> registerFireType(blockIn, fire));
         }
         return oldFire;
     }
@@ -117,6 +118,10 @@ public final class Fire {
             }
         }
         return warnAndUseDefault(String.format("No FireBlock named %s found, used default", location));
+    }
+
+    public static boolean isFireBlock(Block block) {
+        return Fires.FIRES.entrySet().stream().filter(e -> e.getValue().isRealFire()).anyMatch(e -> e.getKey() == block);
     }
 
     public static Fire byBlock(Block block) {
@@ -147,24 +152,38 @@ public final class Fire {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+                .add("fireOverlays", fireOverlays)
                 .add("fireBlock", fireBlock)
+                .add("additionalFireBlocks", additionalFireBlocks)
+                .add("lavaTag", lavaTag)
+                .add("handler", handler)
+                .add("fireDamage", fireDamage)
+                .add("priority", priority)
+                .add("specialDegree", specialDegree)
                 .toString();
     }
 
-    public boolean canSurviveOnBlock(IBlockReader reader, BlockPos firePos, BlockState state) {
-        try {
-            return handler.canSurviveOnBlock(reader, firePos, state, this);
-        } catch (UnableToHandleException e) {
-            return true;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fire fire = (Fire) o;
+        return Float.compare(fire.fireDamage, fireDamage) == 0 && getPriority() == fire.getPriority() && getSpecialDegree() == fire.getSpecialDegree() && Objects.equals(getFireOverlays(), fire.getFireOverlays()) && Objects.equals(fireBlock, fire.fireBlock) && Arrays.equals(getAdditionalFireBlocks(), fire.getAdditionalFireBlocks()) && Objects.equals(getLavaTag(), fire.getLavaTag()) && Objects.equals(handler, fire.handler);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getFireOverlays(), fireBlock, getLavaTag(), handler, fireDamage, getPriority(), getSpecialDegree());
+        result = 31 * result + Arrays.hashCode(getAdditionalFireBlocks());
+        return result;
+    }
+
+    public boolean canBlockCatchFire(IBlockReader reader, BlockPos firePos, BlockState state) {
+        return handler.canBlockCatchFire(reader, firePos, state, this);
     }
 
     public BlockState getState(IBlockReader reader, BlockPos pos) {
-        try {
-            return handler.getState(reader, pos, this);
-        } catch (UnableToHandleException e) {
-            return getBlock().defaultBlockState();
-        }
+        return handler.getState(reader, pos, this);
     }
 
     public Block getBlock() {
@@ -172,11 +191,7 @@ public final class Fire {
     }
 
     public float getFireDamage(Entity entity, World world) {
-        try {
-            return handler.getFireDamage(entity, world, this);
-        } catch (UnableToHandleException e) {
-            return getDefaultFireDamage();
-        }
+        return handler.getFireDamage(entity, world, this);
     }
 
     public float getDefaultFireDamage() {
@@ -200,19 +215,19 @@ public final class Fire {
     }
 
     public boolean canApplyTo(Entity entity) {
-        try {
-            return handler.canApplyTo(entity, this);
-        } catch (UnableToHandleException e) {
-            return true;
-        }
+        return handler.canApplyTo(entity, this);
     }
 
     public Fire applyTo(Entity entity) {
-        try {
-            return handler.applyTo(entity, this);
-        } catch (UnableToHandleException e) {
-            return this;
-        }
+        return handler.applyTo(entity, this);
+    }
+
+    public void startApplyingTo(Entity entity, Fire oldFire) {
+        handler.startApplyingTo(entity, this, oldFire);
+    }
+
+    public void stopApplyingTo(Entity entity, Fire newFireOrEmpty) {
+        handler.stopApplyingTo(entity, this, newFireOrEmpty);
     }
 
     public boolean canReplace(Fire oldFire) {
@@ -230,36 +245,53 @@ public final class Fire {
         return Utils.getOrDefault(fireOverlays, DEFAULT_FIRE_OVERLAYS);
     }
 
+    @Nullable
     public ITag<Fluid> getLavaTag() {
-        return Utils.getOrDefault(lavaTag, FluidTags.LAVA);
+        return lavaTag;
+    }
+
+    public Block[] getAdditionalFireBlocks() {
+        return additionalFireBlocks;
+    }
+
+    public int getSpecialDegree() {
+        return specialDegree;
     }
 
     @SuppressWarnings("unused")
     public interface Handler {
-        default boolean canSurviveOnBlock(IBlockReader reader, BlockPos firePos, BlockState state, Fire fire) throws UnableToHandleException {
-            throw new UnableToHandleException();
+        default boolean canBlockCatchFire(IBlockReader reader, BlockPos firePos, BlockState state, Fire fire) {
+            if (fire.getBlock() instanceof IExtendedFireBlock) {
+                return ((IExtendedFireBlock) fire.getBlock()).canSurviveOnBlock(state.getBlock());
+            }
+            if (fire == Fires.FIRE) {
+                return true;
+            }
+            throw new IllegalStateException();
         }
 
-        default BlockState getState(IBlockReader reader, BlockPos pos, Fire fire) throws UnableToHandleException {
-            throw new UnableToHandleException();
+        default BlockState getState(IBlockReader reader, BlockPos pos, Fire fire) {
+            return fire.getBlock().defaultBlockState();
         }
 
-        default float getFireDamage(Entity entity, World world, Fire fire) throws UnableToHandleException {
-            throw new UnableToHandleException();
+        default float getFireDamage(Entity entity, World world, Fire fire) {
+            return fire.getDefaultFireDamage();
         }
 
-        default boolean canApplyTo(Entity entity, Fire fire) throws UnableToHandleException {
-            throw new UnableToHandleException();
+        default boolean canApplyTo(Entity entity, Fire fire) {
+            return true;
         }
 
-        default Fire applyTo(Entity entity, Fire fire) throws UnableToHandleException {
-            throw new UnableToHandleException();
+        default Fire applyTo(Entity entity, Fire fire) {
+            return fire;
         }
+
+        default void startApplyingTo(Entity entity, Fire newFire, Fire oldFire) {}
 
         default void entityInsideFire(BlockState fireBlockState, World world, BlockPos pos, Entity entity, Fire fire) {}
 
         default void entityOnFire(Entity entity, Fire fire) {}
-    }
 
-    private static class UnableToHandleException extends Exception {}
+        default void stopApplyingTo(Entity entity, Fire oldFire, Fire newFireOrEmpty) {}
+    }
 }

@@ -74,7 +74,6 @@ public abstract class Challenge extends AbstractWorldEvent {
 
     protected static final Logger LOGGER = LogManager.getLogger("challenge");
     protected static final double WARN_DISTANCE_OFFSET = -15;
-    protected static final ITextComponent COMMA = new TranslationTextComponent(SoulCraft.prefixMsg("comma"));
     protected static final ITextComponent VICTORY = new TranslationTextComponent("event.minecraft.raid.victory");
     protected static final ITextComponent DEFEAT = new TranslationTextComponent("event.minecraft.raid.defeat");
     protected static final ITextComponent DISTANCE_WARNING = new TranslationTextComponent(SoulCraft.prefixMsg("challenge", "warning.far_from_center"));

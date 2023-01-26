@@ -1,8 +1,8 @@
 package lych.soulcraft.extension.soulpower.control;
 
 import lych.soulcraft.extension.soulpower.control.controller.ControlledMobBehavior;
+import lych.soulcraft.util.DefaultValues;
 import lych.soulcraft.util.EntityUtils;
-import lych.soulcraft.util.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
@@ -72,7 +72,7 @@ public class Manipulator<T extends LivingEntity> implements INBTSerializable<Com
                             .setMob(victim.getUUID())
                             .setBehaviorType(howToControl.apply(victim))
                             .setController(controller.getUUID())
-                            .setControlTime(Utils.INFINITY)
+                            .setControlTime(DefaultValues.INFINITY)
                             .build(),
                     ControlOptions.defaultSettings(flagGetter.apply(victim)));
         }

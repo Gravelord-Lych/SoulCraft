@@ -6,6 +6,7 @@ import lych.soulcraft.item.crafting.ModRecipeSerializers;
 import lych.soulcraft.potion.ModPotions;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedConstants;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -27,9 +28,10 @@ public class SoulCraft {
         SharedConstants.IS_RUNNING_IN_IDE = true;
         SharedConstants.CHECK_DATA_FIXER_SCHEMA = false;
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_CONFIG);
-        ModRecipeSerializers.RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModAttributes.ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModPotions.POTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModRecipeSerializers.RECIPES.register(bus);
+        ModAttributes.ATTRIBUTES.register(bus);
+        ModPotions.POTIONS.register(bus);
     }
 
     public static <T extends ForgeRegistryEntry<T>> T make(T value, String name) {

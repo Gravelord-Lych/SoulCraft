@@ -1,7 +1,8 @@
 {
+  "fixed_time": 18000,
   "has_skylight": true,
   "has_ceiling": false,
-  "ultrawarm": false,
+  "ultrawarm": true,
   "natural": false,
   "coordinate_scale": 1.0,
   "piglin_safe": false,

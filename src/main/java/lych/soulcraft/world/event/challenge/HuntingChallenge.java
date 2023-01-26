@@ -6,6 +6,7 @@ import lych.soulcraft.SoulCraft;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.entity.monster.SoulSkeletonEntity;
 import lych.soulcraft.entity.monster.WandererEntity;
+import lych.soulcraft.util.DefaultValues;
 import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.world.event.manager.UnknownObjectException;
 import net.minecraft.entity.Entity;
@@ -55,7 +56,7 @@ public class HuntingChallenge extends Challenge {
 
     @Override
     public IFormattableTextComponent getChallengeText() {
-        return getDirectChallengeText().copy().append(" - ").append(timeRemainingText()).append(COMMA).append(new TranslationTextComponent(SoulCraft.prefixMsg("challenge", "killed"), killCount, maxKillCount));
+        return getDirectChallengeText().copy().append(" - ").append(timeRemainingText()).append(DefaultValues.COMMA).append(new TranslationTextComponent(SoulCraft.prefixMsg("challenge", "killed"), killCount, maxKillCount));
     }
 
     @Override

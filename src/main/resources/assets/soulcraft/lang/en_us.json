@@ -11,6 +11,7 @@
   "block.soulcraft.cracked_soul_stone_brick_stairs": "Cracked Soul Stone Brick Stairs",
   "block.soulcraft.cracked_soul_stone_brick_wall": "Cracked Soul Stone Brick Wall",
   "block.soulcraft.cracked_soul_stone_bricks": "Cracked Soul Stone Bricks",
+  "block.soulcraft.crimson_hyphal_soil": "Crimson Hyphal Soil",
   "block.soulcraft.decayed_stone": "Decayed Stone",
   "block.soulcraft.decayed_stone_brick_slab": "Decayed Stone Brick Slab",
   "block.soulcraft.decayed_stone_brick_stairs": "Decayed Stone Brick Stairs",
@@ -23,9 +24,13 @@
   "block.soulcraft.depth_segen_l2": "Depth SE Generator II",
   "block.soulcraft.heat_segen": "Heat SE Generator",
   "block.soulcraft.heat_segen_l2": "Heat SE Generator II",
+  "block.soulcraft.inferno": "Inferno",
   "block.soulcraft.nether_segen": "Nether SE Generator",
   "block.soulcraft.nether_segen_l2": "Nether SE Generator II",
+  "block.soulcraft.parched_soil": "Parched Soil",
   "block.soulcraft.refined_soul_metal_block": "Refined Soul Metal Block",
+  "block.soulcraft.refined_soul_sand": "Refined Soul Sand",
+  "block.soulcraft.refined_soul_soil": "Refined Soul Soil",
   "block.soulcraft.segen": "SE Generator",
   "block.soulcraft.segen_l2": "SE Generator II",
   "block.soulcraft.sky_segen": "Sky SE Generator",
@@ -48,6 +53,7 @@
   "block.soulcraft.soul_stone_slab": "Soul Stone Slab",
   "block.soulcraft.soul_stone_stairs": "Soul Stone Stairs",
   "block.soulcraft.soul_stone_wall": "Soul Stone Wall",
+  "block.soulcraft.warped_hyphal_soil": "Warped Hyphal Soil",
 
   "challenge.soulcraft.hunting": "Hunting Challenge",
   "challenge.soulcraft.killed": "Killed: %1$s / %2$s",
@@ -325,10 +331,12 @@
   "key.message.soulcraft.dragon_wizard": "Dragon Wizard Key",
   "key.message.soulcraft.fangs_summoner": "Fangs Summoner Key",
 
-  "message.soulcraft.comma": ", ",
+  "message.soulcraft.change_voidwalker_spawn_egg_tier": "Set tier: ",
+  "message.soulcraft.comma": ",  ",
   "message.soulcraft.soul_enchantment_info.soul_boost.lack_of_energy": "Warning: All your Soul Energy Gems lack SE to boost damage",
   "message.soulcraft.soul_enchantment_info.soul_boost.low_total_energy": "SE remaining: %s",
   "message.soulcraft.soul_enchantment_info.soul_boost.unsupported_energy_container": "Warning: %1$s can't extract %2$s SE at a time, so damage may not be boosted",
+  "message.soulcraft.space": " ",
 
   "potion.potency.6": "VII",
   "potion.potency.7": "VIII",
@@ -386,6 +394,11 @@
   "soul_enchantment.soulcraft.looting": "Looting",
   "soul_enchantment.soulcraft.sharpness": "Sharpness",
   "soul_enchantment.soulcraft.soul_boost": "Soul Boost",
+
+  "voidwalker.tier.ordinary": "Ordinary",
+  "voidwalker.tier.extraordinary": "Extraordinary",
+  "voidwalker.tier.elite": "Elite",
+  "voidwalker.tier.paragon": "Paragon",
 
   "gui.soulcraft.optifine_warning_title": "WARNING: OPTIFINE DETECTED",
   "gui.soulcraft.optifine_warning": "Before proceeding, please note that Optifine is known to cause crashes, multipart entity visual bugs and many other issues.\n\nBefore reporting a bug please remove Optifine first and check again to see if the bug is still present.\n\nOptiFine-related issues won't be solved by Soul Craft."

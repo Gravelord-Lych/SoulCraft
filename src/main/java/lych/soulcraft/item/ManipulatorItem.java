@@ -45,7 +45,7 @@ public class ManipulatorItem extends Item {
                     findNewVictim(stack, world, player);
                 }
                 mob = getVictim(stack, world);
-                if (mob != null && SoulEnergies.costSimply(player, COST)) {
+                if (mob != null && SoulEnergies.cost(player, COST)) {
                     control(stack, world, player);
                 }
             }

@@ -45,10 +45,6 @@ public class ESVChunkGenerator extends ChunkGenerator {
 
     private static final BlockState STATE = ModBlocks.DECAYED_STONE.defaultBlockState();
     public static final Codec<ESVChunkGenerator> CODEC = RecordCodecBuilder.create(ESVChunkGenerator::makeCodec);
-//    private static final RangedInteger SHIP_DISTANCE = RangedInteger.of(100000, 200000);
-//
-//    private BlockPos shipPos;
-//    private ChunkPos shipChunk;
 
     public ESVChunkGenerator(BiomeProvider biomeSource) {
         super(biomeSource, new DimensionStructuresSettings(false));

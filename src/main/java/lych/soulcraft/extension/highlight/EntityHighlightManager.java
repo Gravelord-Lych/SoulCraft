@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.util.*;
 
-import static lych.soulcraft.util.Utils.INFINITY;
+import static lych.soulcraft.util.DefaultValues.INFINITY;
 
 /**
  * An entity highlighter that can

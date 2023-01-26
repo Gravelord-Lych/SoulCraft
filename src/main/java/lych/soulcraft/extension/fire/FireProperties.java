@@ -5,19 +5,23 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
+import org.jetbrains.annotations.Nullable;
 
 public class FireProperties {
     Block fireBlock = Blocks.FIRE;
+    Block[] additionalFireBlocks = new Block[0];
     Pair<RenderMaterial, RenderMaterial> fireOverlays = Fire.DEFAULT_FIRE_OVERLAYS;
-    ITag<Fluid> lavaTag = FluidTags.LAVA;
+    @Nullable
+    ITag<Fluid> lavaTag;
     Fire.Handler handler = Fire.noHandlerNeeded();
     float fireDamage = 1;
     int priority = Fire.DEFAULT_PRIORITY;
+    int specialDegree = 1;
 
-    public FireProperties setBlock(Block fireBlock) {
+    public FireProperties setBlock(Block fireBlock, Block... additionalFireBlocks) {
         this.fireBlock = fireBlock;
+        this.additionalFireBlocks = additionalFireBlocks;
         return this;
     }
 
@@ -30,8 +34,13 @@ public class FireProperties {
         return this;
     }
 
-    public FireProperties withLava(ITag<Fluid> lavaTag) {
+    public FireProperties withCustomLava(ITag<Fluid> lavaTag) {
         this.lavaTag = lavaTag;
+        return this;
+    }
+
+    public FireProperties noLava() {
+        this.lavaTag = null;
         return this;
     }
 
@@ -47,6 +56,11 @@ public class FireProperties {
 
     public FireProperties withPriority(int priority) {
         this.priority = priority;
+        return this;
+    }
+
+    public FireProperties setSpecialDegree(int specialDegree) {
+        this.specialDegree = specialDegree;
         return this;
     }
 }

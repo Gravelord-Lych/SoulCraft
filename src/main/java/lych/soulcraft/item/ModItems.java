@@ -10,6 +10,10 @@ import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.fluid.ModFluids;
 import lych.soulcraft.item.ModMaterials.Armor;
 import lych.soulcraft.item.ModMaterials.Tool;
+import lych.soulcraft.item.potion.HalfUsedLingeringPotionItem;
+import lych.soulcraft.item.potion.HalfUsedPotionItem;
+import lych.soulcraft.item.potion.HalfUsedSplashPotionItem;
+import lych.soulcraft.util.ModConstants;
 import lych.soulcraft.util.SoulEnergies;
 import lych.soulcraft.world.event.challenge.ChallengeMedalType;
 import net.minecraft.entity.EntityType;
@@ -30,10 +34,15 @@ import static lych.soulcraft.util.ModConstants.VOIDWALKER_SPAWN_EGG_BACKGROUND_C
 
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModItems {
+    public static final String TAG = ".Tag.";
     public static final String SPAWN_EGG_SUFFIX = "_spawn_egg";
     public static final Item CHALLENGE_TEST = new ChallengeTestItem(common().fireResistant());
     public static final ChallengeMedalItem DIAMOND_CHALLENGE_MEDAL = new ChallengeMedalItem(common().stacksTo(1), ChallengeMedalType.DIAMOND);
     public static final ChallengeMedalItem GOLD_CHALLENGE_MEDAL = new ChallengeMedalItem(common().stacksTo(1), ChallengeMedalType.GOLD);
+    public static final Item HALF_USED_LINGERING_POTION = new HalfUsedLingeringPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
+    public static final Item HALF_USED_POTION = new HalfUsedPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
+    public static final Item HALF_USED_SPLASH_POTION = new HalfUsedSplashPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
+
     public static final ChallengeMedalItem IRON_CHALLENGE_MEDAL = new ChallengeMedalItem(common().stacksTo(1), ChallengeMedalType.IRON);
     public static final Item MANIPULATOR = new ManipulatorItem(common().rarity(Rarity.RARE).stacksTo(1));
     public static final ChallengeMedalItem NETHERITE_CHALLENGE_MEDAL = new ChallengeMedalItem(common().fireResistant().stacksTo(1), ChallengeMedalType.NETHERITE);
@@ -48,7 +57,6 @@ public final class ModItems {
     public static final Item REFINED_SOUL_METAL_NUGGET = new Item(common().fireResistant());
     public static final Item REFINED_SOUL_METAL_PICKAXE = new PickaxeItem(Tool.REFINED_SOUL_METAL, 1, -2.8f, common().fireResistant());
     public static final Item REFINED_SOUL_METAL_SHOVEL = new ShovelItem(Tool.REFINED_SOUL_METAL, 1.5f, -3, common().fireResistant());
-//  TODO - Use better texture
     public static final Item REFINED_SOUL_METAL_SWORD = new SwordItem(Tool.REFINED_SOUL_METAL, 3, -2.4f, common().fireResistant());
     public static final ArrowItem SOUL_ARROW = new SimpleArrowItem(SoulArrowEntity::new, common());
     public static final Item SOUL_BLAZE_POWDER = new Item(common());
@@ -73,6 +81,7 @@ public final class ModItems {
     public static final BlockItem CRACKED_SOUL_STONE_BRICK_STAIRS = new BlockItem(ModBlocks.CRACKED_SOUL_STONE_BRICK_STAIRS, common());
     public static final BlockItem CRACKED_SOUL_STONE_BRICK_WALL = new BlockItem(ModBlocks.CRACKED_SOUL_STONE_BRICK_WALL, common());
     public static final BlockItem CRACKED_SOUL_STONE_BRICKS = new BlockItem(ModBlocks.CRACKED_SOUL_STONE_BRICKS, common());
+    public static final BlockItem CRIMSON_HYPHAL_SOIL = new BlockItem(ModBlocks.CRIMSON_HYPHAL_SOIL, common());
     public static final BlockItem DECAYED_STONE = new BlockItem(ModBlocks.DECAYED_STONE, common());
     public static final BlockItem DECAYED_STONE_BRICK_SLAB = new BlockItem(ModBlocks.DECAYED_STONE_BRICK_SLAB, common());
     public static final BlockItem DECAYED_STONE_BRICK_STAIRS = new BlockItem(ModBlocks.DECAYED_STONE_BRICK_STAIRS, common());
@@ -87,7 +96,10 @@ public final class ModItems {
     public static final SEGeneratorBlockItem HEAT_SEGEN_II = new SEGeneratorBlockItem(ModBlocks.HEAT_SEGEN_II, getCapacity(2), se());
     public static final SEGeneratorBlockItem NETHER_SEGEN = new SEGeneratorBlockItem(ModBlocks.NETHER_SEGEN, getCapacity(1), se());
     public static final SEGeneratorBlockItem NETHER_SEGEN_II = new SEGeneratorBlockItem(ModBlocks.NETHER_SEGEN_II, getCapacity(2), se());
+    public static final BlockItem PARCHED_SOIL = new BlockItem(ModBlocks.PARCHED_SOIL, common());
     public static final BlockItem REFINED_SOUL_METAL_BLOCK = new BlockItem(ModBlocks.REFINED_SOUL_METAL_BLOCK, common().fireResistant());
+    public static final BlockItem REFINED_SOUL_SAND = new BlockItem(ModBlocks.REFINED_SOUL_SAND, common());
+    public static final BlockItem REFINED_SOUL_SOIL = new BlockItem(ModBlocks.REFINED_SOUL_SOIL, common());
     public static final SEGeneratorBlockItem SEGEN = new SEGeneratorBlockItem(ModBlocks.SEGEN, getCapacity(1), se());
     public static final SEGeneratorBlockItem SEGEN_II = new SEGeneratorBlockItem(ModBlocks.SEGEN_II, getCapacity(2), se());
     public static final SEGeneratorBlockItem SKY_SEGEN = new SEGeneratorBlockItem(ModBlocks.SKY_SEGEN, getCapacity(1), se());
@@ -111,6 +123,7 @@ public final class ModItems {
     public static final BlockItem SOUL_STONE_STAIRS = new BlockItem(ModBlocks.SOUL_STONE_STAIRS, common());
     public static final BlockItem SOUL_STONE_WALL = new BlockItem(ModBlocks.SOUL_STONE_WALL, common());
     public static final BlockNamedItem SOUL_WART = new BlockNamedItem(ModBlocks.SOUL_WART, common());
+    public static final BlockItem WARPED_HYPHAL_SOIL = new BlockItem(ModBlocks.WARPED_HYPHAL_SOIL, common());
 
     public static final Item DARK_EVOKER_SPAWN_EGG = makeSpawnEgg(ModEntities.DARK_EVOKER, 0x959b9b, 0xd62fd6);
     public static final Item ENGINEER_SPAWN_EGG = makeSpawnEgg(ModEntities.ENGINEER, 0x959b9b, 0xff0000);
@@ -118,16 +131,24 @@ public final class ModItems {
     public static final Item REDSTONE_MORTAR_SPAWN_EGG = makeSpawnEgg(ModEntities.REDSTONE_MORTAR, 0x452d15, 0x474747);
     public static final Item REDSTONE_TURRET_SPAWN_EGG = makeSpawnEgg(ModEntities.REDSTONE_TURRET, 0x452d15, 0x7e7e7e);
     public static final Item SOUL_SKELETON_SPAWN_EGG = makeSpawnEgg(ModEntities.SOUL_SKELETON, 0x79eef2, 0x00797d);
-    public static final Item VOID_ALCHEMIST_SPAWN_EGG = makeSpawnEgg(ModEntities.VOID_ALCHEMIST, VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, 0xe8d1ff);
-    public static final Item VOID_ARCHER_SPAWN_EGG = makeSpawnEgg(ModEntities.VOID_ARCHER, VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, 0x906248);
-    public static final Item VOID_DEFENDER_SPAWN_EGG = makeSpawnEgg(ModEntities.VOID_DEFENDER, VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, 0x7881e5);
-    public static final Item VOIDWALKER_SPAWN_EGG = makeSpawnEgg(ModEntities.VOIDWALKER, VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, 0x346b94);
+    public static final Item VOID_ALCHEMIST_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_ALCHEMIST, 0xe8d1ff);
+    public static final Item VOID_ARCHER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_ARCHER, 0x906248);
+    public static final Item VOID_DEFENDER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_DEFENDER, 0x7881e5);
+    public static final Item VOIDWALKER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOIDWALKER, 0x346b94);
     public static final Item WANDERER_SPAWN_EGG = makeSpawnEgg(ModEntities.WANDERER, 0x022330, 0x53feff);
 
     private ModItems() {}
 
+    private static ForgeSpawnEggItem makeVoidwalkerSpawnEgg(EntityType<?> type, int highlightColor) {
+        return makeVoidwalkerSpawnEgg(() -> type, highlightColor);
+    }
+
     private static ForgeSpawnEggItem makeSpawnEgg(EntityType<?> type, int backgroundColor, int highlightColor) {
         return makeSpawnEgg(() -> type, backgroundColor, highlightColor);
+    }
+
+    private static ForgeSpawnEggItem makeVoidwalkerSpawnEgg(Supplier<EntityType<?>> typeSupplier, int highlightColor) {
+        return new VoidwalkerSpawnEggItem(typeSupplier, ModConstants.VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, highlightColor, spawnEgg());
     }
 
     private static ForgeSpawnEggItem makeSpawnEgg(Supplier<EntityType<?>> typeSupplier, int backgroundColor, int highlightColor) {
@@ -152,6 +173,9 @@ public final class ModItems {
         registry.register(make(CHALLENGE_TEST, "challenge_test"));
         registry.register(make(DIAMOND_CHALLENGE_MEDAL, ModItemNames.DIAMOND_CHALLENGE_MEDAL));
         registry.register(make(GOLD_CHALLENGE_MEDAL, ModItemNames.GOLD_CHALLENGE_MEDAL));
+        registry.register(make(HALF_USED_LINGERING_POTION, ModItemNames.HALF_USED_LINGERING_POTION));
+        registry.register(make(HALF_USED_POTION, ModItemNames.HALF_USED_POTION));
+        registry.register(make(HALF_USED_SPLASH_POTION, ModItemNames.HALF_USED_SPLASH_POTION));
         registry.register(make(IRON_CHALLENGE_MEDAL, ModItemNames.IRON_CHALLENGE_MEDAL));
         registry.register(make(MANIPULATOR, ModItemNames.MANIPULATOR));
         registry.register(make(NETHERITE_CHALLENGE_MEDAL, ModItemNames.NETHERITE_CHALLENGE_MEDAL));
@@ -194,6 +218,7 @@ public final class ModItems {
         registry.register(make(CRACKED_SOUL_STONE_BRICK_STAIRS, ModBlockNames.CRACKED_SOUL_STONE_BRICK_STAIRS));
         registry.register(make(CRACKED_SOUL_STONE_BRICK_WALL, ModBlockNames.CRACKED_SOUL_STONE_BRICK_WALL));
         registry.register(make(CRACKED_SOUL_STONE_BRICKS, ModBlockNames.CRACKED_SOUL_STONE_BRICKS));
+        registry.register(make(CRIMSON_HYPHAL_SOIL, ModBlockNames.CRIMSON_HYPHAL_SOIL));
         registry.register(make(DECAYED_STONE, ModBlockNames.DECAYED_STONE));
         registry.register(make(DECAYED_STONE_BRICK_SLAB, ModBlockNames.DECAYED_STONE_BRICK_SLAB));
         registry.register(make(DECAYED_STONE_BRICK_STAIRS, ModBlockNames.DECAYED_STONE_BRICK_STAIRS));
@@ -208,7 +233,10 @@ public final class ModItems {
         registry.register(make(HEAT_SEGEN_II, ModBlockNames.HEAT_SEGEN_II));
         registry.register(make(NETHER_SEGEN, ModBlockNames.NETHER_SEGEN));
         registry.register(make(NETHER_SEGEN_II, ModBlockNames.NETHER_SEGEN_II));
+        registry.register(make(PARCHED_SOIL, ModBlockNames.PARCHED_SOIL));
         registry.register(make(REFINED_SOUL_METAL_BLOCK, ModBlockNames.REFINED_SOUL_METAL_BLOCK));
+        registry.register(make(REFINED_SOUL_SAND, ModBlockNames.REFINED_SOUL_SAND));
+        registry.register(make(REFINED_SOUL_SOIL, ModBlockNames.REFINED_SOUL_SOIL));
         registry.register(make(SEGEN, ModBlockNames.SEGEN));
         registry.register(make(SEGEN_II, ModBlockNames.SEGEN_II));
         registry.register(make(SKY_SEGEN, ModBlockNames.SKY_SEGEN));
@@ -232,6 +260,7 @@ public final class ModItems {
         registry.register(make(SOUL_STONE_STAIRS, ModBlockNames.SOUL_STONE_STAIRS));
         registry.register(make(SOUL_STONE_WALL, ModBlockNames.SOUL_STONE_WALL));
         registry.register(make(SOUL_WART, ModBlockNames.SOUL_WART));
+        registry.register(make(WARPED_HYPHAL_SOIL, ModBlockNames.WARPED_HYPHAL_SOIL));
     }
 
     private static void registerSpawnEggs(IForgeRegistry<Item> registry) {

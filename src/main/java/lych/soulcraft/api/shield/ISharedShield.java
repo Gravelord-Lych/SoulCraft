@@ -5,7 +5,11 @@ import net.minecraft.util.DamageSource;
 
 /**
  * An energy shield which user can share with other mobs.
- * You only need to save and load the shield because it will automatically tick and update.
+ * You only need to save and load the shield because it will automatically tick and update.<br>
+ * The shield has 2 types of defense: Absolute Defense and Passive Defense. The Absolute Defense (AD)
+ * means that any attack that hit the shield will get its power lowered, and the Passive Defense (PD)
+ * is basically the "max health" of the shield. The PD will regenerate by the specified regen amount
+ * each regen interval.
  */
 public interface ISharedShield {
     /**

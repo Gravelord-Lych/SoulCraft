@@ -1,12 +1,14 @@
 package lych.soulcraft.data;
 
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.tag.ModBlockTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 
 import static lych.soulcraft.block.ModBlocks.*;
+import static net.minecraft.block.Blocks.*;
 
 public class BlockTagDataGen extends ForgeBlockTagsProvider {
     public BlockTagDataGen(DataGenerator gen, ExistingFileHelper existingFileHelper) {
@@ -17,31 +19,15 @@ public class BlockTagDataGen extends ForgeBlockTagsProvider {
     public void addTags() {
         tag(BlockTags.BEACON_BASE_BLOCKS).add(REFINED_SOUL_METAL_BLOCK,
                 SOUL_METAL_BLOCK);
-        tag(BlockTags.SOUL_FIRE_BASE_BLOCKS).add(CRACKED_SOUL_STONE_BRICK_SLAB,
-                CRACKED_SOUL_STONE_BRICK_STAIRS,
-                CRACKED_SOUL_STONE_BRICK_WALL,
-                CRACKED_SOUL_STONE_BRICKS,
+        tag(BlockTags.SOUL_FIRE_BASE_BLOCKS).add(CRACKED_SOUL_STONE_BRICKS,
                 DECAYED_STONE,
-                DECAYED_STONE_BRICK_SLAB,
-                DECAYED_STONE_BRICK_STAIRS,
-                DECAYED_STONE_BRICK_WALL,
-                DECAYED_STONE_SLAB,
-                DECAYED_STONE_STAIRS,
-                DECAYED_STONE_WALL,
+                DECAYED_STONE_BRICKS,
                 REFINED_SOUL_METAL_BLOCK,
                 SMOOTH_SOUL_STONE,
-                SMOOTH_SOUL_STONE_SLAB,
-                SMOOTH_SOUL_STONE_STAIRS,
-                SMOOTH_SOUL_STONE_WALL,
                 SOUL_METAL_BLOCK,
+                SOUL_REINFORCEMENT_TABLE,
                 SOUL_STONE,
-                SOUL_STONE_BRICK_SLAB,
-                SOUL_STONE_BRICK_STAIRS,
-                SOUL_STONE_BRICK_WALL,
-                SOUL_STONE_BRICKS,
-                SOUL_STONE_SLAB,
-                SOUL_STONE_STAIRS,
-                SOUL_STONE_WALL);
+                SOUL_STONE_BRICKS);
         tag(BlockTags.WALLS).add(CRACKED_DECAYED_STONE_BRICK_WALL,
                 CRACKED_SOUL_STONE_BRICK_WALL,
                 DECAYED_STONE_BRICK_WALL,
@@ -49,6 +35,16 @@ public class BlockTagDataGen extends ForgeBlockTagsProvider {
                 SMOOTH_SOUL_STONE_WALL,
                 SOUL_STONE_BRICK_WALL,
                 SOUL_STONE_WALL);
+        tag(ModBlockTags.HYPHAL_SOUL_SOIL).add(CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);
+        tag(ModBlockTags.INFERNO_BASE_BLOCKS).add(PARCHED_SOIL);
+        tag(ModBlockTags.POISONOUS_FIRE_BASE_BLOCKS)
+                .addTag(BlockTags.WARPED_STEMS)
+                .add(WARPED_NYLIUM, WARPED_PLANKS, WARPED_WART_BLOCK, WARPED_HYPHAL_SOIL);
+        tag(ModBlockTags.PURE_SOUL_FIRE_BASED_BLOCKS).add(REFINED_SOUL_SAND, REFINED_SOUL_SOIL);
+        tag(BlockTags.FIRE).add(INFERNO, PURE_SOUL_FIRE);
+        tag(BlockTags.MUSHROOM_GROW_BLOCK).add(CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);
+        tag(BlockTags.NYLIUM).add(CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);
+        tag(BlockTags.SOUL_SPEED_BLOCKS).add(REFINED_SOUL_SAND, REFINED_SOUL_SOIL, CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);
     }
 
     @Override

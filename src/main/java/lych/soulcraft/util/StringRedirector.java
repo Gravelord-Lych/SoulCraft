@@ -1,15 +1,15 @@
 package lych.soulcraft.util;
 
-public abstract class StringRedirector extends Redirector<String, String> {
+public abstract class StringRedirector extends Redirector<String, String> implements StringRedirectable {
     protected StringRedirector(String value, String... aliases) {
         super(value, aliases);
     }
 
-    public static StringRedirector caseSensitive(String value, String... aliases) {
+    public static StringRedirectable caseSensitive(String value, String... aliases) {
         return new Cased(value, aliases);
     }
 
-    public static StringRedirector caseInsensitive(String value, String... aliases) {
+    public static StringRedirectable caseInsensitive(String value, String... aliases) {
         return new Caseless(value, aliases);
     }
 

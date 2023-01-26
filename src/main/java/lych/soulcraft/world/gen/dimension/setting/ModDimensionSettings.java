@@ -55,7 +55,7 @@ public final class ModDimensionSettings {
                 .defaultFluid(ModBlocks.SOUL_LAVA_FLUID_BLOCK.defaultBlockState())
                 .bedrockFloorPosition(0)
                 .bedrockRoofPosition(NO_BEDROCKS)
-                .seaLevel(54)
+                .seaLevel(63)
                 .build();
     }
 

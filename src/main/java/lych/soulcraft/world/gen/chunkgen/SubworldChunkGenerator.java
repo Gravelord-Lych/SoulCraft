@@ -3,6 +3,7 @@ package lych.soulcraft.world.gen.chunkgen;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lych.soulcraft.world.SeedHelper;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.DimensionSettings;
 
@@ -28,7 +29,7 @@ public class SubworldChunkGenerator extends CustomNoiseChunkGenerator {
     private static App<RecordCodecBuilder.Mu<SubworldChunkGenerator>, SubworldChunkGenerator> makeCodec(RecordCodecBuilder.Instance<SubworldChunkGenerator> instance) {
         return instance
                 .group(BiomeProvider.CODEC.fieldOf("biome_source").forGetter(SubworldChunkGenerator::getBiomeSource),
-                        Codec.LONG.fieldOf("seed").stable().forGetter(SubworldChunkGenerator::getSeed),
+                        Codec.LONG.fieldOf("seed").orElseGet(SeedHelper::getSeed).stable().forGetter(SubworldChunkGenerator::getSeed),
                         DimensionSettings.CODEC.fieldOf("settings").forGetter(SubworldChunkGenerator::getSettingsSupplier))
                 .apply(instance, instance.stable(SubworldChunkGenerator::new));
     }

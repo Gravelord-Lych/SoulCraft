@@ -309,7 +309,7 @@ public abstract class CustomNoiseChunkGenerator extends ChunkGenerator {
                 double yOffset = (double) y / (double) chunkHeight;
                 double depth = MathHelper.lerp3(yOffset, rpX, rpZ, xyzNoise, xy1zNoise, x1yzNoise, x1y1zNoise, xyz1Noise, xy1z1Noise, x1yz1Noise, x1y1z1Noise);
                 int realY = chunkY * chunkHeight + y;
-                BlockState state = generateBaseState(depth, realY);
+                BlockState state = generateBaseState(depth, x, realY, z);
                 if (stateArray != null) {
                     stateArray[realY] = state;
                 }
@@ -321,7 +321,7 @@ public abstract class CustomNoiseChunkGenerator extends ChunkGenerator {
         return 0;
     }
 
-    protected BlockState generateBaseState(double depth, int realHeight) {
+    protected BlockState generateBaseState(double depth, int realX, int realHeight, int realZ) {
         BlockState state;
         if (depth > 0) {
             state = defaultBlock;
@@ -487,7 +487,7 @@ public abstract class CustomNoiseChunkGenerator extends ChunkGenerator {
                                 }
 
                                 junctionItr.back(jigsawJunctions.size());
-                                BlockState baseState = generateBaseState(depth, realY);
+                                BlockState baseState = generateBaseState(depth, realX, realY, realZ);
 
                                 if (shouldGenerateTerrain(realX, realY, realZ) && !baseState.isAir()) {
                                     mutablePos.set(realX, realY, realZ);
@@ -578,7 +578,7 @@ public abstract class CustomNoiseChunkGenerator extends ChunkGenerator {
 
     @Override
     public List<MobSpawnInfo.Spawners> getMobsAt(Biome biome, StructureManager manager, EntityClassification classification, BlockPos pos) {
-        if (shouldGenerateTerrain(pos.getX(), pos.getY(), pos.getZ())) {
+        if (!shouldGenerateTerrain(pos.getX(), pos.getY(), pos.getZ())) {
             return Collections.emptyList();
         }
         List<MobSpawnInfo.Spawners> spawns = StructureSpawnManager.getStructureSpawns(manager, classification, pos);
@@ -777,5 +777,9 @@ public abstract class CustomNoiseChunkGenerator extends ChunkGenerator {
 //  TODO: Untested
     protected int getOctaveCount() {
         return 16;
+    }
+
+    protected boolean checkNoFluidBiomes() {
+        return true;
     }
 }

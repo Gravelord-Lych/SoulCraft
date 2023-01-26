@@ -2,6 +2,7 @@ package lych.soulcraft.entity;
 
 import com.google.common.base.MoreObjects;
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.util.Utils;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import net.minecraft.client.resources.I18n;
@@ -78,6 +79,9 @@ public class Soul<T extends LivingEntity> {
         try {
             location = new ResourceLocation(compoundNBT.getString("EntityType"));
         } catch (ResourceLocationException e) {
+            if (ConfigHelper.shouldFailhard()) {
+                throw new RuntimeException("Failed to load a soul", e);
+            }
             SoulCraft.LOGGER.error("Failed to load a soul", e);
             return null;
         }
@@ -90,6 +94,9 @@ public class Soul<T extends LivingEntity> {
         try {
             castedType = (EntityType<? extends T>) type;
         } catch (ClassCastException e) {
+            if (ConfigHelper.shouldFailhard()) {
+                throw new RuntimeException("EntityType does not match the entity", e);
+            }
             SoulCraft.LOGGER.error("EntityType does not match the entity because {}", e.getMessage());
             return null;
         }

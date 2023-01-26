@@ -6,15 +6,19 @@ import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
 import lych.soulcraft.api.shield.ISharedShieldUser;
 import lych.soulcraft.api.shield.IShieldUser;
+import lych.soulcraft.block.IArmoredBlock;
+import lych.soulcraft.block.ModBlocks;
 import lych.soulcraft.capability.ChallengeMobProvider;
 import lych.soulcraft.capability.IChallengeMob;
 import lych.soulcraft.capability.NonAPICapabilities;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.effect.ModEffects;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.entity.ai.goal.wrapper.Goals;
 import lych.soulcraft.entity.iface.*;
 import lych.soulcraft.entity.monster.boss.SkeletonKingEntity;
 import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
+import lych.soulcraft.entity.monster.voidwalker.AbstractVoidwalkerEntity;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
@@ -26,10 +30,12 @@ import lych.soulcraft.extension.soulpower.reinforce.WandererReinforcement;
 import lych.soulcraft.extension.superlink.SuperLinkManager;
 import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SoulPieceItem;
+import lych.soulcraft.item.VoidwalkerSpawnEggItem;
 import lych.soulcraft.mixin.EntityDamageSourceAccessor;
 import lych.soulcraft.mixin.IndirectEntityDamageSourceAccessor;
 import lych.soulcraft.mixin.MobSpawnInfoAccessor;
 import lych.soulcraft.network.ClickHandlerNetwork;
+import lych.soulcraft.tag.ModBlockTags;
 import lych.soulcraft.util.*;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
@@ -40,6 +46,11 @@ import lych.soulcraft.world.event.challenge.SurvivalChallenge;
 import lych.soulcraft.world.event.manager.ChallengeManager;
 import lych.soulcraft.world.event.manager.EventManager;
 import lych.soulcraft.world.event.manager.WorldTickerManager;
+import lych.soulcraft.world.gen.feature.ModConfiguredFeatures;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.NetherrackBlock;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
@@ -51,24 +62,33 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -77,6 +97,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 import static lych.soulcraft.util.ExtraAbilityConstants.FALL_BUFFER_AMOUNT;
@@ -131,11 +152,11 @@ public final class CommonEventListener {
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
-        if (event.getSource() == DamageSource.ON_FIRE && ((IEntityMixin) event.getEntity()).isOnSoulFire()) {
-            event.setAmount(event.getAmount() * 2);
+        if (event.getSource() == DamageSource.ON_FIRE) {
+            event.setAmount(event.getAmount() * Math.max(1, ((IEntityMixin) event.getEntity()).getFireOnSelf().getFireDamage(event.getEntity(), event.getEntity().level)));
         }
-        if (event.getSource().getDirectEntity() instanceof SoulArrowEntity && ((IEntityMixin) event.getSource().getDirectEntity()).isOnSoulFire()) {
-            ((IEntityMixin) event.getEntity()).setOnSoulFire(true);
+        if (event.getSource().getDirectEntity() instanceof SoulArrowEntity) {
+            ((IEntityMixin) event.getEntity()).setFireOnSelf(((IEntityMixin) event.getSource().getDirectEntity()).getFireOnSelf());
         }
         if (event.getEntity() instanceof PlayerEntity && ExtraAbility.THORNS_MASTER.isOn((PlayerEntity) event.getEntity())) {
             if (EntityUtils.isMelee(event.getSource()) && !EntityUtils.isThorns(event.getSource()) && event.getSource().getEntity() instanceof LivingEntity) {
@@ -224,15 +245,112 @@ public final class CommonEventListener {
     }
 
     @SubscribeEvent
-    public void onPlayerDig(PlayerEvent.BreakSpeed event) {
+    public static void onSpecialSpawn(LivingSpawnEvent.SpecialSpawn event) {
+        if (event.getEntity() instanceof AbstractVoidwalkerEntity && event.getSpawnReason() == SpawnReason.SPAWN_EGG) {
+            ((AbstractVoidwalkerEntity) event.getEntity()).setTier(VoidwalkerSpawnEggItem.getCurrentTier());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBonemealApply(BonemealEvent event) {
+        if (event.getBlock().is(Blocks.SOUL_SOIL) && canSoulSoilApplyBonemeal(event.getWorld(), event.getPos(), true)) {
+            performHyphalify(event.getWorld(), event.getWorld().getRandom(), event.getPos(), ModBlocks.CRIMSON_HYPHAL_SOIL.defaultBlockState(), ModBlocks.WARPED_HYPHAL_SOIL.defaultBlockState());
+            event.setResult(Event.Result.ALLOW);
+        }
+        if (event.getBlock().getBlock() instanceof NetherrackBlock) {
+            if (canSoulSoilApplyBonemeal(event.getWorld(), event.getPos(), false)) {
+                performHyphalify(event.getWorld(), event.getWorld().getRandom(), event.getPos(), Blocks.CRIMSON_NYLIUM.defaultBlockState(), Blocks.WARPED_NYLIUM.defaultBlockState());
+                event.setResult(Event.Result.ALLOW);
+            }
+        }
+    }
+
+    private static boolean canSoulSoilApplyBonemeal(IBlockReader reader, BlockPos pos, boolean checkNyliums) {
+        if (reader.getBlockState(pos.above()).propagatesSkylightDown(reader, pos)) {
+            for (BlockPos nearbyPos : BlockPos.betweenClosed(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))) {
+                if ((checkNyliums && reader.getBlockState(nearbyPos).is(BlockTags.NYLIUM)) || reader.getBlockState(nearbyPos).is(ModBlockTags.HYPHAL_SOUL_SOIL)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static void performHyphalify(World world, Random random, BlockPos pos, BlockState forCrimson, BlockState forWarped) {
+        boolean crimson = false;
+        boolean warped = false;
+        for (BlockPos nearbyPos : BlockPos.betweenClosed(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))) {
+            BlockState state = world.getBlockState(nearbyPos);
+            if (state.is(Blocks.CRIMSON_NYLIUM) || state.is(ModBlocks.CRIMSON_HYPHAL_SOIL)) {
+                crimson = true;
+            }
+            if (state.is(Blocks.WARPED_NYLIUM) || state.is(ModBlocks.WARPED_HYPHAL_SOIL)) {
+                warped = true;
+            }
+        }
+        if (crimson && warped) {
+            world.setBlock(pos, random.nextBoolean() ? forCrimson : forWarped, Constants.BlockFlags.DEFAULT);
+        } else if (crimson) {
+            world.setBlock(pos, forCrimson, Constants.BlockFlags.DEFAULT);
+        } else if (warped) {
+            world.setBlock(pos, forWarped, Constants.BlockFlags.DEFAULT);
+        } else if (ConfigHelper.shouldFailhard()) {
+            throw new AssertionError("Neither nylium nor hyphal soul soil found");
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerDig(PlayerEvent.BreakSpeed event) {
         if (ExtraAbility.DESTROYER.isOn(event.getPlayer())) {
             event.setNewSpeed(event.getNewSpeed() * ExtraAbilityConstants.DESTROYER_SPEED_MULTIPLIER);
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onEntityDestroyBlock(LivingDestroyBlockEvent event) {
+        if (handleArmoredBlockBreak(event.getEntity().level, event.getPos(), IArmoredBlock::enableForMobs)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onPlayerDestroyBlock(BlockEvent.BreakEvent event) {
+        if (handleArmoredBlockBreak((World) event.getWorld(), event.getPos())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
+        event.getAffectedBlocks().removeIf(pos -> handleArmoredBlockBreak(event.getWorld(), pos, IArmoredBlock::enableForExplosion));
+    }
+
+    private static boolean handleArmoredBlockBreak(World world, BlockPos pos) {
+        return handleArmoredBlockBreak(world, pos, b -> true);
+    }
+
+    private static boolean handleArmoredBlockBreak(World world, BlockPos pos, Predicate<? super IArmoredBlock> shouldEnable) {
+        BlockState old = world.getBlockState(pos);
+        Block oldBlock = old.getBlock();
+        TileEntity oldBlockEntity = world.getBlockEntity(pos);
+        if (oldBlock instanceof IArmoredBlock) {
+            IArmoredBlock armoredBlock = (IArmoredBlock) oldBlock;
+            if (!shouldEnable.test(armoredBlock)) {
+                return false;
+            }
+            BlockState child = armoredBlock.getChild(world, pos, old, oldBlockEntity);
+            if (child != null) {
+                world.setBlock(pos, child, Constants.BlockFlags.DEFAULT);
+                armoredBlock.restoreFrom(world, pos, old, child, oldBlockEntity);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SubscribeEvent
     public static void onEmptyClick(PlayerInteractEvent.RightClickEmpty event) {
-        ClickHandlerNetwork.INSTANCE.sendToServer(Utils.DUMMY);
+        ClickHandlerNetwork.INSTANCE.sendToServer(DefaultValues.DUMMY);
     }
 
     @SuppressWarnings("deprecation")
@@ -300,7 +418,10 @@ public final class CommonEventListener {
             ((IEntityMixin) event.getEntityLiving()).setReversed(event.getEntityLiving().hasEffect(ModEffects.REVERSION));
         }
         if (event.getEntityLiving() instanceof IShieldUser && ((IShieldUser) event.getEntityLiving()).getSharedShield() != null) {
-            ((IShieldUser) event.getEntityLiving()).getSharedShield().tick();
+//          Multi-tick is not allowed for shields
+            if (!(event.getEntityLiving() instanceof ISharedShieldUser) || (((ISharedShieldUser) event.getEntityLiving()).getShieldProvider() == event.getEntityLiving())) {
+                ((IShieldUser) event.getEntityLiving()).getSharedShield().tick();
+            }
         }
         if (event.getEntityLiving() instanceof ISpellCastable) {
             ((ISpellCastable) event.getEntityLiving()).renderParticles();
@@ -356,18 +477,25 @@ public final class CommonEventListener {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onBiomeLoadWithHighPriority(BiomeLoadingEvent event) {
-        if (event.getName() != null && "soul_sand_valley".equals(event.getName().getPath())) {
+        if (isVanillaRegistryName(event.getName()) && "soul_sand_valley".equals(event.getName().getPath())) {
             event.getSpawns().addMobCharge(ModEntities.SOUL_SKELETON, 0.7, 0.15);
             event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.SOUL_SKELETON, 20, 5, 5));
+        }
+        if (isVanillaRegistryName(event.getName()) && "warped_forest".equals(event.getName().getPath())) {
+            event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_POISONOUS_FIRE);
         }
     }
 
     @SubscribeEvent
     public static void onBiomeLoad(BiomeLoadingEvent event) {
-        if (event.getName() != null && "soul_sand_valley".equals(event.getName().getPath())) {
+        if (isVanillaRegistryName(event.getName()) && "soul_sand_valley".equals(event.getName().getPath())) {
             ((MobSpawnInfoAccessor) event.getSpawns()).getSpawners().get(EntityClassification.MONSTER).removeIf(spawners -> spawners.type == EntityType.SKELETON);
             ((MobSpawnInfoAccessor) event.getSpawns()).getMobSpawnCosts().remove(EntityType.SKELETON);
         }
+    }
+
+    private static boolean isVanillaRegistryName(@Nullable ResourceLocation location) {
+        return location != null && "minecraft".equals(location.getNamespace());
     }
 
     @SubscribeEvent

@@ -34,7 +34,7 @@ public abstract class ItemStackTileEntityRendererMixin {
         this.stack = stack;
     }
 
-//  Fail-safe, OptiFine seems to redirect these below.
+//  Fail-safe for OptiFine.
     @Redirect(method = "renderByItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/BannerTileEntityRenderer;renderPatterns(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;IILnet/minecraft/client/renderer/model/ModelRenderer;Lnet/minecraft/client/renderer/model/RenderMaterial;ZLjava/util/List;Z)V"), require = 0)
     private void renderBannerPatterns(MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, ModelRenderer renderer, RenderMaterial material, boolean isBanner, List<Pair<BannerPattern, DyeColor>> list, boolean hasFoil) {
         SoulRenderers.renderBannerPatterns(matrix, buffer, combinedLight, combinedOverlay, renderer, material, isBanner, list, stack);

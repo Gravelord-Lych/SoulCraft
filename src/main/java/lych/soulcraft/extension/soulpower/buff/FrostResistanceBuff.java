@@ -11,7 +11,7 @@ public enum FrostResistanceBuff implements DefenseBuff {
     INSTANCE;
 
     private static float calculateFrostResistanceDamageMultiplier(float temperature, boolean onFire) {
-        float damageMultiplier = MathHelper.clamp(0.5f + (temperature + 1) / 6, 0.5f, 1);
+        float damageMultiplier = MathHelper.clamp(0.5f + (temperature + 1) / 6, 0.5f, 1.1f);
         return onFire ? (damageMultiplier + 1) / 2 : damageMultiplier;
     }
 

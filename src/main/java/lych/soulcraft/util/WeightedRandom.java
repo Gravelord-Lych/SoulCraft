@@ -23,6 +23,10 @@ public final class WeightedRandom {
     }
 
     public static <T extends Item> T getRandomItem(Random random, List<T> list, int bound) {
+        return getRandomItem(random::nextInt, list, bound);
+    }
+
+    public static <T extends Item> T getRandomItem(IRandom random, List<T> list, int bound) {
         if (bound <= 0) {
             throw Util.pauseInIde(new IllegalArgumentException("Bound must be positive"));
         }
@@ -43,10 +47,18 @@ public final class WeightedRandom {
     }
 
     public static <T extends Item> T getRandomItem(Random random, List<T> itemList) {
+        return getRandomItem(random::nextInt, itemList);
+    }
+
+    public static <T extends Item> T getRandomItem(IRandom random, List<T> itemList) {
         return getRandomItem(random, itemList, getTotalWeight(itemList));
     }
 
     public interface Item {
         int getWeight();
+    }
+
+    public interface IRandom {
+        int nextInt(int bound);
     }
 }

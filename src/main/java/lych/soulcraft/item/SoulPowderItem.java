@@ -1,8 +1,8 @@
 package lych.soulcraft.item;
 
 import lych.soulcraft.block.ModBlocks;
+import lych.soulcraft.util.DefaultValues;
 import lych.soulcraft.util.SoulEnergies;
-import lych.soulcraft.util.Utils;
 import lych.soulcraft.world.event.manager.WorldTickerManager;
 import lych.soulcraft.world.event.ticker.WorldTickers;
 import net.minecraft.block.Block;
@@ -40,12 +40,9 @@ public class SoulPowderItem extends Item {
         ItemStack stack = context.getItemInHand();
         if (stack.getItem() instanceof SoulPowderItem && stack.getCount() == 63) {
             if (context.getLevel() instanceof ServerWorld && context.getPlayer() != null) {
-                SoulEnergies.cost(context.getPlayer(),
-                        ENERGY_REQUIRED,
-                        () -> trySpawnMeta08((ServerWorld) context.getLevel(), context.getClickedPos(), stack),
-                        Utils.dummyRunnable());
+                return SoulEnergies.cost(context.getPlayer(), ENERGY_REQUIRED, () -> trySpawnMeta08((ServerWorld) context.getLevel(), context.getClickedPos(), stack), DefaultValues.dummyRunnable()) ?
+                        ActionResultType.SUCCESS : super.useOn(context);
             }
-            return ActionResultType.SUCCESS;
         }
         return super.useOn(context);
     }

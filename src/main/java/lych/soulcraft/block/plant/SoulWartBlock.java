@@ -1,5 +1,6 @@
 package lych.soulcraft.block.plant;
 
+import lych.soulcraft.block.ModBlocks;
 import lych.soulcraft.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherWartBlock;
@@ -21,5 +22,10 @@ public class SoulWartBlock extends NetherWartBlock {
     @Override
     public PlantType getPlantType(IBlockReader world, BlockPos pos) {
         return ModPlantTypes.SOUL;
+    }
+
+    @Override
+    protected boolean mayPlaceOn(BlockState state, IBlockReader reader, BlockPos pos) {
+        return super.mayPlaceOn(state, reader, pos) || state.is(ModBlocks.REFINED_SOUL_SAND);
     }
 }

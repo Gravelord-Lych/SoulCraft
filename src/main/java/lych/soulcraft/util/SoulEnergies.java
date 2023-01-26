@@ -256,31 +256,31 @@ public final class SoulEnergies {
         return storages.stream().filter(stack -> of(stack).isPresent()).filter(stack -> of(stack).resolve().get().getMaxExtract() >= amount).collect(Collectors.toList());
     }
 
-    public static boolean costSimply(PlayerEntity player, int amount) {
-        return costSimply(getSEContainers(player), amount);
+    public static boolean cost(PlayerEntity player, int amount) {
+        return cost(getSEContainers(player), amount);
     }
 
     public static boolean cost(PlayerEntity player, int amount, Runnable ifSucceeded, Runnable ifFailed) {
-        return cost(player, amount, Utils.dummyConsumer(), ifSucceeded, ifFailed);
+        return cost(player, amount, DefaultValues.dummyConsumer(), ifSucceeded, ifFailed);
     }
 
-    public static boolean cost(PlayerEntity player, int amount, Consumer<ItemStack> ifSuccessfullyCostAStack, Runnable ifSucceeded, Runnable ifFailed) {
+    public static boolean cost(PlayerEntity player, int amount, Consumer<? super ItemStack> ifSuccessfullyCostAStack, Runnable ifSucceeded, Runnable ifFailed) {
         return cost(getSEContainers(player), ifSuccessfullyCostAStack, ifSucceeded, ifFailed, new AtomicInteger(amount));
     }
 
-    public static boolean costSimply(List<ItemStack> list, int amount) {
-        return cost(list, amount, Utils.dummyConsumer(), Utils.dummyRunnable(), Utils.dummyRunnable());
+    public static boolean cost(List<? extends ItemStack> list, int amount) {
+        return cost(list, amount, DefaultValues.dummyConsumer(), DefaultValues.dummyRunnable(), DefaultValues.dummyRunnable());
     }
 
-    public static boolean cost(List<ItemStack> list, int amount, Runnable ifSucceeded, Runnable ifFailed) {
-        return cost(list, amount, Utils.dummyConsumer(), ifSucceeded, ifFailed);
+    public static boolean cost(List<? extends ItemStack> list, int amount, Runnable ifSucceeded, Runnable ifFailed) {
+        return cost(list, amount, DefaultValues.dummyConsumer(), ifSucceeded, ifFailed);
     }
 
-    public static boolean cost(List<ItemStack> list, int amount, Consumer<ItemStack> ifSuccessfullyCostAStack, Runnable ifSucceeded, Runnable ifFailed) {
+    public static boolean cost(List<? extends ItemStack> list, int amount, Consumer<? super ItemStack> ifSuccessfullyCostAStack, Runnable ifSucceeded, Runnable ifFailed) {
         return cost(list, ifSuccessfullyCostAStack, ifSucceeded, ifFailed, new AtomicInteger(amount));
     }
 
-    private static boolean cost(List<ItemStack> list, Consumer<ItemStack> ifSuccessfullyCostAStack, Runnable ifSucceeded, Runnable ifFailed, AtomicInteger amountRemaining) {
+    private static boolean cost(List<? extends ItemStack> list, Consumer<? super ItemStack> ifSuccessfullyCostAStack, Runnable ifSucceeded, Runnable ifFailed, AtomicInteger amountRemaining) {
         if (list.isEmpty()) {
             ifFailed.run();
             return false;

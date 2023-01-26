@@ -66,6 +66,12 @@ public final class VoidwalkerGoals {
         }
 
         @Override
+        protected void findTarget() {
+            targetConditions = targetConditions.range(getFollowDistance());
+            super.findTarget();
+        }
+
+        @Override
         protected AxisAlignedBB getTargetSearchArea(double followDistance) {
             return mob.getBoundingBox().inflate(followDistance, followDistance / 2, followDistance);
         }

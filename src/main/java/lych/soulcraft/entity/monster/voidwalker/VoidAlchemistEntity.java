@@ -9,8 +9,8 @@ import lych.soulcraft.entity.ai.goal.wrapper.Goals;
 import lych.soulcraft.entity.iface.ESVMob;
 import lych.soulcraft.entity.monster.boss.esv.SoulControllerEntity;
 import lych.soulcraft.potion.ModPotions;
-import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.util.ModEffectUtils;
 import lych.soulcraft.util.WeightedRandom;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -44,7 +44,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -130,6 +129,11 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
     }
 
     @Override
+    public ItemStack createWeapon() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     public void doHealTarget(AbstractVoidwalkerEntity healTarget) {
         Optional<EffectInstance> effect = healTarget.getActiveEffects().stream().filter(ModEffectUtils::isHarmful).reduce(VoidAlchemistEntity::findEffectToClear);
         effect.map(EffectInstance::getEffect).ifPresent(healTarget::removeEffect);
@@ -144,11 +148,6 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
     @Override
     public boolean canHeal(AbstractVoidwalkerEntity voidwalker) {
         return voidwalker.getActiveEffects().stream().anyMatch(ModEffectUtils::isHarmful);
-    }
-
-    @Override
-    protected void strengthenSelf(VoidwalkerTier tier, DifficultyInstance difficulty, SpawnReason reason) {
-        strengthenSelfByDefault(tier);
     }
 
     @Override

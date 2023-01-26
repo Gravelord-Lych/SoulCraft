@@ -46,7 +46,7 @@ public class ESVSkyRenderer implements ISkyRenderHandler {
     @SuppressWarnings("deprecation")
     @Override
     public void render(int ticks, float partialTicks, MatrixStack matrixStack, ClientWorld level, Minecraft mc) {
-        WorldRenderer rg = mc.levelRenderer;
+        WorldRenderer renderer = mc.levelRenderer;
         RenderSystem.disableTexture();
         color = updateColor(ticks, partialTicks, level);
         Vector3d vec3d = getColorVec();
@@ -61,13 +61,13 @@ public class ESVSkyRenderer implements ISkyRenderHandler {
         RenderSystem.enableFog();
         RenderSystem.color3f(x, y, z);
 
-        ((IWorldRendererMixin) rg).getSkyBuffer().bind();
+        ((IWorldRendererMixin) renderer).getSkyBuffer().bind();
         vertexBufferFormat.setupBufferState(0L);
-        ((IWorldRendererMixin) rg).getSkyBuffer().draw(matrixStack.last().pose(), 7);
+        ((IWorldRendererMixin) renderer).getSkyBuffer().draw(matrixStack.last().pose(), 7);
         VertexBuffer.unbind();
         vertexBufferFormat.clearBufferState();
-
         RenderSystem.disableFog();
+
         RenderSystem.disableAlphaTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -87,9 +87,9 @@ public class ESVSkyRenderer implements ISkyRenderHandler {
         if (d0 < 0.0D) {
             matrixStack.pushPose();
             matrixStack.translate(0.0F, 12.0F, 0.0F);
-            ((IWorldRendererMixin) rg).getSkyBuffer().bind();
+            ((IWorldRendererMixin) renderer).getSkyBuffer().bind();
             vertexBufferFormat.setupBufferState(0L);
-            ((IWorldRendererMixin) rg).getSkyBuffer().draw(matrixStack.last().pose(), 7);
+            ((IWorldRendererMixin) renderer).getSkyBuffer().draw(matrixStack.last().pose(), 7);
             VertexBuffer.unbind();
             vertexBufferFormat.clearBufferState();
             matrixStack.popPose();
@@ -152,13 +152,7 @@ public class ESVSkyRenderer implements ISkyRenderHandler {
     }
 
     protected Color getCachedColor(float partialTicks) {
-        int ro = cachedColorO.getRed();
-        int go = cachedColorO.getGreen();
-        int bo = cachedColorO.getBlue();
-        int r = cachedColor.getRed();
-        int g = cachedColor.getGreen();
-        int b = cachedColor.getBlue();
-        return new Color((int) MathHelper.lerp(partialTicks, ro, r), (int) MathHelper.lerp(partialTicks, go, g), (int) MathHelper.lerp(partialTicks, bo, b));
+        return Utils.lerpColor(partialTicks, cachedColorO, cachedColor);
     }
 
     protected void begin(BufferBuilder builder) {

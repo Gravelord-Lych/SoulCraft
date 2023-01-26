@@ -15,9 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(FogRenderer.class)
 public abstract class FogRendererMixin {
     @Shadow private static float fogRed;
-
     @Shadow private static float fogGreen;
-
     @Shadow private static float fogBlue;
 
     @Inject(method = "setupColor",

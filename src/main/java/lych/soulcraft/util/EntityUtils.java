@@ -32,12 +32,16 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.PotionEvent;
@@ -54,7 +58,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public final class EntityUtils {
+public final class  EntityUtils {
     public static final EntityPredicate ALL = EntityPredicate.DEFAULT.allowUnseeable().allowInvulnerable().ignoreInvisibilityTesting().allowSameTeam().allowNonAttackable();
     public static final EntityPredicate ALL_ATTACKABLE = EntityPredicate.DEFAULT.allowUnseeable().ignoreInvisibilityTesting();
 
@@ -179,29 +183,6 @@ public final class EntityUtils {
 
     public static void directlyAddGoal(GoalSelector selector, PrioritizedGoal goal) {
         ((IGoalSelectorMixin) selector).getAvailableGoals().add(goal);
-    }
-
-    public static RayTraceResult getHitResult(Entity entity, Vector3d vector, Predicate<? super Entity> predicate) {
-        World world = entity.level;
-        Vector3d pos = entity.position();
-        Vector3d to = pos.add(vector);
-        RayTraceResult res = world.clip(new RayTraceContext(pos, to, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, entity));
-        if (res.getType() != RayTraceResult.Type.MISS) {
-            to = res.getLocation();
-        }
-        RayTraceResult entityRes = ProjectileHelper.getEntityHitResult(world, entity, pos, to, entity.getBoundingBox().expandTowards(vector).inflate(5), predicate::test);
-        if (entityRes != null) {
-            res = entityRes;
-        }
-        return res;
-    }
-
-    public static Optional<EntityRayTraceResult> getHitResult(Entity entity, Vector3d position, Vector3d targetPosition, Predicate<? super Entity> entityPredicate) {
-        return getHitResult(entity, position, position.vectorTo(targetPosition), new AxisAlignedBB(targetPosition.subtract(2, 2, 2), targetPosition.add(2, 2, 2)), entityPredicate);
-    }
-
-    public static Optional<EntityRayTraceResult> getHitResult(Entity entity, Vector3d position, Vector3d vectorToTarget, AxisAlignedBB bb, Predicate<? super Entity> entityPredicate) {
-        return Optional.ofNullable(ProjectileHelper.getEntityHitResult(entity.level, entity, position, vectorToTarget, bb, entityPredicate::test));
     }
 
     public static ModifiableAttributeInstance getAttribute(LivingEntity entity, Attribute attribute) {
@@ -397,6 +378,10 @@ public final class EntityUtils {
         return ForgeEventFactory.getMobGriefingEvent(entity.level, entity);
     }
 
+    public static boolean canMobGrief(LivingEntity entity, BlockPos pos) {
+        return ForgeHooks.canEntityDestroy(entity.level, pos, entity);
+    }
+
     public static int removeEffect(LivingEntity entity, Predicate<? super EffectInstance> predicate) {
         List<EffectInstance> effectInstancesToRemove = entity.getActiveEffects().stream().filter(predicate).collect(Collectors.toList());
         List<Effect> effectsToRemove = effectInstancesToRemove.stream().map(EffectInstance::getEffect).collect(Collectors.toList());
@@ -426,6 +411,15 @@ public final class EntityUtils {
     @SuppressWarnings("unchecked")
     public static <T extends Entity> Optional<T> getEntityOptional(Class<? extends T> cls, World world, UUID uuid) {
         return world instanceof ServerWorld ? Optional.ofNullable(((ServerWorld) world).getEntity(uuid)).filter(entity -> cls.isAssignableFrom(entity.getClass())).map(entity -> (T) entity) : Optional.empty();
+    }
+
+    @Nullable
+    public static EntityRayTraceResult getEntityRayTraceResult(Entity entity, double reachDistance) {
+        Vector3d position = entity.getEyePosition(0);
+        Vector3d viewVector = entity.getViewVector(1);
+        Vector3d targetPos = position.add(viewVector.scale(reachDistance));
+        AxisAlignedBB possibleEntities = entity.getBoundingBox().expandTowards(viewVector.scale(reachDistance)).inflate(1);
+        return ProjectileHelper.getEntityHitResult(entity, position, targetPos, possibleEntities, entityIn -> !entityIn.isSpectator() && entityIn.isPickable(), reachDistance * reachDistance);
     }
 
     @FieldsAreNullableByDefault

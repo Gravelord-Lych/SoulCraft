@@ -8,17 +8,15 @@ import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.util.RedstoneParticles;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser {
     static final double PROTECTIVE_RANGE = 6;
@@ -66,10 +64,15 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     }
 
     @Override
+    public ItemStack createWeapon() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {}
 
     @Override
-    protected void strengthenSelf(VoidwalkerTier tier, DifficultyInstance difficulty, SpawnReason reason) {
+    protected void doStrengthenSelf(VoidwalkerTier tier, VoidwalkerTier oldTier, DifficultyInstance difficulty) {
         float absoluteDefense = 0;
         float regenAmount = 1;
         switch (tier) {
@@ -166,7 +169,6 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
         super.readAdditionalSaveData(compoundNBT);
         if (!level.isClientSide() && compoundNBT.contains("SharedShield")) {
             sharedShield = new SharedShield(compoundNBT.getCompound("SharedShield"));
-            Objects.requireNonNull(getSharedShield(), "SharedShield not present").setInvulnerableTicks(100);
         }
         if (compoundNBT.contains("ShieldValid")) {
             shieldValid = compoundNBT.getBoolean("ShieldValid");

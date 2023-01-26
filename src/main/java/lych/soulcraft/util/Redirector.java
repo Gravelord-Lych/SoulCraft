@@ -4,11 +4,10 @@ import com.google.common.base.Preconditions;
 
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static org.apache.commons.lang3.ArrayUtils.add;
 
-public class Redirector<T extends A, A> implements Predicate<A> {
+public class Redirector<T extends A, A> implements Redirectable<T, A> {
     private final T value;
     private final A[] aliases;
 
@@ -20,26 +19,19 @@ public class Redirector<T extends A, A> implements Predicate<A> {
         Preconditions.checkArgument(this.aliases.length > 0, "Aliases should not be empty");
     }
 
-    public T redirect(A a, Function<? super A, ? extends T> function) {
+    @Override
+    public T redirect(A a, Function<? super A, ? extends T> ifNotFound) {
         Objects.requireNonNull(a);
-        Objects.requireNonNull(function);
+        Objects.requireNonNull(ifNotFound);
         for (A alias : aliases) {
             if (isEqual(a, alias)) {
                 return value;
             }
         }
-        return function.apply(a);
+        return ifNotFound.apply(a);
     }
 
     protected boolean isEqual(A a, A alias) {
         return Objects.equals(a, alias);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public boolean test(A a) {
-//      Returns null if not redirected, so suppressed.
-        T t = redirect(a, al -> null);
-        return t != null;
     }
 }

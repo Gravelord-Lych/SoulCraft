@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -62,6 +63,11 @@ public class EtherealArrowRenderer extends EntityRenderer<EtherealArrowEntity> {
     @Override
     public ResourceLocation getTextureLocation(EtherealArrowEntity arrow) {
         return arrow.isEnhanced() ? ENHANCED_ETHEREAL_ARROW : ETHEREAL_ARROW;
+    }
+
+    @Override
+    protected int getBlockLightLevel(EtherealArrowEntity arrow, BlockPos pos) {
+        return 15;
     }
 
     private void vertex(Matrix4f mat4, Matrix3f mat3, IVertexBuilder builder, int x, int y, int z, float u, float v, int nx, int ny, int nz, int light) {

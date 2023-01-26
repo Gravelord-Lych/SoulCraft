@@ -51,7 +51,7 @@ public class RobotEntity extends MonsterEntity implements IMeta08NonAttackable, 
         return MonsterEntity.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 20)
                 .add(Attributes.FOLLOW_RANGE, 22)
-                .add(Attributes.ATTACK_DAMAGE, 2)
+                .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.MOVEMENT_SPEED, 0.26);
     }
 

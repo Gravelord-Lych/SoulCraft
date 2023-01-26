@@ -66,78 +66,77 @@ public interface IExtraAbility extends Comparable<IExtraAbility> {
     static IExtraAbility dummy() {
         return Dummy.INSTANCE;
     }
+}
+class Dummy implements IExtraAbility {
+    static final IExtraAbility INSTANCE = new Dummy();
 
-    class Dummy implements IExtraAbility {
-        private static final IExtraAbility INSTANCE = new Dummy();
+    private Dummy() {}
 
-        private Dummy() {}
+    private static final ResourceLocation DUMMY_REGISTRY_NAME = new ResourceLocation("dummy");
+    private static final ITextComponent DUMMY_DISPLAY_NAME = new StringTextComponent("Dummy");
 
-        private static final ResourceLocation DUMMY_REGISTRY_NAME = new ResourceLocation("dummy");
-        private static final ITextComponent DUMMY_DISPLAY_NAME = new StringTextComponent("Dummy");
+    @Override
+    public ResourceLocation getRegistryName() {
+        return DUMMY_REGISTRY_NAME;
+    }
 
-        @Override
-        public ResourceLocation getRegistryName() {
-            return DUMMY_REGISTRY_NAME;
-        }
+    @Override
+    public boolean isOn(PlayerEntity player) {
+        return false;
+    }
 
-        @Override
-        public boolean isOn(PlayerEntity player) {
-            return false;
-        }
+    @Override
+    public boolean addTo(PlayerEntity player) {
+        return false;
+    }
 
-        @Override
-        public boolean addTo(PlayerEntity player) {
-            return false;
-        }
+    @Override
+    public boolean removeFrom(PlayerEntity player) {
+        return false;
+    }
 
-        @Override
-        public boolean removeFrom(PlayerEntity player) {
-            return false;
-        }
+    @Override
+    public ITextComponent getDisplayName() {
+        return DUMMY_DISPLAY_NAME;
+    }
 
-        @Override
-        public ITextComponent getDisplayName() {
-            return DUMMY_DISPLAY_NAME;
-        }
+    @Override
+    public int getSoulContainerCost() {
+        return 0;
+    }
 
-        @Override
-        public int getSoulContainerCost() {
-            return 0;
-        }
+    @Override
+    public int getSECost() {
+        return 0;
+    }
 
-        @Override
-        public int getSECost() {
-            return 0;
-        }
+    @Override
+    public boolean isSpecial() {
+        return false;
+    }
 
-        @Override
-        public boolean isSpecial() {
-            return false;
-        }
+    @Override
+    public TextFormatting getStyle() {
+        return TextFormatting.GRAY;
+    }
 
-        @Override
-        public TextFormatting getStyle() {
-            return TextFormatting.GRAY;
-        }
+    @Override
+    public int compareTo(@NotNull IExtraAbility o) {
+        return o.isDummy() ? getRegistryName().compareTo(o.getRegistryName()) : -1;
+    }
 
-        @Override
-        public int compareTo(@NotNull IExtraAbility o) {
-            return o.isDummy() ? getRegistryName().compareTo(o.getRegistryName()) : -1;
-        }
+    @Override
+    public String toString() {
+        return "DummyExtraAbility";
+    }
 
-        @Override
-        public String toString() {
-            return "DummyExtraAbility";
-        }
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof IExtraAbility && ((IExtraAbility) obj).isDummy();
+    }
 
-        @Override
-        public boolean equals(Object obj) {
-            return this == obj || obj instanceof IExtraAbility && ((IExtraAbility) obj).isDummy();
-        }
-
-        @Override
-        public int hashCode() {
-            return 1;
-        }
+    @Override
+    public int hashCode() {
+        return 1;
     }
 }

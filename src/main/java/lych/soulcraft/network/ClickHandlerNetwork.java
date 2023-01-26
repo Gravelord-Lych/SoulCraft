@@ -2,7 +2,7 @@ package lych.soulcraft.network;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.listener.CommonEventListener;
-import lych.soulcraft.util.Utils;
+import lych.soulcraft.util.DefaultValues;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -21,7 +21,7 @@ public class ClickHandlerNetwork {
         INSTANCE = NetworkRegistry.newSimpleChannel(SoulCraft.prefix("clicks"), () -> VERSION, ClickHandlerNetwork::isCorrectVersion, ClickHandlerNetwork::isCorrectVersion);
         INSTANCE.messageBuilder(Object.class, nextID())
                 .encoder((o, buf) -> {})
-                .decoder(buf -> Utils.DUMMY)
+                .decoder(buf -> DefaultValues.DUMMY)
                 .consumer((key, ctx) -> {
                     CommonEventListener.handleEmptyClickServerside(Objects.requireNonNull(ctx.get().getSender(), "Packets that are sent from a client to the server must have a sender"));
                 })

@@ -3,6 +3,7 @@ package lych.soulcraft.util.data;
 import com.google.gson.JsonObject;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.util.ArrayUtils;
+import lych.soulcraft.world.gen.chunkgen.ModChunkGenerators;
 import lych.soulcraft.world.gen.dimension.ModDimensionNames;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,7 +31,7 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
 
     protected abstract void addDetails(JsonObject root);
 
-    public abstract ResourceLocation getType();
+    protected abstract ResourceLocation getType();
 
     @Override
     public String getNamespace() {
@@ -74,7 +75,9 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
         private static final ResourceLocation NOISE = new ResourceLocation("noise");
         private JsonObject biomeSource;
         private long seed;
+        private boolean noSeed;
         private ResourceLocation settings;
+        private ResourceLocation type = NOISE;
 
         private Noise(String modid, String name) {
             super(modid, name);
@@ -95,6 +98,13 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
             return this;
         }
 
+        public Noise noSeed() {
+            this.noSeed = true;
+            this.seed = 0;
+            this.type = ModChunkGenerators.DYNAMIC_SEED_CHUNKGEN;
+            return this;
+        }
+
         public Noise settings(ResourceLocation settings) {
             this.settings = settings;
             return this;
@@ -104,13 +114,15 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
         protected void addDetails(JsonObject root) {
             ArrayUtils.checkNonNull(biomeSource, seed, settings);
             root.add("biome_source", biomeSource);
-            root.addProperty("seed", seed);
+            if (!noSeed) {
+                root.addProperty("seed", seed);
+            }
             root.addProperty("settings", settings.toString());
         }
 
         @Override
         public ResourceLocation getType() {
-            return NOISE;
+            return type;
         }
     }
 
@@ -134,6 +146,7 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
         private static final ResourceLocation SUBWORLD = SoulCraft.prefix(ModDimensionNames.SUBWORLD);
         private JsonObject biomeSource;
         private long seed;
+        private boolean noSeed;
         private ResourceLocation settings;
 
         private Subworld(String modid, String name) {
@@ -155,6 +168,12 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
             return this;
         }
 
+        public Subworld noSeed() {
+            this.noSeed = true;
+            this.seed = 0;
+            return this;
+        }
+
         public Subworld settings(ResourceLocation settings) {
             this.settings = settings;
             return this;
@@ -164,7 +183,9 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
         protected void addDetails(JsonObject root) {
             ArrayUtils.checkNonNull(biomeSource, seed, settings);
             root.add("biome_source", biomeSource);
-            root.addProperty("seed", seed);
+            if (!noSeed) {
+                root.addProperty("seed", seed);
+            }
             root.addProperty("settings", settings.toString());
         }
 
@@ -203,6 +224,7 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
         private final ResourceLocation type;
         private JsonObject biomeSource;
         private long seed;
+        private boolean noSeed;
         private ResourceLocation settings;
 
         private Common(String modid, String name, ResourceLocation type) {
@@ -225,6 +247,12 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
             return this;
         }
 
+        public Common noSeed() {
+            this.noSeed = true;
+            this.seed = 0;
+            return this;
+        }
+
         public Common settings(ResourceLocation settings) {
             this.settings = settings;
             return this;
@@ -234,7 +262,9 @@ public abstract class ChunkGeneratorBuilder implements IDataBuilder {
         protected void addDetails(JsonObject root) {
             ArrayUtils.checkNonNull(biomeSource, seed, settings);
             root.add("biome_source", biomeSource);
-            root.addProperty("seed", seed);
+            if (!noSeed) {
+                root.addProperty("seed", seed);
+            }
             root.addProperty("settings", settings.toString());
         }
 

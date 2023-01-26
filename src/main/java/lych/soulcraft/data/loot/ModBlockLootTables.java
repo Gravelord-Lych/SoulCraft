@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static lych.soulcraft.block.ModBlocks.*;
+import static net.minecraft.block.Blocks.*;
 
 public class ModBlockLootTables extends BlockLootTables {
     private final Set<Block> knownBlocks = new HashSet<>();
@@ -32,6 +33,7 @@ public class ModBlockLootTables extends BlockLootTables {
         dropSelf(CRACKED_SOUL_STONE_BRICK_STAIRS);
         dropSelf(CRACKED_SOUL_STONE_BRICK_WALL);
         dropSelf(CRACKED_SOUL_STONE_BRICKS);
+        dropSelfIfSilkTouch(CRIMSON_HYPHAL_SOIL, SOUL_SOIL);
         dropSelf(DECAYED_STONE);
         dropSelf(DECAYED_STONE_BRICK_SLAB);
         dropSelf(DECAYED_STONE_BRICK_STAIRS);
@@ -40,7 +42,10 @@ public class ModBlockLootTables extends BlockLootTables {
         dropSelf(DECAYED_STONE_SLAB);
         dropSelf(DECAYED_STONE_STAIRS);
         dropSelf(DECAYED_STONE_WALL);
+        dropSelf(PARCHED_SOIL);
         dropSelf(REFINED_SOUL_METAL_BLOCK);
+        dropSelf(REFINED_SOUL_SAND);
+        dropSelf(REFINED_SOUL_SOIL);
         dropSelf(SMOOTH_SOUL_STONE);
         dropSelf(SMOOTH_SOUL_STONE_SLAB);
         dropSelf(SMOOTH_SOUL_STONE_STAIRS);
@@ -67,6 +72,7 @@ public class ModBlockLootTables extends BlockLootTables {
                                         .when(BlockStateProperty.hasBlockStateProperties(block)
                                                 .setProperties(StatePropertiesPredicate.Builder.properties()
                                                         .hasProperty(NetherWartBlock.AGE, 3))))))));
+        dropSelfIfSilkTouch(WARPED_HYPHAL_SOIL, SOUL_SOIL);
     }
 
     @Override
@@ -74,7 +80,7 @@ public class ModBlockLootTables extends BlockLootTables {
         return knownBlocks;
     }
 
-    protected void dropSelfWhenSilkTouch(Block self, Block droppedBlockIfNoSilkTouch) {
+    protected void dropSelfIfSilkTouch(Block self, Block droppedBlockIfNoSilkTouch) {
         add(self, selfIn -> createSingleItemTableWithSilkTouch(selfIn, droppedBlockIfNoSilkTouch));
     }
 }

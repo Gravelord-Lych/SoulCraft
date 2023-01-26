@@ -2,8 +2,8 @@ package lych.soulcraft.block.entity;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.ItemSEContainer;
-import lych.soulcraft.api.capability.ISoulEnergyStorage;
 import lych.soulcraft.api.capability.APICapabilities;
+import lych.soulcraft.api.capability.ISoulEnergyStorage;
 import lych.soulcraft.block.ModBlockStateProperties;
 import lych.soulcraft.gui.container.SEStorageContainer;
 import lych.soulcraft.util.ProgressArray;

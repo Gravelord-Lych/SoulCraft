@@ -59,7 +59,7 @@ public class SoulReinforcementResultSlot extends Slot {
                     throw new AssertionError();
                 }
 
-                SoulEnergies.costSimply(ImmutableList.of(seContainer), energyCost);
+                SoulEnergies.cost(ImmutableList.of(seContainer), energyCost);
                 return;
             }
         }

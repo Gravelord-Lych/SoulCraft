@@ -8,8 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -17,6 +16,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static lych.soulcraft.data.BlockModelDataGen.side;
+import static lych.soulcraft.data.BlockModelDataGen.top;
+import static net.minecraftforge.client.model.generators.ModelProvider.BLOCK_FOLDER;
 
 public class BlockStateDataGen extends BlockStateProvider {
     public BlockStateDataGen(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -26,10 +29,10 @@ public class BlockStateDataGen extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         simpleBlock(ModBlocks.SOUL_REINFORCEMENT_TABLE, models().orientableWithBottom(name(ModBlocks.SOUL_REINFORCEMENT_TABLE),
-                BlockModelDataGen.prefix(side(ModBlocks.SOUL_REINFORCEMENT_TABLE)),
-                BlockModelDataGen.prefix(side(ModBlocks.SOUL_REINFORCEMENT_TABLE)),
+                side(ModBlocks.SOUL_REINFORCEMENT_TABLE),
+                side(ModBlocks.SOUL_REINFORCEMENT_TABLE),
                 BlockModelDataGen.prefix(ModBlocks.SOUL_STONE),
-                BlockModelDataGen.prefix(top(ModBlocks.SOUL_REINFORCEMENT_TABLE))));
+                top(ModBlocks.SOUL_REINFORCEMENT_TABLE)));
         simpleBlock(ModBlocks.CHISELED_SOUL_STONE_BRICKS, modelFromBlock(ModBlocks.CHISELED_SOUL_STONE_BRICKS));
         simpleBlock(ModBlocks.CRACKED_DECAYED_STONE_BRICKS);
         slabBlock(ModBlocks.CRACKED_DECAYED_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS));
@@ -39,6 +42,7 @@ public class BlockStateDataGen extends BlockStateProvider {
         slabBlock(ModBlocks.CRACKED_SOUL_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
         stairsBlock(ModBlocks.CRACKED_SOUL_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
         wallBlock(ModBlocks.CRACKED_SOUL_STONE_BRICK_WALL, BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
+        simpleBlock(ModBlocks.CRIMSON_HYPHAL_SOIL, modelFromBlock(ModBlocks.CRIMSON_HYPHAL_SOIL));
         simpleBlock(ModBlocks.DECAYED_STONE);
         slabBlock(ModBlocks.DECAYED_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS));
         stairsBlock(ModBlocks.DECAYED_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS));
@@ -47,7 +51,13 @@ public class BlockStateDataGen extends BlockStateProvider {
         slabBlock(ModBlocks.DECAYED_STONE_SLAB, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE), BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE));
         stairsBlock(ModBlocks.DECAYED_STONE_STAIRS, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE));
         wallBlock(ModBlocks.DECAYED_STONE_WALL, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE));
+        fire(ModBlocks.INFERNO);
+        simpleBlock(ModBlocks.PARCHED_SOIL);
+        fire(ModBlocks.POISONOUS_FIRE);
+        fire(ModBlocks.PURE_SOUL_FIRE);
         simpleBlock(ModBlocks.REFINED_SOUL_METAL_BLOCK);
+        simpleBlock(ModBlocks.REFINED_SOUL_SAND);
+        simpleBlock(ModBlocks.REFINED_SOUL_SOIL);
         simpleBlock(ModBlocks.SMOOTH_SOUL_STONE);
         slabBlock(ModBlocks.SMOOTH_SOUL_STONE_SLAB, BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE), BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE));
         stairsBlock(ModBlocks.SMOOTH_SOUL_STONE_STAIRS, BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE));
@@ -82,22 +92,7 @@ public class BlockStateDataGen extends BlockStateProvider {
         stairsBlock(ModBlocks.SOUL_STONE_STAIRS, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE));
         wallBlock(ModBlocks.SOUL_STONE_WALL, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE));
         cropsBlock(ModBlocks.SOUL_WART, BlockStateProperties.AGE_3, 0, 1, 1, 2);
-    }
-
-    private String side(Block block) {
-        return name(block) + "_side";
-    }
-
-    private String front(Block block) {
-        return name(block) + "_front";
-    }
-
-    private String bottom(Block block) {
-        return name(block) + "_bottom";
-    }
-
-    private String top(Block block) {
-        return name(block) + "_top";
+        simpleBlock(ModBlocks.WARPED_HYPHAL_SOIL, modelFromBlock(ModBlocks.WARPED_HYPHAL_SOIL));
     }
 
     private void segens() {
@@ -164,7 +159,92 @@ public class BlockStateDataGen extends BlockStateProvider {
         }
     }
 
-    private String name(Block block) {
+    protected void fire(Block block) {
+        fire(block,
+                fireFloorModel(block, 0),
+                fireFloorModel(block, 1),
+                fireSideModel(block, 0, false),
+                fireSideModel(block, 1, false),
+                fireSideModel(block, 0, true),
+                fireSideModel(block, 1, true));
+    }
+
+    protected void fire(Block block, ModelFile floor0, ModelFile floor1, ModelFile side0, ModelFile side1, ModelFile sideAlt0, ModelFile sideAlt1) {
+        MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
+//      Floor
+        builder.part()
+                .modelFile(floor0)
+                .nextModel()
+                .modelFile(floor1)
+                .addModel();
+//      North
+        builder.part()
+                .modelFile(side0)
+                .nextModel()
+                .modelFile(side1)
+                .nextModel()
+                .modelFile(sideAlt0)
+                .nextModel()
+                .modelFile(sideAlt1)
+                .addModel();
+//      East
+        builder.part()
+                .modelFile(side0)
+                .rotationY(90)
+                .nextModel()
+                .modelFile(side1)
+                .rotationY(90)
+                .nextModel()
+                .modelFile(sideAlt0)
+                .rotationY(90)
+                .nextModel()
+                .modelFile(sideAlt1)
+                .rotationY(90)
+                .addModel()
+                .useOr();
+//      South
+        builder.part()
+                .modelFile(side0)
+                .rotationY(180)
+                .nextModel()
+                .modelFile(side1)
+                .rotationY(180)
+                .nextModel()
+                .modelFile(sideAlt0)
+                .rotationY(180)
+                .nextModel()
+                .modelFile(sideAlt1)
+                .rotationY(180)
+                .addModel();
+//      West
+        builder.part()
+                .modelFile(side0)
+                .rotationY(270)
+                .nextModel()
+                .modelFile(side1)
+                .rotationY(270)
+                .nextModel()
+                .modelFile(sideAlt0)
+                .rotationY(270)
+                .nextModel()
+                .modelFile(sideAlt1)
+                .rotationY(270)
+                .addModel();
+    }
+
+    private BlockModelBuilder fireFloorModel(Block fireBlock, int texId) {
+        return models().withExistingParent(name(fireBlock) + "_floor" + texId, BLOCK_FOLDER + "/template_fire_floor").texture("fire", BlockModelDataGen.prefix(fireBlock) + "_" + texId);
+    }
+
+    private BlockModelBuilder fireSideModel(Block fireBlock, int texId, boolean alt) {
+        return models().withExistingParent(name(fireBlock) + "_side" + (alt ? "_alt" : "") + texId, BLOCK_FOLDER + "/template_fire_side" + (alt ? "_alt" : "")).texture("fire", BlockModelDataGen.prefix(fireBlock) + "_" + texId);
+    }
+
+    private BlockModelBuilder fireUpModel(Block fireBlock, int texId, boolean alt) {
+        return models().withExistingParent(name(fireBlock) + "_up" + (alt ? "_alt" : "") + texId, BLOCK_FOLDER + "/template_fire_up" + (alt ? "_alt" : "")).texture("fire", BlockModelDataGen.prefix(fireBlock) + "_" + texId);
+    }
+
+    private static String name(Block block) {
         return Objects.requireNonNull(block.getRegistryName(), "Registry name should be non-null").getPath();
     }
 }

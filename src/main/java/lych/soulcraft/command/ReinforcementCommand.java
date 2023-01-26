@@ -10,13 +10,13 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.command.argument.ReinforcementArgument;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.extension.soulpower.reinforce.ReinforcementHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.SharedConstants;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collections;
@@ -79,8 +79,9 @@ public final class ReinforcementCommand {
         if (!reinforcement.isItemSuitable(stack) || ReinforcementHelper.isIncompatible(stack, reinforcement)) {
             throw ERROR_UNSUPPORTED_ITEM.create(stack.getItem().getName(stack).getString());
         }
-        if (!ReinforcementHelper.addReinforcement(stack, reinforcement, level).isOk() && SharedConstants.IS_RUNNING_IN_IDE) {
-            throw new IllegalStateException("Reinforcement not added");
+        ReinforcementHelper.ApplicationStatus status = ReinforcementHelper.addReinforcement(stack, reinforcement, level);
+        if (!status.isOk() && ConfigHelper.shouldFailhard()) {
+            throw new IllegalStateException("Reinforcement not added for status " + status);
         }
         context.getSource().sendSuccess(new TranslationTextComponent(SoulCraft.prefixMsg("commands", "reinforcement.add_success"), reinforcement.getType().getDescription().copy().withStyle(reinforcement.getStyle()), player.getDisplayName()), true);
         return Command.SINGLE_SUCCESS;

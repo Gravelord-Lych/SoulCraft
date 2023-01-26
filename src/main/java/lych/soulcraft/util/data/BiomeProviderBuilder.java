@@ -3,7 +3,9 @@ package lych.soulcraft.util.data;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lych.soulcraft.world.gen.biome.provider.SoulLandBiomeProvider;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +67,14 @@ public abstract class BiomeProviderBuilder implements IDataBuilder {
 
     public static MultiNoiseBiomeProviderBuilder multiNoise(String modid, String name) {
         return new MultiNoiseBiomeProviderBuilder(modid, name);
+    }
+
+    public static SoulLand soulLand(String modid, String name) {
+        return new SoulLand(modid, name, null);
+    }
+
+    public static SoulLand soulLand(String modid, String name, long seed) {
+        return new SoulLand(modid, name, seed);
     }
 
     public static class Fixed extends BiomeProviderBuilder {
@@ -163,6 +173,33 @@ public abstract class BiomeProviderBuilder implements IDataBuilder {
         @Override
         public ResourceLocation getType() {
             return CHECKERBOARD;
+        }
+    }
+
+    public static class SoulLand extends BiomeProviderBuilder {
+        private final long seed;
+        private final boolean noSeed;
+
+        private SoulLand(String modid, String name, @Nullable Long seed) {
+            super(modid, name);
+            this.noSeed = seed == null;
+            if (noSeed) {
+                this.seed = 0;
+            } else {
+                this.seed = seed;
+            }
+        }
+
+        @Override
+        protected void addDetails(JsonObject root) {
+            if (!noSeed) {
+                root.addProperty("seed", seed);
+            }
+        }
+
+        @Override
+        public ResourceLocation getType() {
+            return SoulLandBiomeProvider.SOUL_LAND;
         }
     }
 }

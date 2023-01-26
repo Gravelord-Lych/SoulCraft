@@ -3,56 +3,23 @@ package lych.soulcraft.util;
 import lych.soulcraft.world.CommandData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeSet;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public final class Utils {
-    public static final long INFINITY = -1;
-    private static final StringTextComponent DUMMY_TEXT_COMPONENT = new StringTextComponent("");
-    private static final Consumer<?> DUMMY_CONSUMER = o -> {};
-    private static final Runnable DUMMY_RUNNABLE = () -> {};
-    private static final Supplier<?> DUMMY_SUPPLIER = () -> null;
-    private static final Function<?, ?> DUMMY_FUNCTION = o -> null;
-    public static final Object DUMMY = new Object();
-
     private Utils() {}
-
-    @SuppressWarnings("unchecked")
-    public static <T, R> Function<T, R> dummyFunction() {
-        return (Function<T, R>) DUMMY_FUNCTION;
-    }
-
-    public static Runnable dummyRunnable() {
-        return DUMMY_RUNNABLE;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> Supplier<T> dummySupplier() {
-        return (Supplier<T>) DUMMY_SUPPLIER;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> Consumer<T> dummyConsumer() {
-        return (Consumer<T>) DUMMY_CONSUMER;
-    }
-
-    public static StringTextComponent dummyTextComponent() {
-        return DUMMY_TEXT_COMPONENT;
-    }
 
     public static long clamp(long value, long min, long max) {
         if (value < min) {
@@ -124,6 +91,10 @@ public final class Utils {
     }
 
     public static String snakeToCamel(String s) {
+        Objects.requireNonNull(s);
+        if (s.length() <= 1) {
+            return s.toUpperCase();
+        }
         String[] arr = s.split("_");
         if (Arrays.stream(arr).anyMatch(String::isEmpty)) {
             throw new IllegalArgumentException("Malformed string " + s);
@@ -134,5 +105,15 @@ public final class Utils {
             builder.append(ss.substring(1));
         });
         return builder.toString();
+    }
+
+    public static Color lerpColor(float partialTicks, Color colorO, Color color) {
+        int ro = colorO.getRed();
+        int go = colorO.getGreen();
+        int bo = colorO.getBlue();
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        return new Color((int) MathHelper.lerp(partialTicks, ro, r), (int) MathHelper.lerp(partialTicks, go, g), (int) MathHelper.lerp(partialTicks, bo, b));
     }
 }

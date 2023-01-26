@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class SoulLandGenHelper {
-    private static final Set<Block> REPLACEABLE_BLOCKS = new HashSet<>(Arrays.asList(Blocks.SOUL_SAND, Blocks.SOUL_SOIL, ModBlocks.SOUL_STONE));
+    private static final Set<Block> REPLACEABLE_BLOCKS = new HashSet<>(Arrays.asList(ModBlocks.PARCHED_SOIL, Blocks.SOUL_SAND, Blocks.SOUL_SOIL, ModBlocks.SOUL_STONE));
 
     private SoulLandGenHelper() {}
 

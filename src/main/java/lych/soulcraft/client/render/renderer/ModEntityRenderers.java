@@ -48,6 +48,6 @@ public final class ModEntityRenderers {
     }
 
     private static <T extends Entity & IRendersAsItem> EntityRenderer<T> createRenderForMortarShells(EntityRendererManager manager) {
-        return new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1.2f, false);
+        return new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1.2f, true);
     }
 }

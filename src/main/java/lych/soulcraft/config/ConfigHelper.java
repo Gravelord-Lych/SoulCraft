@@ -1,5 +1,7 @@
 package lych.soulcraft.config;
 
+import net.minecraft.util.SharedConstants;
+
 public final class ConfigHelper {
     private ConfigHelper() {}
 
@@ -21,5 +23,9 @@ public final class ConfigHelper {
 
     public static int getUltrareachLengthenPickupDelayAmount() {
         return CommonConfig.ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT.get();
+    }
+
+    public static boolean shouldFailhard() {
+        return SharedConstants.IS_RUNNING_IN_IDE || CommonConfig.FAILHARD.get();
     }
 }

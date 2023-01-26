@@ -51,18 +51,19 @@ public class DimensionDataGen implements IDataProvider {
     }
 
     private void makeSoulLand() {
-        final BiomeProviderBuilder soulLandBiomeProvider = BiomeProviderBuilder.fixed(ModBiomes.SOUL_PLAINS.location(), MOD_ID, ModDimensionNames.SOUL_LAND);
+        final BiomeProviderBuilder soulLandBiomeProvider = BiomeProviderBuilder.soulLand(MOD_ID, ModDimensionNames.SOUL_LAND);
         final ChunkGeneratorBuilder soulLandChunkGenerator = ChunkGeneratorBuilder.noise(MOD_ID, ModDimensionNames.SOUL_LAND)
                 .biomeSource(soulLandBiomeProvider)
-                .seed(0)
+                .noSeed()
                 .settings(SoulCraft.prefix(ModDimensionNames.SOUL_LAND));
 
         final DimensionTypeBuilder soulLandDimensionType = new DimensionTypeBuilder(MOD_ID, ModDimensionNames.SOUL_LAND)
                 .ambientLight(0.1f)
+                .fixedTime(18000)
+                .ultraWarm()
                 .respawnAnchorWorks()
                 .hasRaids()
                 .logicalHeight(256)
-//                .biomeZoomer(FuzzedBiomeMagnifier.INSTANCE)
                 .infiniburn(BlockTags.INFINIBURN_NETHER.getName())
                 .effectsLocation(SoulCraft.prefix(ModDimensionNames.SOUL_LAND));
 
@@ -78,7 +79,7 @@ public class DimensionDataGen implements IDataProvider {
         final BiomeProviderBuilder subworldBiomeProvider = BiomeProviderBuilder.overworld(false, MOD_ID, ModDimensionNames.SUBWORLD, 0);
         final ChunkGeneratorBuilder subworldChunkGenerator = ChunkGeneratorBuilder.subworld(MOD_ID, ModDimensionNames.SUBWORLD)
                 .biomeSource(subworldBiomeProvider)
-                .seed(0)
+                .noSeed()
                 .settings(SoulCraft.prefix(ModDimensionNames.SUBWORLD));
 
         final DimensionTypeBuilder subworldDimensionType = new DimensionTypeBuilder(MOD_ID, ModDimensionNames.SUBWORLD)
@@ -120,7 +121,7 @@ public class DimensionDataGen implements IDataProvider {
         final BiomeProviderBuilder etheBiomeProvider = BiomeProviderBuilder.fixed(Biomes.PLAINS.location(), MOD_ID, ModDimensionNames.ETHEREAL);
         final ChunkGeneratorBuilder etheChunkGenerator = ChunkGeneratorBuilder.ethe(MOD_ID, ModDimensionNames.ETHEREAL)
                 .biomeSource(etheBiomeProvider)
-                .seed(0)
+                .noSeed()
                 .settings(SoulCraft.prefix(ModDimensionNames.ETHEREAL));
 
         final DimensionTypeBuilder etheDimensionType = new DimensionTypeBuilder(MOD_ID, ModDimensionNames.ETHEREAL)

@@ -1,6 +1,7 @@
 package lych.soulcraft.entity.monster.raider;
 
 import com.sun.javafx.scene.control.behavior.OptionalBoolean;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.iface.INoDefaultHurtAnimationEntity;
 import lych.soulcraft.entity.ai.goal.CopyOwnerTargetGoal;
@@ -163,6 +164,9 @@ public abstract class AbstractRedstoneTurretEntity extends MonsterEntity impleme
                     elite = owner.isElite() ? OptionalBoolean.TRUE : OptionalBoolean.FALSE;
                 }
                 if (owner.getTurretMap().remove(this) < 0) {
+                    if (ConfigHelper.shouldFailhard()) {
+                        throw new AssertionError(String.format("An engineer is trying to build %s without any turrets in his turret map", getType().getRegistryName()));
+                    }
                     LOGGER.error("An engineer is trying to build {} without any turrets in his turret map", getType().getRegistryName());
                 }
             }

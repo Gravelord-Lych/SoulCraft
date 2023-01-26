@@ -2,11 +2,15 @@ package lych.soulcraft.client.render.world.sky;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import lych.soulcraft.util.mixin.IWorldRendererMixin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -14,34 +18,48 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ISkyRenderHandler;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
 public class SimpleSkyRenderer implements ISkyRenderHandler {
-    private final ResourceLocation skyLocation;
-    private final Color color;
+    @Nullable
+    protected final ResourceLocation skyLocation;
+    protected Color color;
+    private VertexFormat vertexBufferFormat = DefaultVertexFormats.POSITION;
 
-    public SimpleSkyRenderer(ResourceLocation skyLocation, Color color) {
+    public SimpleSkyRenderer(@Nullable ResourceLocation skyLocation, @Nullable Color initialColor) {
         this.skyLocation = skyLocation;
-        this.color = color;
+        this.color = initialColor;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void render(int ticks, float partialTicks, MatrixStack matrixStack, ClientWorld world, Minecraft mc) {
-        renderSky(ticks, matrixStack, world, mc.getTextureManager());
+        renderSky(ticks, partialTicks, matrixStack, world, mc, mc.getTextureManager());
     }
 
     @SuppressWarnings("deprecation")
-    private void renderSky(int ticks, MatrixStack stack, ClientWorld world, TextureManager manager) {
+    private void renderSky(int ticks, float partialTicks, MatrixStack stack, ClientWorld world, Minecraft mc, TextureManager manager) {
+        RenderSystem.enableFog();
+        Color color = getColor(ticks, partialTicks, world, mc);
+        RenderSystem.color3f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
+        FogRenderer.levelFogColor();
+        ((IWorldRendererMixin) mc.levelRenderer).getSkyBuffer().bind();
+        vertexBufferFormat.setupBufferState(0L);
+        ((IWorldRendererMixin) mc.levelRenderer).getSkyBuffer().draw(stack.last().pose(), 7);
+        VertexBuffer.unbind();
+        vertexBufferFormat.clearBufferState();
+
+        RenderSystem.disableFog();
+        if (skyLocation == null) {
+            return;
+        }
         RenderSystem.disableAlphaTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);
-        Color color = getColor(ticks, world);
-        RenderSystem.color3f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
         manager.bind(skyLocation);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuilder();
@@ -66,11 +84,7 @@ public class SimpleSkyRenderer implements ISkyRenderHandler {
             }
             Matrix4f matrix4f = stack.last().pose();
             begin(builder);
-
-            builder.vertex(matrix4f, -100, -100, -100).uv(0, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
-            builder.vertex(matrix4f, -100, -100, 100).uv(0, 16).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
-            builder.vertex(matrix4f, 100, -100, 100).uv(16, 16).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
-            builder.vertex(matrix4f, 100, -100, -100).uv(16, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+            doRenderTex(color, builder, matrix4f);
             tessellator.end();
             stack.popPose();
         }
@@ -80,16 +94,19 @@ public class SimpleSkyRenderer implements ISkyRenderHandler {
         RenderSystem.enableAlphaTest();
     }
 
+    protected void doRenderTex(Color color, BufferBuilder builder, Matrix4f matrix4f) {
+        builder.vertex(matrix4f, -100, -100, -100).uv(0, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+        builder.vertex(matrix4f, -100, -100, 100).uv(0, 16).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+        builder.vertex(matrix4f, 100, -100, 100).uv(16, 16).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+        builder.vertex(matrix4f, 100, -100, -100).uv(16, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+    }
+
     @SuppressWarnings("deprecation")
     protected void begin(BufferBuilder builder) {
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
     }
 
-    protected Color getColor(int ticks, ClientWorld world) {
+    protected Color getColor(int ticks, float partialTicks, ClientWorld world, Minecraft mc) {
         return color;
-    }
-
-    public ResourceLocation getSkyLocation() {
-        return skyLocation;
     }
 }

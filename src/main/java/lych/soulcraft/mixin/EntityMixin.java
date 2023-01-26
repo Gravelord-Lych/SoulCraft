@@ -21,8 +21,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,14 +42,10 @@ import java.util.Random;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements IEntityMixin {
-    private static final int FIRE_FLAG = 0;
     private static final float LAVA_HURT_DAMAGE = 4;
     @Shadow
     @Final
     protected EntityDataManager entityData;
-
-    @Shadow
-    public abstract boolean fireImmune();
 
     @Shadow
     public World level;
@@ -61,10 +55,6 @@ public abstract class EntityMixin implements IEntityMixin {
     protected Random random;
 
     @Shadow public abstract int getRemainingFireTicks();
-
-    @Shadow public abstract boolean isOnFire();
-
-    @Shadow public abstract boolean isSpectator();
 
     @Shadow protected boolean firstTick;
 
@@ -77,10 +67,6 @@ public abstract class EntityMixin implements IEntityMixin {
     @Shadow public abstract AxisAlignedBB getBoundingBox();
 
     @Shadow protected abstract boolean getSharedFlag(int p_70083_1_);
-
-    @Shadow protected abstract void setSharedFlag(int p_70052_1_, boolean p_70052_2_);
-
-    @Shadow public abstract void setRemainingFireTicks(int p_241209_1_);
 
     @Shadow public abstract void remove();
 
@@ -101,16 +87,7 @@ public abstract class EntityMixin implements IEntityMixin {
         entityData.define(DATA_HIGHLIGHT_COLOR, Optional.empty());
         entityData.define(DATA_FIRE_ID, Fire.empty().getId());
         entityData.define(DATA_REVERSED, false);
-        fluidHeight = new Object2DoubleArrayMap<>(4);
-    }
-
-    @Unique
-    @Override
-    public boolean isOnSoulFire() {
-        if (isOnFire()) {
-            return !fireImmune() && getFireOnSelf() == Fires.SOUL_FIRE;
-        }
-        return false;
+        fluidHeight = new Object2DoubleArrayMap<>(6);
     }
 
     @Inject(method = "lavaHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;setSecondsOnFire(I)V", shift = At.Shift.AFTER))
@@ -126,6 +103,9 @@ public abstract class EntityMixin implements IEntityMixin {
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
     private void updateInSoulFireState(CallbackInfoReturnable<Boolean> cir, double d0, boolean flag) {
         for (Fire fire : Fire.getTrueFires()) {
+            if (fire.getLavaTag() == null) {
+                continue;
+            }
             cir.setReturnValue(updateFluidHeightAndDoFluidPushing(fire.getLavaTag(), d0) | cir.getReturnValueZ());
         }
     }
@@ -135,14 +115,12 @@ public abstract class EntityMixin implements IEntityMixin {
         if (firstTick) {
             return;
         }
-        Fire.getTrueFires().stream().filter(fire -> fire.canApplyTo((Entity) (Object) this)).filter(fire -> fluidHeight.getDouble(fire.getLavaTag()) > 0).findFirst().ifPresent(this::setFireOnSelf);
-    }
-
-    @Unique
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public boolean displaySoulFireAnimation() {
-        return isOnFire() && isOnSoulFire() && !isSpectator();
+        Fire.getTrueFires().stream()
+                .filter(fire -> fire.getLavaTag() != null)
+                .filter(fire -> fire.canApplyTo((Entity) (Object) this))
+                .filter(fire -> fluidHeight.getDouble(fire.getLavaTag()) > 0)
+                .findFirst()
+                .ifPresent(this::setFireOnSelf);
     }
 
     @Deprecated
@@ -158,14 +136,19 @@ public abstract class EntityMixin implements IEntityMixin {
     }
 
     @Override
-    public void setFireOnSelf(Fire fire) {
+    public boolean doSetFireOnSelf(Fire fire) {
         fire = fire.applyTo((Entity) (Object) this);
+        if (fire == getFireOnSelf()) {
+            return false;
+        }
         if (fire.canReplace(getFireOnSelf())) {
             fireOnSelf = fire;
             if (fire.isRealFire()) {
                 entityData.set(DATA_FIRE_ID, fire.getId());
             }
+            return true;
         }
+        return false;
     }
 
     @Unique
@@ -184,7 +167,10 @@ public abstract class EntityMixin implements IEntityMixin {
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isInLava()Z", ordinal = 1))
     private void synchronizeData(CallbackInfo ci) {
         if (getRemainingFireTicks() <= 0) {
-            setFireOnSelf(Fire.empty());
+            Fire oldFire = getFireOnSelf();
+            doSetFireOnSelf(Fire.empty());
+            oldFire.stopApplyingTo((Entity) (Object) this, Fire.empty());
+            Fire.empty().startApplyingTo((Entity) (Object) this, oldFire);
         }
         adjustLava();
         getFireOnSelf().entityOnFire((Entity) (Object) this);
@@ -198,7 +184,9 @@ public abstract class EntityMixin implements IEntityMixin {
     @Inject(method = "setRemainingFireTicks", at = @At("TAIL"))
     private void updateFire(int ticks, CallbackInfo ci) {
         if (ticks > 0 && !getFireOnSelf().isRealFire()) {
-            setFireOnSelf(Fires.FIRE);
+            doSetFireOnSelf(Fires.FIRE);
+            Fire.empty().stopApplyingTo((Entity) (Object) this, Fires.FIRE);
+            Fires.FIRE.startApplyingTo((Entity) (Object) this, Fire.empty());
         }
     }
 
@@ -210,7 +198,7 @@ public abstract class EntityMixin implements IEntityMixin {
     @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundNBT;getFloat(Ljava/lang/String;)F"))
     private void loadFireData(CompoundNBT compoundNBT, CallbackInfo ci) {
         if (compoundNBT.contains("EntityFireType", Constants.NBT.TAG_STRING)) {
-            setFireOnSelf(Fire.fromNBT(compoundNBT, "EntityFireType"));
+            doSetFireOnSelf(Fire.fromNBT(compoundNBT, "EntityFireType"));
         }
     }
 

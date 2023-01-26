@@ -92,7 +92,7 @@ public final class Lasers {
     }
 
     public static BiFunction<? super Vector3d, ? super World, ?> any() {
-        return (vec, world) -> Utils.DUMMY;
+        return (vec, world) -> DefaultValues.DUMMY;
     }
 
     public static boolean solid(BlockState state) {

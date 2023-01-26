@@ -70,7 +70,7 @@ public class CreeperReinforcement extends AggressiveReinforcement {
 
     @Override
     protected boolean allowsDamageSource(DamageSource source) {
-        return super.allowsDamageSource(source) && !source.isExplosion() || source.isProjectile();
+        return (super.allowsDamageSource(source) || source.isProjectile()) && !source.isExplosion() && !source.isMagic();
     }
 
     @Override

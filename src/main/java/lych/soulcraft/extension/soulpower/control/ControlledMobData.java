@@ -2,7 +2,7 @@ package lych.soulcraft.extension.soulpower.control;
 
 import com.google.common.base.MoreObjects;
 import lych.soulcraft.extension.soulpower.control.controller.ControlledMobBehavior;
-import lych.soulcraft.util.Utils;
+import lych.soulcraft.util.DefaultValues;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -34,11 +34,11 @@ public class ControlledMobData {
     }
 
     public ControlledMobData plusTime(long time) {
-        return new ControlledMobData(mob, controller, directController, isInfiniteControlTime() ? Utils.INFINITY : controlTime + time, behaviorType);
+        return new ControlledMobData(mob, controller, directController, isInfiniteControlTime() ? DefaultValues.INFINITY : controlTime + time, behaviorType);
     }
 
     public boolean isInfiniteControlTime() {
-        return controlTime == Utils.INFINITY;
+        return controlTime == DefaultValues.INFINITY;
     }
 
     public UUID getMob() {

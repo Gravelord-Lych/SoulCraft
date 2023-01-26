@@ -1,10 +1,11 @@
 package lych.soulcraft.entity.monster.boss;
 
-import com.google.common.base.Preconditions;
+import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.IMeta08NonAttackable;
 import lych.soulcraft.api.shield.ISharedShield;
 import lych.soulcraft.api.shield.ISharedShieldProvider;
 import lych.soulcraft.client.ModRenderTypes;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.effect.ModEffects;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.entity.ai.goal.boss.Meta08Goals.*;
@@ -66,6 +67,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static lych.soulcraft.util.StringRedirector.caseInsensitive;
@@ -118,6 +120,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
     private static final int MAX_INVULNERABLE_TIME = 20 * 5;
     private static final int MIN_INVULNERABLE_TIME = 20 * 2;
     private static final double TELEPORT_PROBABILITY = 0.15;
+    private static final Pattern PREDECESSORS = Pattern.compile("[Mm]eta(0*)[1-7+]");
     private static final RedstoneParticleData SPEEDY_META8_PARTICLE = RedstoneParticles.create(255, 245, 128);
     private static final DataParameter<Boolean> DATA_ATTACKING = EntityDataManager.defineId(Meta08Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> DATA_PHASE = EntityDataManager.defineId(Meta08Entity.class, DataSerializers.INT);
@@ -165,14 +168,15 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                     return phase;
                 }
             }
+            return getHighHealthPhases()[0];
         } else {
             for (LoPhase phase : LoPhase.values()) {
                 if (entityData.get(DATA_PHASE) == phase.getId()) {
                     return phase;
                 }
             }
+            return LoPhase.values()[0];
         }
-        throw new IllegalStateException("Phase was not found");
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
@@ -432,8 +436,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
         loManager.load(compoundNBT.getCompound("LoPhaseManager"));
         if (!level.isClientSide() && compoundNBT.contains("SharedShield")) {
             setSharedShield(new SharedShield(compoundNBT.getCompound("SharedShield")));
-//          Gives the shield some invulnerable ticks to prevent unexpected damage.
-            Objects.requireNonNull(getSharedShield(), "SharedShield not present").setInvulnerableTicks(100);
+            Objects.requireNonNull(getSharedShield(), "SharedShield not present").setInvulnerableTicks(20);
         }
         if (compoundNBT.contains("Color")) {
             setColor(BossInfo.Color.byName(compoundNBT.getString("Color")));
@@ -451,16 +454,23 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 setTrait(SpecialTrait.byOrdinal(compoundNBT.getInt("SpecialTrait")));
             }
         } catch (EnumConstantNotFoundException e) {
+            if (ConfigHelper.shouldFailhard()) {
+                crash(new IllegalStateException(String.format("Trait indexed %s for Meta08 was not found", e.getId())));
+                return;
+            }
             LOGGER.warn("Trait indexed {} was not found, so ignore the trait", e.getId());
             setTrait(null);
         } catch (Throwable throwable) {
-//          Vanilla copy
-            CrashReport report = CrashReport.forThrowable(throwable, "Loading entity NBT");
-            CrashReportCategory category = report.addCategory("Entity being loaded");
-            fillCrashReportCategory(category);
-            throw new ReportedException(report);
+            crash(throwable);
         }
         super.load(compoundNBT);
+    }
+
+    private void crash(Throwable throwable) {
+        CrashReport report = CrashReport.forThrowable(throwable, String.format("%s - Loading Meta08's Trait", SoulCraft.MOD_NAME));
+        CrashReportCategory category = report.addCategory("Meta08 being loaded");
+        fillCrashReportCategory(category);
+        throw new ReportedException(report);
     }
 
     @Override
@@ -1128,7 +1138,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 meta8.setColor(BossInfo.Color.RED);
             }
         },
-        DEFENSIVE(caseInsensitive("Constance")) {
+        DEFENSIVE(caseInsensitive("Constance").or(caseInsensitive("Teddy"))) {
             private final AttributeModifier healthBonus = new AttributeModifier(UUID.fromString("621C6C42-4EC0-10F2-93AD-E9CDF04766C7"), "Defensive Meta8 health bonus", 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
             @Override
@@ -1148,7 +1158,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 robot.setHealth(robot.getMaxHealth());
             }
         },
-        SPEEDY(caseInsensitive("AJAYA")) {
+        SPEEDY(caseInsensitive("AJAYA").or(caseInsensitive("Vortex"))) {
             private final AttributeModifier speedBonus = new AttributeModifier(UUID.fromString("D1776DE7-6453-891C-9903-8B6C358CEF6F"), "Speedy Meta8 movement speed bonus", 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
             private final AttributeModifier followRangeBonus = new AttributeModifier(UUID.fromString("7A6FC8E6-6C48-A12A-A093-F48B628B1993"), "Speedy Meta8 follow range bonus", 15, AttributeModifier.Operation.ADDITION);
 
@@ -1165,31 +1175,30 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 EntityUtils.getAttribute(robot, Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier("Speedy robot movement speed bonus", 0.75, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
         },
-        CREATIVE(caseInsensitive("Tim"));
+        CREATIVE(caseInsensitive("Tim").or(new RegexRedirectable(PREDECESSORS, s -> "Meta0" + s.charAt(s.length() - 1))));
 
-        private final StringRedirector[] matchNames;
+        private final StringRedirectable matchName;
 
-        SpecialTrait(StringRedirector... matchNames) {
-            Preconditions.checkArgument(!ArrayUtils.isNullOrEmpty(matchNames), "Names cannot be null or empty");
-            this.matchNames = matchNames;
+        SpecialTrait(StringRedirectable matchName) {
+            Objects.requireNonNull(matchName);
+            this.matchName = matchName;
         }
 
-        public boolean test(ITextComponent component) {
-            return Arrays.stream(matchNames).anyMatch(redirector -> redirector.test(component.getString()));
+        public boolean canRedirect(ITextComponent component) {
+            return matchName.test(component.getString());
         }
 
         public void applyTo(Meta08Entity meta8) {}
 
         public void addModifiersTo(RobotEntity robot, Meta08Entity meta8) {}
 
-        @SuppressWarnings("ConstantConditions")
         public String getName(ITextComponent name) {
-            return Arrays.stream(matchNames).map(redirector -> redirector.redirect(name.getString(), s -> null)).filter(Objects::nonNull).findFirst().orElseThrow(() -> new IllegalArgumentException("Name was not found"));
+            return Objects.requireNonNull(matchName.redirect(name.getString()), "Name was not found");
         }
 
         @Nullable
         public static SpecialTrait find(ITextComponent component) {
-            return Arrays.stream(values()).filter(trait -> trait.test(component)).findFirst().orElse(null);
+            return Arrays.stream(values()).filter(trait -> trait.canRedirect(component)).findFirst().orElse(null);
         }
 
         public static SpecialTrait byOrdinal(int ordinal) throws EnumConstantNotFoundException {
