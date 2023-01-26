@@ -89,7 +89,7 @@ public class ExtraAbility implements IExtraAbility {
     static {
         register(ARMOR_PIERCER, ArmorPiercerBuff.INSTANCE, EntityType.VINDICATOR);
         register(BOW_EXPERT, EntityType.SKELETON);
-        register(CHEMIST, ChemistBuff.INSTANCE, EntityType.WITCH);
+        register(CHEMIST, EntityType.WITCH);
         register(CLIMBER, EntityType.SPIDER);
         register(DESTROYER, EntityType.WOLF);
         register(DRAGON_WIZARD, EntityType.ENDER_DRAGON);

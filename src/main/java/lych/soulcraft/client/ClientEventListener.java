@@ -29,7 +29,6 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
@@ -176,9 +175,10 @@ public final class ClientEventListener {
 
         @SubscribeEvent
         public static void onColorHandle(ColorHandlerEvent.Item event) {
-            event.getItemColors().register((stack, p_210238_1_) -> {
-                return p_210238_1_ > 0 ? -1 : PotionUtils.getColor(stack);
-            }, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
+            event.getItemColors().register((stack, tintIndex) -> tintIndex > 0 ? -1 : PotionUtils.getColor(stack),
+                    ModItems.HALF_USED_POTION,
+                    ModItems.HALF_USED_SPLASH_POTION,
+                    ModItems.HALF_USED_LINGERING_POTION);
         }
 
         private static void run() {

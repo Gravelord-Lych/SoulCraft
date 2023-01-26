@@ -27,14 +27,17 @@
     "MobSpawnInfoAccessor",
     "NearestAttackableTargetGoalMixin",
     "PlayerEntityMixin",
+    "PotionItemMixin",
     "RaidMixin",
     "TargetGoalAccessor",
+    "ThrowablePotionItemMixin",
     "TridentEntityMixin",
     "VillagerEntityMixin",
     "WaveMemberAccessor",
     "ZombieEntityMixin"
   ],
   "client": [
+    "PotionEntityMixin",
     "SmallFireballEntityMixin",
     "client.BipedArmorLayerMixin",
     "client.ClientPlayerEntityMixin",

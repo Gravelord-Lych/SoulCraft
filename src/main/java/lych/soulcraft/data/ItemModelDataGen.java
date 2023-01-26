@@ -26,7 +26,12 @@ public class ItemModelDataGen extends ItemModelProvider {
     private static final ModelFile GENERATED = new UncheckedModelFile("item/generated");
     private static final ModelFile HANDHELD = new UncheckedModelFile("item/handheld");
     private static final ModelFile SPAWN_EGG = new UncheckedModelFile("item/template_spawn_egg");
+    private static final ResourceLocation HALF_USED_POTION_OVERLAY = SoulCraft.prefix("item/half_used_potion_overlay");
+    private static final ResourceLocation LINGERING_POTION = new ResourceLocation("item/lingering_potion");
+    private static final ResourceLocation POTION = new ResourceLocation("item/potion");
+    private static final ResourceLocation SPLASH_POTION = new ResourceLocation("item/splash_potion");
     private static final String LAYER0 = "layer0";
+    private static final String LAYER1 = "layer1";
 
     public ItemModelDataGen(DataGenerator generator, ExistingFileHelper existingFileHelper) {
         super(generator, SoulCraft.MOD_ID, existingFileHelper);
@@ -36,6 +41,9 @@ public class ItemModelDataGen extends ItemModelProvider {
     protected void registerModels() {
         simple(registryNameToString(ModItems.DIAMOND_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.DIAMOND_CHALLENGE_MEDAL));
         simple(registryNameToString(ModItems.GOLD_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.GOLD_CHALLENGE_MEDAL));
+        halfUsedPotion(registryNameToString(ModItems.HALF_USED_LINGERING_POTION), LINGERING_POTION);
+        halfUsedPotion(registryNameToString(ModItems.HALF_USED_POTION), POTION);
+        halfUsedPotion(registryNameToString(ModItems.HALF_USED_SPLASH_POTION), SPLASH_POTION);
         simple(registryNameToString(ModItems.IRON_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.IRON_CHALLENGE_MEDAL));
         simple(registryNameToString(ModItems.MANIPULATOR), HANDHELD, prefix(ModItems.MANIPULATOR));
         simple(registryNameToString(ModItems.NETHERITE_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.NETHERITE_CHALLENGE_MEDAL));
@@ -74,8 +82,12 @@ public class ItemModelDataGen extends ItemModelProvider {
         registerSpawnEggModels();
     }
 
-    private void simple(String name, ModelFile model, ResourceLocation location) {
-        getBuilder(name).parent(model).texture(LAYER0, location);
+    private void simple(String name, ModelFile model, ResourceLocation texture) {
+        getBuilder(name).parent(model).texture(LAYER0, texture);
+    }
+
+    private void halfUsedPotion(String name, ResourceLocation texture) {
+        getBuilder(name).parent(GENERATED).texture(LAYER0, HALF_USED_POTION_OVERLAY).texture(LAYER1, texture);
     }
 
     private void SEGem(SEGemItem item) {

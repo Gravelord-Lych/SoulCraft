@@ -1,7 +1,6 @@
 package lych.soulcraft.util;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
@@ -51,10 +50,6 @@ public final class ExtraAbilityConstants {
     public static final ImmutableList<EffectInstance> ESCAPER_EFFECTS = ImmutableList.of(
             new ImmutableEffectInstance(Effects.WEAKNESS, 30, 1, false, false, true),
             new ImmutableEffectInstance(Effects.MOVEMENT_SLOWDOWN, 30, 1));
-    public static final int CHEMIST_RANDOM_INTERVAL = 600;
-    public static final int CHEMIST_DURATION = 80;
-    public static final int CHEMIST_AMPLIFIER = 1;
-    public static final ImmutableList<Effect> CHEMIST_AVAILABLE_EFFECTS = ImmutableList.of(Effects.REGENERATION, Effects.DAMAGE_RESISTANCE, Effects.MOVEMENT_SPEED);
     public static final double PURIFICATION_PROBABILITY = 0.5;
     public static final float DESTROYER_SPEED_MULTIPLIER = 1.5f;
 
