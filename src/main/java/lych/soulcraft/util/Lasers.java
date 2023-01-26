@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -91,8 +92,8 @@ public final class Lasers {
         return (vec, world) -> world.getBlockState(new BlockPos(vec));
     }
 
-    public static BiFunction<? super Vector3d, ? super World, ?> any() {
-        return (vec, world) -> DefaultValues.DUMMY;
+    public static BiFunction<? super Vector3d, ? super World, Unit> any() {
+        return (vec, world) -> Unit.INSTANCE;
     }
 
     public static boolean solid(BlockState state) {

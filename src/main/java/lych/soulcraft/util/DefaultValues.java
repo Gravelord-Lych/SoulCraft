@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 public final class DefaultValues {
     public static final long INFINITY = -1;
+    @Deprecated
     public static final Object DUMMY = Unit.INSTANCE;
     public static final ITextComponent COMMA = new TranslationTextComponent(SoulCraft.prefixMsg("comma"));
     public static final ITextComponent SPACE = new TranslationTextComponent(SoulCraft.prefixMsg("space"));

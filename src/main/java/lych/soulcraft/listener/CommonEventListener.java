@@ -64,10 +64,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.GameRules;
@@ -350,7 +347,7 @@ public final class CommonEventListener {
 
     @SubscribeEvent
     public static void onEmptyClick(PlayerInteractEvent.RightClickEmpty event) {
-        ClickHandlerNetwork.INSTANCE.sendToServer(DefaultValues.DUMMY);
+        ClickHandlerNetwork.INSTANCE.sendToServer(Unit.INSTANCE);
     }
 
     @SuppressWarnings("deprecation")
