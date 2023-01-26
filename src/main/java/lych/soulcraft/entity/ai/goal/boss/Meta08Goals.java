@@ -1,11 +1,11 @@
 package lych.soulcraft.entity.ai.goal.boss;
 
 import lych.soulcraft.api.shield.ISharedShield;
-import lych.soulcraft.entity.functional.SoulBoltEntity;
-import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.entity.ai.goal.IPhaseableGoal;
 import lych.soulcraft.entity.ai.goal.LaserAttackGoal;
+import lych.soulcraft.entity.functional.SoulBoltEntity;
+import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.monster.RobotEntity;
 import lych.soulcraft.entity.monster.boss.Meta08Entity;
 import lych.soulcraft.extension.shield.SharedShield;
@@ -30,7 +30,6 @@ import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
-import static lych.soulcraft.entity.monster.boss.Meta08Entity.SpecialTrait.DEFENSIVE;
 import static lych.soulcraft.util.EntityUtils.checkGoalInstantiationServerside;
 
 public final class Meta08Goals {
@@ -245,7 +244,7 @@ public final class Meta08Goals {
         private final Supplier<ISharedShield> shieldSupplier;
 
         public ShieldRobotsGoal(Meta08Entity meta8) {
-            this(meta8, () -> meta8.getTrait() == DEFENSIVE ? DEFENSIVE_SHARED_SHIELD_SUPPLIER.get() : SHARED_SHIELD_SUPPLIER.get());
+            this(meta8, () -> meta8.getTrait() != null && meta8.getTrait().enhancesShield() ? DEFENSIVE_SHARED_SHIELD_SUPPLIER.get() : SHARED_SHIELD_SUPPLIER.get());
         }
 
         public ShieldRobotsGoal(Meta08Entity meta8, Supplier<ISharedShield> shieldSupplier) {

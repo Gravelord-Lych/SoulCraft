@@ -50,6 +50,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -122,7 +123,8 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
     private static final int MAX_INVULNERABLE_TIME = 20 * 5;
     private static final int MIN_INVULNERABLE_TIME = 20 * 2;
     private static final double TELEPORT_PROBABILITY = 0.15;
-    private static final Pattern PREDECESSORS = Pattern.compile("[Mm]eta(0*)[1-7+]");
+    private static final Pattern PREDECESSORS = Pattern.compile("(?i)Meta(0*)[1-7+]");
+    private static final Pattern GRAVELORD_LYCH = Pattern.compile("(?i)Gravelord([ \\-_—]*)Lych");
     private static final RedstoneParticleData SPEEDY_META8_PARTICLE = RedstoneParticles.create(255, 245, 128);
     private static final DataParameter<Boolean> DATA_ATTACKING = EntityDataManager.defineId(Meta08Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> DATA_PHASE = EntityDataManager.defineId(Meta08Entity.class, DataSerializers.INT);
@@ -282,7 +284,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
         if (isCreative() && tickCount % 60 == 0) {
             level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(CLEAR_EFFECT_RANGE), this::canClearEffect).forEach(this::clearEffect);
         }
-        if (getTrait() == SpecialTrait.SPEEDY && random.nextDouble() < 0.25) {
+        if (getTrait() != null && getTrait().isSpeedy() && random.nextDouble() < 0.25) {
             EntityUtils.addParticlesAroundSelfServerside(this, (ServerWorld) level, SPEEDY_META8_PARTICLE, 0.1, 1);
         }
     }
@@ -381,7 +383,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
 
     @Override
     public int getLaserRenderTickCount(LivingEntity target) {
-        return getTrait() == SpecialTrait.SPEEDY ? 15 : 30;
+        return getTrait() != null && getTrait().isSpeedy() ? 15 : 30;
     }
 
     @Override
@@ -618,7 +620,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
 
     @Override
     public float getDamageMultiplier() {
-        return getTrait() == SpecialTrait.AGGRESSIVE ? 3 : 1;
+        return getTrait() != null && getTrait().multipliesDamage() ? 3 : 1;
     }
 
     @Nullable
@@ -630,7 +632,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
         if (getTrait() != null && trait != getTrait()) {
             throw new UnsupportedOperationException(String.format("Trait %s exists", getTrait()));
         }
-        if (trait == SpecialTrait.CREATIVE) {
+        if (trait != null && trait.isCreative()) {
             entityData.set(DATA_CREATIVE, true);
         }
         this.trait = trait;
@@ -645,11 +647,11 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
     }
 
     private IntSupplier getAttackInterval(int baseInterval) {
-        return () -> baseInterval / (getTrait() == SpecialTrait.SPEEDY ? 2 : 1);
+        return () -> baseInterval / (getTrait() != null && getTrait().isSpeedy() ? 2 : 1);
     }
 
     public boolean isCreative() {
-        return level.isClientSide() ? entityData.get(DATA_CREATIVE) : getTrait() == SpecialTrait.CREATIVE;
+        return level.isClientSide() ? entityData.get(DATA_CREATIVE) : (getTrait() != null && getTrait().isCreative());
     }
 
     public void addModifiersTo(RobotEntity robot) {
@@ -1133,14 +1135,14 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
      * Traited Meta8 is much stronger than the non-traited one.
      */
     public enum SpecialTrait {
-        AGGRESSIVE(caseInsensitive("Mandy")) {
+        AGGRESSIVE(caseInsensitive("Mandy"), true, false, false, false) {
             @Override
             public void applyTo(Meta08Entity meta8) {
                 super.applyTo(meta8);
                 meta8.setColor(BossInfo.Color.RED);
             }
         },
-        DEFENSIVE(caseInsensitive("Constance").or(caseInsensitive("Teddy"))) {
+        DEFENSIVE(caseInsensitive("Constance").or(caseInsensitive("Teddy")), false, true, false, false) {
             private final AttributeModifier healthBonus = new AttributeModifier(UUID.fromString("621C6C42-4EC0-10F2-93AD-E9CDF04766C7"), "Defensive Meta8 health bonus", 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
             @Override
@@ -1160,7 +1162,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 robot.setHealth(robot.getMaxHealth());
             }
         },
-        SPEEDY(caseInsensitive("AJAYA").or(caseInsensitive("Vortex"))) {
+        SPEEDY(caseInsensitive("AJAYA").or(caseInsensitive("Vortex")), false, false, true, false) {
             private final AttributeModifier speedBonus = new AttributeModifier(UUID.fromString("D1776DE7-6453-891C-9903-8B6C358CEF6F"), "Speedy Meta8 movement speed bonus", 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
             private final AttributeModifier followRangeBonus = new AttributeModifier(UUID.fromString("7A6FC8E6-6C48-A12A-A093-F48B628B1993"), "Speedy Meta8 follow range bonus", 15, AttributeModifier.Operation.ADDITION);
 
@@ -1177,16 +1179,36 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 EntityUtils.getAttribute(robot, Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier("Speedy robot movement speed bonus", 0.75, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
         },
-        CREATIVE(caseInsensitive("Tim").or(new RegexRedirectable(PREDECESSORS, s -> "Meta0" + s.charAt(s.length() - 1))));
+        CREATIVE(caseInsensitive("Tim").or(new RegexRedirectable(PREDECESSORS, s -> "Meta0" + s.charAt(s.length() - 1))), false, false, false, true),
+        ALL_ROUND(caseInsensitive("Lych").or(caseInsensitive("Lych233")).or(new RegexRedirectable(GRAVELORD_LYCH, s -> "Gravelord Lych")), true, true, true, true) {
+            @Override
+            public void applyTo(Meta08Entity meta8) {
+                Arrays.stream(NON_ALL_ROUND_TRAITS.get()).forEach(t -> t.applyTo(meta8));
+            }
 
+            @Override
+            public void addModifiersTo(RobotEntity robot, Meta08Entity meta8) {
+                Arrays.stream(NON_ALL_ROUND_TRAITS.get()).forEach(t -> t.addModifiersTo(robot, meta8));
+            }
+        };
+
+        private static final LazyValue<SpecialTrait[]> NON_ALL_ROUND_TRAITS = new LazyValue<>(() -> Arrays.stream(values()).filter(t -> t != ALL_ROUND).toArray(SpecialTrait[]::new));
         private final StringRedirectable matchName;
+        private final boolean multipliesDamage;
+        private final boolean enhancesShield;
+        private final boolean speedy;
+        private final boolean creative;
 
-        SpecialTrait(StringRedirectable matchName) {
+        SpecialTrait(StringRedirectable matchName, boolean multipliesDamage, boolean enhancesShield, boolean speedy, boolean creative) {
+            this.multipliesDamage = multipliesDamage;
+            this.enhancesShield = enhancesShield;
+            this.speedy = speedy;
+            this.creative = creative;
             Objects.requireNonNull(matchName);
             this.matchName = matchName;
         }
 
-        public boolean canRedirect(ITextComponent component) {
+        private boolean canRedirect(ITextComponent component) {
             return matchName.test(component.getString());
         }
 
@@ -1210,6 +1232,22 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
                 }
             }
             throw new EnumConstantNotFoundException(ordinal);
+        }
+
+        public boolean isSpeedy() {
+            return speedy;
+        }
+
+        public boolean isCreative() {
+            return creative;
+        }
+
+        public boolean multipliesDamage() {
+            return multipliesDamage;
+        }
+
+        public boolean enhancesShield() {
+            return enhancesShield;
         }
     }
 }
