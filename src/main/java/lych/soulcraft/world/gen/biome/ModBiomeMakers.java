@@ -16,6 +16,9 @@ import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilders;
 
 public final class ModBiomeMakers {
+    public static final int DEFAULT_WATER_COLOR = 0x3f76e4;
+    public static final int DEFAULT_WATER_FOG_COLOR = 0x050533;
+
     private ModBiomeMakers() {}
 
     public static Biome makeSoulBiome(float depth, float scale) {
@@ -58,8 +61,8 @@ public final class ModBiomeMakers {
 
     private static BiomeAmbience.Builder defaultSoulBiomeAmbience(float prob) {
         return new BiomeAmbience.Builder()
-                .waterColor(0x35e0eb)
-                .waterFogColor(0x052f33)
+                .waterColor(DEFAULT_WATER_COLOR)
+                .waterFogColor(DEFAULT_WATER_FOG_COLOR)
                 .fogColor(0xbffdff)
                 .skyColor(0x0849cd)
                 .ambientParticle(new ParticleEffectAmbience(ParticleTypes.ASH, prob))
@@ -76,8 +79,8 @@ public final class ModBiomeMakers {
                 .temperature(0.2f)
                 .downfall(0)
                 .specialEffects(new BiomeAmbience.Builder()
-                        .waterColor(0x5674B0)
-                        .waterFogColor(0x0F0F36)
+                        .waterColor(DEFAULT_WATER_COLOR)
+                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
                         .fogColor(0xC4D0E3)
                         .skyColor(calculateSkyColor(0.2f))
                         .ambientParticle(new ParticleEffectAmbience(ParticleTypes.ASH, 0.02f))
@@ -100,14 +103,59 @@ public final class ModBiomeMakers {
                 .temperature(2.5f)
                 .downfall(0)
                 .specialEffects(new BiomeAmbience.Builder()
-                        .waterColor(0x661717)
-                        .waterFogColor(0x562626)
+                        .waterColor(DEFAULT_WATER_COLOR)
+                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
                         .fogColor(0xCE5E5E)
                         .skyColor(calculateFantasticalBiomeSkyColor(2.5f))
                         .ambientParticle(new ParticleEffectAmbience(ParticleTypes.SMOKE, 0.002f))
                         .ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS)
                         .build())
                 .mobSpawnSettings(MobSpawnInfo.EMPTY)
+                .generationSettings(genBuilder.build())
+                .build();
+    }
+
+    public static Biome makeCrimsonBiome(float depth, float scale) {
+        return makeCrimsonBiome(depth, scale, false);
+    }
+
+    public static Biome makeCrimsonBiome(float depth, float scale, boolean edge) {
+        MobSpawnInfo.Builder spawnBuilder = new MobSpawnInfo.Builder();
+        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.SOUL_SKELETON, 75, 2, 3))
+                .addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ZOGLIN, 30, 1, 2))
+                .addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ZOMBIFIED_PIGLIN, 30, 1, 2))
+                .addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ENDERMAN, 1, 1, 1));
+
+        BiomeGenerationSettings.Builder genBuilder = new BiomeGenerationSettings.Builder();
+        genBuilder.surfaceBuilder(ModConfiguredSurfaceBuilders.CRIMSON_PLAINS);
+        genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, Features.PATCH_FIRE);
+        DefaultBiomeFeatures.addDefaultMushrooms(genBuilder);
+        genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Features.CRIMSON_FOREST_VEGETATION);
+        if (!edge) {
+            genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_CRIMSON_FUNGI)
+                    .addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_WEEPING_VINE);
+        } else {
+            genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_CRIMSON_FUNGI_AT_THE_EDGE);
+        }
+        return new Biome.Builder()
+                .precipitation(Biome.RainType.NONE)
+                .biomeCategory(Biome.Category.PLAINS)
+                .depth(depth)
+                .scale(scale)
+                .temperature(2)
+                .downfall(0)
+                .specialEffects(new BiomeAmbience.Builder()
+                        .waterColor(DEFAULT_WATER_COLOR)
+                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
+                        .fogColor(edge ? 0x602020 : 0x980B0B)
+                        .skyColor(calculateSkyColor(2))
+                        .ambientParticle(new ParticleEffectAmbience(ParticleTypes.CRIMSON_SPORE, 0.05f))
+                        .ambientLoopSound(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP)
+                        .ambientMoodSound(new MoodSoundAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2))
+                        .ambientAdditionsSound(new SoundAdditionsAmbience(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111))
+                        .backgroundMusic(BackgroundMusicTracks.createGameMusic(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST))
+                        .build())
+                .mobSpawnSettings(spawnBuilder.build())
                 .generationSettings(genBuilder.build())
                 .build();
     }
@@ -142,9 +190,9 @@ public final class ModBiomeMakers {
                 .temperature(2)
                 .downfall(0)
                 .specialEffects(new BiomeAmbience.Builder()
-                        .waterColor(0x3f76e4)
-                        .waterFogColor(0x050533)
-                        .fogColor(edge ? 0x11051a : 0x1a051a)
+                        .waterColor(DEFAULT_WATER_COLOR)
+                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
+                        .fogColor(edge ? 0x6C148C : 0x8C148C)
                         .skyColor(calculateSkyColor(2))
                         .ambientParticle(new ParticleEffectAmbience(ParticleTypes.WARPED_SPORE, 0.02857f))
                         .ambientLoopSound(SoundEvents.AMBIENT_WARPED_FOREST_LOOP)
@@ -160,7 +208,6 @@ public final class ModBiomeMakers {
     public static Biome makeInnermostSoulLand(float depth, float scale) {
         MobSpawnInfo.Builder spawnBuilder = new MobSpawnInfo.Builder();
         soulMobs(spawnBuilder);
-
         BiomeGenerationSettings.Builder genBuilder = new BiomeGenerationSettings.Builder();
         addDefaultSoulBiomeCarvers(genBuilder);
         genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_PURE_SOUL_FIRE);
@@ -174,8 +221,8 @@ public final class ModBiomeMakers {
                 .temperature(1.8f)
                 .downfall(0)
                 .specialEffects(new BiomeAmbience.Builder()
-                        .waterColor(0x353eeb)
-                        .waterFogColor(0x051033)
+                        .waterColor(DEFAULT_WATER_COLOR)
+                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
                         .fogColor(0xbfccff)
                         .skyColor(0x0818cd)
                         .ambientParticle(new ParticleEffectAmbience(ParticleTypes.ASH, 0.006f))
@@ -202,8 +249,8 @@ public final class ModBiomeMakers {
                 .temperature(1.8f)
                 .downfall(0)
                 .specialEffects(new BiomeAmbience.Builder()
-                        .waterColor(0x353eeb)
-                        .waterFogColor(0x051033)
+                        .waterColor(DEFAULT_WATER_COLOR)
+                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
                         .fogColor(0xbfccff)
                         .skyColor(0x0818cd)
                         .ambientParticle(new ParticleEffectAmbience(ParticleTypes.ASH, 0.01f))

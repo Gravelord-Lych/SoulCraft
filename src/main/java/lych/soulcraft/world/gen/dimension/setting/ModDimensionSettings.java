@@ -45,7 +45,7 @@ public final class ModDimensionSettings {
                         .topSlideSettings(new SlideSettings(-10, 3, 0))
                         .bottomSlideSettings(new SlideSettings(-30, 0, 0))
                         .noiseSizeHorizontal(1)
-                        .noiseSizeVertical(2)
+                        .noiseSizeVertical(3)
                         .densityFactor(1)
                         .densityOffset(-0.46875D)
                         .useSimplexSurfaceNoise()

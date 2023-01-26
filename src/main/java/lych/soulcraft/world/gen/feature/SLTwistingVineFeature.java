@@ -2,10 +2,8 @@ package lych.soulcraft.world.gen.feature;
 
 import com.mojang.serialization.Codec;
 import lych.soulcraft.block.ModBlocks;
-import net.minecraft.block.AbstractTopPlantBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.ISeedReader;
@@ -67,19 +65,6 @@ public class SLTwistingVineFeature extends TwistingVineFeature {
 
         mutablePos.move(0, 1, 0);
         return true;
-    }
-
-    public static void placeWeepingVinesColumn(IWorld world, Random random, BlockPos.Mutable mutablePos, int count, int minAge, int maxAge) {
-        for (int i = 1; i <= count; ++i) {
-            if (world.isEmptyBlock(mutablePos)) {
-                if (i == count || !world.isEmptyBlock(mutablePos.above())) {
-                    world.setBlock(mutablePos, Blocks.TWISTING_VINES.defaultBlockState().setValue(AbstractTopPlantBlock.AGE, MathHelper.nextInt(random, minAge, maxAge)), 2);
-                    break;
-                }
-                world.setBlock(mutablePos, Blocks.TWISTING_VINES_PLANT.defaultBlockState(), 2);
-            }
-            mutablePos.move(Direction.UP);
-        }
     }
 
     private static boolean isInvalidPlacementLocation(IWorld world, BlockPos pos) {

@@ -12,6 +12,8 @@ public enum SLBeachesLayer implements ICastleTransformer {
 
     private static final Int2IntMap BEACHES_MAP = Util.make(new Int2IntOpenHashMap(), map -> {
         map.defaultReturnValue(SLLayer.getId(ModBiomes.SOUL_SAND_BEACH));
+        SLLayer.putId(map, ModBiomes.CRIMSON_PLAINS, ModBiomes.CRIMSON_PLAINS_EDGE);
+        SLLayer.putId(map, ModBiomes.CRIMSON_HILLS, ModBiomes.CRIMSON_PLAINS_EDGE);
         SLLayer.putId(map, ModBiomes.INNERMOST_PLATEAU, ModBiomes.INNERMOST_SOUL_LAND);
         SLLayer.putId(map, ModBiomes.WARPED_PLAINS, ModBiomes.WARPED_PLAINS_EDGE);
         SLLayer.putId(map, ModBiomes.WARPED_HILLS, ModBiomes.WARPED_PLAINS_EDGE);

@@ -13,11 +13,13 @@ import static lych.soulcraft.SoulCraft.make;
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModFeatures {
     public static final Feature<NoFeatureConfig> SL_TWISTING_VINE = new SLTwistingVineFeature(NoFeatureConfig.CODEC);
+    public static final Feature<NoFeatureConfig> SL_WEEPING_WINE = new SLWeepingVineFeature(NoFeatureConfig.CODEC);
 
     @SubscribeEvent
     public static void registerFeatures(RegistryEvent.Register<Feature<?>> event) {
         IForgeRegistry<Feature<?>> registry = event.getRegistry();
-        registry.register(make(SL_TWISTING_VINE, "soul_land_twisting_vine"));
+        registry.register(make(SL_TWISTING_VINE, "sl_twisting_vine"));
+        registry.register(make(SL_WEEPING_WINE, "sl_weeping_vine"));
     }
 
     private ModFeatures() {}

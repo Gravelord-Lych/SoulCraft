@@ -21,6 +21,8 @@ import lych.soulcraft.extension.laser.LaserHitPredicate;
 import lych.soulcraft.extension.laser.LaserHitType;
 import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.util.*;
+import lych.soulcraft.util.redirectable.RegexRedirectable;
+import lych.soulcraft.util.redirectable.StringRedirectable;
 import lych.soulcraft.world.event.manager.WorldTickerManager;
 import lych.soulcraft.world.event.ticker.WorldTickers;
 import net.minecraft.client.renderer.RenderType;
@@ -70,7 +72,7 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static lych.soulcraft.util.StringRedirector.caseInsensitive;
+import static lych.soulcraft.util.redirectable.StringRedirector.caseInsensitive;
 
 /**
  * <b>Meta08 the Conceptor</b> (shortened as Meta8) is a large robot that is full of creativity.

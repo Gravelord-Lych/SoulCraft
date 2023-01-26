@@ -31,9 +31,10 @@ public final class ModConfiguredFeatures {
     public static final ConfiguredFeature<?, ?> SL_CRIMSON_FUNGI = Feature.HUGE_FUNGUS.configured(CRIMSON_PLAINS_CRIMSON_FUNGI_NOT_PLANTED_CONFIG).decorated(Placement.COUNT_MULTILAYER.configured(new FeatureSpreadConfig(4)));
     public static final ConfiguredFeature<?, ?> SL_CRIMSON_FUNGI_AT_THE_EDGE = Feature.HUGE_FUNGUS.configured(CRIMSON_PLAINS_CRIMSON_FUNGI_NOT_PLANTED_CONFIG).decorated(Placement.COUNT_MULTILAYER.configured(new FeatureSpreadConfig(2)));
     public static final ConfiguredFeature<?, ?> SL_PATCH_SOUL_FIRE = firePatch(Fires.SOUL_FIRE, b -> b.xspread(9).yspread(4).zspread(9).tries(96), Blocks.SOUL_SAND, Blocks.SOUL_SOIL);
+    public static final ConfiguredFeature<?, ?> SL_TWISTING_VINE = ModFeatures.SL_TWISTING_VINE.configured(NoFeatureConfig.INSTANCE);
     public static final ConfiguredFeature<?, ?> SL_WARPED_FUNGI = Feature.HUGE_FUNGUS.configured(WARPED_PLAINS_WARPED_FUNGI_NOT_PLANTED_CONFIG).decorated(Placement.COUNT_MULTILAYER.configured(new FeatureSpreadConfig(4)));
     public static final ConfiguredFeature<?, ?> SL_WARPED_FUNGI_AT_THE_EDGE = Feature.HUGE_FUNGUS.configured(WARPED_PLAINS_WARPED_FUNGI_NOT_PLANTED_CONFIG).decorated(Placement.COUNT_MULTILAYER.configured(new FeatureSpreadConfig(2)));
-    public static final ConfiguredFeature<?, ?> SL_TWISTING_VINE = ModFeatures.SL_TWISTING_VINE.configured(NoFeatureConfig.INSTANCE);
+    public static final ConfiguredFeature<?, ?> SL_WEEPING_VINE = ModFeatures.SL_WEEPING_WINE.configured(NoFeatureConfig.INSTANCE);
 
     private ModConfiguredFeatures() {}
 
@@ -46,9 +47,10 @@ public final class ModConfiguredFeatures {
         register("sl_crimson_fungi", SL_CRIMSON_FUNGI);
         register("sl_crimson_fungi_at_the_edge", SL_CRIMSON_FUNGI_AT_THE_EDGE);
         register("sl_patch_soul_fire", SL_PATCH_SOUL_FIRE);
+        register("sl_twisting_vine", SL_TWISTING_VINE);
         register("sl_warped_fungi", SL_WARPED_FUNGI);
         register("sl_warped_fungi_at_the_edge", SL_WARPED_FUNGI_AT_THE_EDGE);
-        register("sl_twisting_vine", SL_TWISTING_VINE);
+        register("sl_weeping_vine", SL_WEEPING_VINE);
     }
 
     private static ConfiguredFeature<?, ?> firePatch(Fire fire, Block... whiteList) {

@@ -55,14 +55,17 @@ public final class SLLayer {
 
     static {
         remapColors = new HashMap<>();
+        remapColors.put(getId(ModBiomes.CRIMSON_PLAINS), 0x940000);
+        remapColors.put(getId(ModBiomes.CRIMSON_HILLS), 0xC40000);
+        remapColors.put(getId(ModBiomes.CRIMSON_PLAINS_EDGE), 0x4A2525);
         remapColors.put(getId(ModBiomes.INNERMOST_PLATEAU), 0x061e96);
         remapColors.put(getId(ModBiomes.INNERMOST_SOUL_LAND), 0x172466);
         remapColors.put(getId(ModBiomes.SOUL_LAVA_OCEAN), 0x00DDDD);
         remapColors.put(getId(ModBiomes.UNSTABLE_SOUL_LAVA_OCEAN), 0x006666);
         remapColors.put(getId(ModBiomes.SOUL_PLAINS), 0x664A17);
         remapColors.put(getId(ModBiomes.SOUL_MOUNTAINS), 0x886017);
-        remapColors.put(getId(ModBiomes.PARCHED_DESERT), 0x661717);
-        remapColors.put(getId(ModBiomes.PARCHED_DESERT_HILLS), 0x891111);
+        remapColors.put(getId(ModBiomes.PARCHED_DESERT), 0x572F2F);
+        remapColors.put(getId(ModBiomes.PARCHED_DESERT_HILLS), 0x834747);
         remapColors.put(getId(ModBiomes.SOUL_SAND_BEACH), 0xEFA420);
         remapColors.put(getId(ModBiomes.WARPED_PLAINS), 0x8C0094);
         remapColors.put(getId(ModBiomes.WARPED_HILLS), 0xCA00D5);

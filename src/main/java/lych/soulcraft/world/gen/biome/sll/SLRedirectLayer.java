@@ -14,7 +14,10 @@ import java.util.Objects;
 public enum SLRedirectLayer implements IC0Transformer {
     INSTANCE;
 
-    private static final List<WeightedBiome> REDIRECTABLE_BIOMES = ImmutableList.of(withWeight(ModBiomes.SOUL_PLAINS, 100), withWeight(ModBiomes.PARCHED_DESERT, 80), withWeight(ModBiomes.WARPED_PLAINS, 75));
+    private static final List<WeightedBiome> REDIRECTABLE_BIOMES = ImmutableList.of(withWeight(ModBiomes.SOUL_PLAINS, 100),
+            withWeight(ModBiomes.PARCHED_DESERT, 80),
+            withWeight(ModBiomes.WARPED_PLAINS, 75),
+            withWeight(ModBiomes.CRIMSON_PLAINS, 60));
     private static final List<WeightedBiome> REDIRECTABLE_OCEANS = ImmutableList.of(withWeight(ModBiomes.SOUL_LAVA_OCEAN, 100));
 
     public static WeightedBiome withWeight(RegistryKey<Biome> biome, int weight) {

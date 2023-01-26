@@ -11,6 +11,7 @@ public enum SLHillsLayer implements ICastleTransformer {
     INSTANCE;
 
     private static final Int2IntMap HILLS_MAP = Util.make(new Int2IntOpenHashMap(), map -> {
+        SLLayer.putId(map, ModBiomes.CRIMSON_PLAINS, ModBiomes.CRIMSON_HILLS);
         SLLayer.putId(map, ModBiomes.SOUL_PLAINS, ModBiomes.SOUL_MOUNTAINS);
         SLLayer.putId(map, ModBiomes.PARCHED_DESERT, ModBiomes.PARCHED_DESERT_HILLS);
         SLLayer.putId(map, ModBiomes.WARPED_PLAINS, ModBiomes.WARPED_HILLS);
