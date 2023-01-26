@@ -1,4 +1,4 @@
-package lych.soulcraft.util;
+package lych.soulcraft.util.redirectable;
 
 public interface StringRedirectable extends Redirectable<String, String> {
     @Override

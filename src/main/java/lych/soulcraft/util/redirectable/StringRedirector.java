@@ -1,4 +1,4 @@
-package lych.soulcraft.util;
+package lych.soulcraft.util.redirectable;
 
 public abstract class StringRedirector extends Redirector<String, String> implements StringRedirectable {
     protected StringRedirector(String value, String... aliases) {

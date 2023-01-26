@@ -1,4 +1,4 @@
-package lych.soulcraft.util;
+package lych.soulcraft.util.redirectable;
 
 import com.google.common.base.Preconditions;
 

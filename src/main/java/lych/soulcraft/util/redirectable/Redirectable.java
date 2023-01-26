@@ -1,4 +1,4 @@
-package lych.soulcraft.util;
+package lych.soulcraft.util.redirectable;
 
 import org.jetbrains.annotations.Nullable;
 

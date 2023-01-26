@@ -1,4 +1,4 @@
-package lych.soulcraft.util;
+package lych.soulcraft.util.redirectable;
 
 import java.util.function.Function;
 import java.util.regex.Matcher;
