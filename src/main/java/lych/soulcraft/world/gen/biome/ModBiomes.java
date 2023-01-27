@@ -32,6 +32,7 @@ public class ModBiomes {
     public static final RegistryKey<Biome> SOUL_PLAINS = makeKey(ModBiomeNames.SOUL_PLAINS);
     public static final RegistryKey<Biome> SOUL_SAND_BEACH = makeKey(ModBiomeNames.SOUL_SAND_BEACH);
     public static final RegistryKey<Biome> SOUL_LAVA_OCEAN = makeKey(ModBiomeNames.SOUL_LAVA_OCEAN);
+    public static final RegistryKey<Biome> SPIKED_SOUL_PLAINS = makeKey(ModBiomeNames.SPIKED_SOUL_PLAINS);
     public static final RegistryKey<Biome> UNSTABLE_SOUL_LAVA_OCEAN = makeKey(ModBiomeNames.UNSTABLE_SOUL_LAVA_OCEAN);
     public static final RegistryKey<Biome> WARPED_HILLS = makeKey(ModBiomeNames.WARPED_HILLS);
     public static final RegistryKey<Biome> WARPED_PLAINS = makeKey(ModBiomeNames.WARPED_PLAINS);
@@ -52,6 +53,7 @@ public class ModBiomes {
         registry.register(make(makeSoulBiome(0.15f, 0.05f), ModBiomeNames.SOUL_PLAINS));
         registry.register(make(makeSoulBeach(0, 0.01f), ModBiomeNames.SOUL_SAND_BEACH));
         registry.register(make(makeSoulLavaOcean(-1, 0.075f), ModBiomeNames.SOUL_LAVA_OCEAN));
+        registry.register(make(makeSoulBiome(0.15f, 0.05f, true), ModBiomeNames.SPIKED_SOUL_PLAINS));
         registry.register(make(makeSoulLavaOcean(-0.6f, 0.32f), ModBiomeNames.UNSTABLE_SOUL_LAVA_OCEAN));
         registry.register(make(makeWarpedBiome(0.45f, 0.3f), ModBiomeNames.WARPED_HILLS));
         registry.register(make(makeWarpedBiome(0.15f, 0.045f), ModBiomeNames.WARPED_PLAINS));

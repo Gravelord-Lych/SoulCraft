@@ -48,6 +48,7 @@ public class BlockTagDataGen extends ForgeBlockTagsProvider {
                 SOUL_SAND,
                 SOUL_SOIL,
                 WARPED_HYPHAL_SOIL);
+        tag(BlockTags.ENDERMAN_HOLDABLE).add(CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);
         tag(BlockTags.FIRE).add(INFERNO, PURE_SOUL_FIRE);
         tag(BlockTags.MUSHROOM_GROW_BLOCK).add(CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);
         tag(BlockTags.NYLIUM).add(CRIMSON_HYPHAL_SOIL, WARPED_HYPHAL_SOIL);

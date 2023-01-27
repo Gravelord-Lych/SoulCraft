@@ -12,11 +12,13 @@ public enum SLHillsLayer implements ICastleTransformer {
 
     private static final Int2IntMap HILLS_MAP = Util.make(new Int2IntOpenHashMap(), map -> {
         SLLayer.putId(map, ModBiomes.CRIMSON_PLAINS, ModBiomes.CRIMSON_HILLS);
-        SLLayer.putId(map, ModBiomes.SOUL_PLAINS, ModBiomes.SOUL_MOUNTAINS);
         SLLayer.putId(map, ModBiomes.PARCHED_DESERT, ModBiomes.PARCHED_DESERT_HILLS);
+        SLLayer.putId(map, ModBiomes.SOUL_PLAINS, ModBiomes.SOUL_MOUNTAINS);
+//      Spiked soul plains cannot be hills.
+        SLLayer.putId(map, ModBiomes.SPIKED_SOUL_PLAINS, ModBiomes.SPIKED_SOUL_PLAINS);
         SLLayer.putId(map, ModBiomes.WARPED_PLAINS, ModBiomes.WARPED_HILLS);
     });
-    private static final int HILLIFY_PROB_INV = 8;
+    private static final int HILLIFY_PROB_INV = 5;
 
     @Override
     public int apply(INoiseRandom random, int n, int e, int s, int w, int self) {

@@ -17,7 +17,8 @@ public enum SLRedirectLayer implements IC0Transformer {
     private static final List<WeightedBiome> REDIRECTABLE_BIOMES = ImmutableList.of(withWeight(ModBiomes.SOUL_PLAINS, 100),
             withWeight(ModBiomes.PARCHED_DESERT, 80),
             withWeight(ModBiomes.WARPED_PLAINS, 60),
-            withWeight(ModBiomes.CRIMSON_PLAINS, 60));
+            withWeight(ModBiomes.CRIMSON_PLAINS, 60),
+            withWeight(ModBiomes.SPIKED_SOUL_PLAINS, 5));
     private static final List<WeightedBiome> REDIRECTABLE_OCEANS = ImmutableList.of(withWeight(ModBiomes.SOUL_LAVA_OCEAN, 100));
 
     public static WeightedBiome withWeight(RegistryKey<Biome> biome, int weight) {

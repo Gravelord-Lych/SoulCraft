@@ -22,13 +22,24 @@ public final class ModBiomeMakers {
     private ModBiomeMakers() {}
 
     public static Biome makeSoulBiome(float depth, float scale) {
+        return makeSoulBiome(depth, scale, false);
+    }
+
+    public static Biome makeSoulBiome(float depth, float scale, boolean spiked) {
         MobSpawnInfo.Builder spawnBuilder = new MobSpawnInfo.Builder();
         soulMobs(spawnBuilder);
 
         BiomeGenerationSettings.Builder genBuilder = new BiomeGenerationSettings.Builder();
         addDefaultSoulBiomeCarvers(genBuilder);
         genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.SL_PATCH_SOUL_FIRE);
-        genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_SOUL_WART);
+        defaultSoulBiomeVegetation(genBuilder);
+
+        if (spiked) {
+            genBuilder.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModConfiguredFeatures.SPIKED_SOUL_PLAINS_SPIKE);
+        } else if (depth < 0.2f) {
+            genBuilder.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModConfiguredFeatures.SOUL_PLAINS_SPIKE);
+        }
+
         genBuilder.surfaceBuilder(ModConfiguredSurfaceBuilders.SOUL_LAND);
 
         return new Biome.Builder()
@@ -136,6 +147,7 @@ public final class ModBiomeMakers {
                     .addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_WEEPING_VINE);
         } else {
             genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_CRIMSON_FUNGI_AT_THE_EDGE);
+            defaultSoulBiomeVegetation(genBuilder);
         }
         return new Biome.Builder()
                 .precipitation(Biome.RainType.NONE)
@@ -181,6 +193,7 @@ public final class ModBiomeMakers {
                     .addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_TWISTING_VINE);
         } else {
             genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.SL_WARPED_FUNGI_AT_THE_EDGE);
+            defaultSoulBiomeVegetation(genBuilder);
         }
         return new Biome.Builder()
                 .precipitation(Biome.RainType.NONE)
@@ -208,10 +221,12 @@ public final class ModBiomeMakers {
     public static Biome makeInnermostSoulLand(float depth, float scale) {
         MobSpawnInfo.Builder spawnBuilder = new MobSpawnInfo.Builder();
         soulMobs(spawnBuilder);
+
         BiomeGenerationSettings.Builder genBuilder = new BiomeGenerationSettings.Builder();
         addDefaultSoulBiomeCarvers(genBuilder);
         genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_PURE_SOUL_FIRE);
-        genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_SOUL_WART);
+        defaultSoulBiomeVegetation(genBuilder);
+
         genBuilder.surfaceBuilder(ModConfiguredSurfaceBuilders.INNERMOST_SOUL_LAND);
         return new Biome.Builder()
                 .precipitation(Biome.RainType.NONE)
@@ -239,7 +254,7 @@ public final class ModBiomeMakers {
         BiomeGenerationSettings.Builder genBuilder = new BiomeGenerationSettings.Builder();
         addDefaultSoulBiomeCarvers(genBuilder);
 
-        genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_SOUL_WART);
+        defaultSoulBiomeVegetation(genBuilder);
         genBuilder.surfaceBuilder(ModConfiguredSurfaceBuilders.SOUL_BEACH);
         return new Biome.Builder()
                 .precipitation(Biome.RainType.NONE)
@@ -248,16 +263,15 @@ public final class ModBiomeMakers {
                 .scale(scale)
                 .temperature(1.8f)
                 .downfall(0)
-                .specialEffects(new BiomeAmbience.Builder()
-                        .waterColor(DEFAULT_WATER_COLOR)
-                        .waterFogColor(DEFAULT_WATER_FOG_COLOR)
-                        .fogColor(0xbfccff)
-                        .skyColor(0x0818cd)
-                        .ambientParticle(new ParticleEffectAmbience(ParticleTypes.ASH, 0.01f))
-                        .ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
+                .specialEffects(defaultSoulBiomeAmbience(0.01f).build())
                 .mobSpawnSettings(spawnBuilder.build())
                 .generationSettings(genBuilder.build())
                 .build();
+    }
+
+    private static void defaultSoulBiomeVegetation(BiomeGenerationSettings.Builder genBuilder) {
+        genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.PATCH_SOUL_WART);
+        genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.PATCH_SOULIFIED_BUSH);
     }
 
     private static void soulMobs(MobSpawnInfo.Builder builder) {

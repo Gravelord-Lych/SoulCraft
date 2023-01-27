@@ -13,6 +13,7 @@ public final class ModBiomeNames {
     public static final String SOUL_MOUNTAINS = "soul_mountains";
     public static final String SOUL_PLAINS = "soul_plains";
     public static final String SOUL_SAND_BEACH = "soul_sand_beach";
+    public static final String SPIKED_SOUL_PLAINS = "spiked_soul_plains";
     public static final String UNSTABLE_SOUL_LAVA_OCEAN = "unstable_soul_lava_ocean";
     public static final String WARPED_HILLS = "warped_hills";
     public static final String WARPED_PLAINS = "warped_plains";
