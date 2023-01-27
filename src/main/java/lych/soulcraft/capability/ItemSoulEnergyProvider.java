@@ -120,17 +120,26 @@ public class ItemSoulEnergyProvider implements ICapabilityProvider, INBTSerializ
 
         @Override
         public int getMaxSoulEnergyStored() {
-            return stack.get().getOrCreateTag().getInt(CAPACITY);
+            if (!stack.get().hasTag()) {
+                return 0;
+            }
+            return stack.get().getTag().getInt(CAPACITY);
         }
 
         @Override
         public int getMaxReceive() {
-            return stack.get().getOrCreateTag().getInt(MAX_RECEIVE);
+            if (!stack.get().hasTag()) {
+                return 0;
+            }
+            return stack.get().getTag().getInt(MAX_RECEIVE);
         }
 
         @Override
         public int getMaxExtract() {
-            return stack.get().getOrCreateTag().getInt(MAX_EXTRACT);
+            if (!stack.get().hasTag()) {
+                return 0;
+            }
+            return stack.get().getTag().getInt(MAX_EXTRACT);
         }
     }
 }

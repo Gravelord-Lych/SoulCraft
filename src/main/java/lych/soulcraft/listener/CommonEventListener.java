@@ -8,6 +8,7 @@ import lych.soulcraft.api.shield.ISharedShieldUser;
 import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.block.IArmoredBlock;
 import lych.soulcraft.block.ModBlocks;
+import lych.soulcraft.block.plant.SoulifiedBushBlock;
 import lych.soulcraft.capability.ChallengeMobProvider;
 import lych.soulcraft.capability.IChallengeMob;
 import lych.soulcraft.capability.NonAPICapabilities;
@@ -83,6 +84,7 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -293,6 +295,13 @@ public final class CommonEventListener {
             world.setBlock(pos, forWarped, Constants.BlockFlags.DEFAULT);
         } else if (ConfigHelper.shouldFailhard()) {
             throw new AssertionError("Neither nylium nor hyphal soul soil found");
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBurnTimeGet(FurnaceFuelBurnTimeEvent event) {
+        if (event.getItemStack().getItem() == ModItems.SOULIFIED_BUSH) {
+            event.setBurnTime(SoulifiedBushBlock.BURN_TIME);
         }
     }
 

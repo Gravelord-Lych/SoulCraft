@@ -52,7 +52,10 @@ public class ChallengeMedalItem extends Item {
     @Nullable
     private String initName(ItemStack stack) {
         String name = null;
-        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundNBT tag = stack.getTag();
+        if (tag == null) {
+            return null;
+        }
         if (tag.contains("Owner", Constants.NBT.TAG_STRING)) {
             name = tag.getString("Owner");
         } else if (tag.contains("Owner", Constants.NBT.TAG_COMPOUND)) {

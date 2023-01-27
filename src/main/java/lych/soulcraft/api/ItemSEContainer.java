@@ -23,7 +23,10 @@ public interface ItemSEContainer {
     }
 
     static TransferMode getMode(ItemStack stack) {
-        return TransferMode.byId(stack.getOrCreateTag().getInt(TRANSFER_MODE_TAG)).orElse(TransferMode.NORMAL);
+        if (!stack.hasTag()) {
+            return TransferMode.NORMAL;
+        }
+        return TransferMode.byId(stack.getTag().getInt(TRANSFER_MODE_TAG)).orElse(TransferMode.NORMAL);
     }
 
     static void setMode(ItemStack stack, TransferMode mode) {

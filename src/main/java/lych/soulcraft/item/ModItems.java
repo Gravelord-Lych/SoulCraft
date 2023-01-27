@@ -123,6 +123,7 @@ public final class ModItems {
     public static final BlockItem SOUL_STONE_STAIRS = new BlockItem(ModBlocks.SOUL_STONE_STAIRS, common());
     public static final BlockItem SOUL_STONE_WALL = new BlockItem(ModBlocks.SOUL_STONE_WALL, common());
     public static final BlockNamedItem SOUL_WART = new BlockNamedItem(ModBlocks.SOUL_WART, common());
+    public static final BlockItem SOULIFIED_BUSH = new BlockItem(ModBlocks.SOULIFIED_BUSH, common());
     public static final BlockItem WARPED_HYPHAL_SOIL = new BlockItem(ModBlocks.WARPED_HYPHAL_SOIL, common());
 
     public static final Item DARK_EVOKER_SPAWN_EGG = makeSpawnEgg(ModEntities.DARK_EVOKER, 0x959b9b, 0xd62fd6);
@@ -260,6 +261,7 @@ public final class ModItems {
         registry.register(make(SOUL_STONE_STAIRS, ModBlockNames.SOUL_STONE_STAIRS));
         registry.register(make(SOUL_STONE_WALL, ModBlockNames.SOUL_STONE_WALL));
         registry.register(make(SOUL_WART, ModBlockNames.SOUL_WART));
+        registry.register(make(SOULIFIED_BUSH, ModBlockNames.SOULIFIED_BUSH));
         registry.register(make(WARPED_HYPHAL_SOIL, ModBlockNames.WARPED_HYPHAL_SOIL));
     }
 

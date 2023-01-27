@@ -48,6 +48,7 @@ public abstract class ItemStackMixin implements IItemStackMixin {
         }
     }
 
+//  For better display, so require = 0
     @Redirect(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Multimap;entries()Ljava/util/Collection;", remap = false), require = 0)
     private Collection<Map.Entry<Attribute, AttributeModifier>> sortAttributeModifiers(Multimap<Attribute, AttributeModifier> instance) {
 //      Do not sort armors because armor do not have attack damage and attack speed.

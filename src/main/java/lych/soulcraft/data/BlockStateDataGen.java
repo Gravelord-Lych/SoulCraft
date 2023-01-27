@@ -2,7 +2,6 @@ package lych.soulcraft.data;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.block.ModBlockStateProperties;
-import lych.soulcraft.block.ModBlocks;
 import lych.soulcraft.block.entity.SEStorageTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static lych.soulcraft.block.ModBlocks.*;
 import static lych.soulcraft.data.BlockModelDataGen.side;
 import static lych.soulcraft.data.BlockModelDataGen.top;
 import static net.minecraftforge.client.model.generators.ModelProvider.BLOCK_FOLDER;
@@ -28,96 +28,98 @@ public class BlockStateDataGen extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlock(ModBlocks.SOUL_REINFORCEMENT_TABLE, models().orientableWithBottom(name(ModBlocks.SOUL_REINFORCEMENT_TABLE),
-                side(ModBlocks.SOUL_REINFORCEMENT_TABLE),
-                side(ModBlocks.SOUL_REINFORCEMENT_TABLE),
-                BlockModelDataGen.prefix(ModBlocks.SOUL_STONE),
-                top(ModBlocks.SOUL_REINFORCEMENT_TABLE)));
-        simpleBlock(ModBlocks.CHISELED_SOUL_STONE_BRICKS, modelFromBlock(ModBlocks.CHISELED_SOUL_STONE_BRICKS));
-        simpleBlock(ModBlocks.CRACKED_DECAYED_STONE_BRICKS);
-        slabBlock(ModBlocks.CRACKED_DECAYED_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS));
-        stairsBlock(ModBlocks.CRACKED_DECAYED_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS));
-        wallBlock(ModBlocks.CRACKED_DECAYED_STONE_BRICK_WALL, BlockModelDataGen.prefix(ModBlocks.CRACKED_DECAYED_STONE_BRICKS));
-        simpleBlock(ModBlocks.CRACKED_SOUL_STONE_BRICKS);
-        slabBlock(ModBlocks.CRACKED_SOUL_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
-        stairsBlock(ModBlocks.CRACKED_SOUL_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
-        wallBlock(ModBlocks.CRACKED_SOUL_STONE_BRICK_WALL, BlockModelDataGen.prefix(ModBlocks.CRACKED_SOUL_STONE_BRICKS));
-        simpleBlock(ModBlocks.CRIMSON_HYPHAL_SOIL, modelFromBlock(ModBlocks.CRIMSON_HYPHAL_SOIL));
-        simpleBlock(ModBlocks.DECAYED_STONE);
-        slabBlock(ModBlocks.DECAYED_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS));
-        stairsBlock(ModBlocks.DECAYED_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS));
-        wallBlock(ModBlocks.DECAYED_STONE_BRICK_WALL, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE_BRICKS));
-        simpleBlock(ModBlocks.DECAYED_STONE_BRICKS);
-        slabBlock(ModBlocks.DECAYED_STONE_SLAB, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE), BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE));
-        stairsBlock(ModBlocks.DECAYED_STONE_STAIRS, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE));
-        wallBlock(ModBlocks.DECAYED_STONE_WALL, BlockModelDataGen.prefix(ModBlocks.DECAYED_STONE));
-        fire(ModBlocks.INFERNO);
-        simpleBlock(ModBlocks.PARCHED_SOIL);
-        fire(ModBlocks.POISONOUS_FIRE);
-        fire(ModBlocks.PURE_SOUL_FIRE);
-        simpleBlock(ModBlocks.REFINED_SOUL_METAL_BLOCK);
-        simpleBlock(ModBlocks.REFINED_SOUL_SAND);
-        simpleBlock(ModBlocks.REFINED_SOUL_SOIL);
-        simpleBlock(ModBlocks.SMOOTH_SOUL_STONE);
-        slabBlock(ModBlocks.SMOOTH_SOUL_STONE_SLAB, BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE), BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE));
-        stairsBlock(ModBlocks.SMOOTH_SOUL_STONE_STAIRS, BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE));
-        wallBlock(ModBlocks.SMOOTH_SOUL_STONE_WALL, BlockModelDataGen.prefix(ModBlocks.SMOOTH_SOUL_STONE));
+        simpleBlock(SOUL_REINFORCEMENT_TABLE, models().orientableWithBottom(name(SOUL_REINFORCEMENT_TABLE),
+                side(SOUL_REINFORCEMENT_TABLE),
+                side(SOUL_REINFORCEMENT_TABLE),
+                BlockModelDataGen.prefix(SOUL_STONE),
+                top(SOUL_REINFORCEMENT_TABLE)));
+        simpleBlock(CHISELED_SOUL_STONE_BRICKS, modelFromBlock(CHISELED_SOUL_STONE_BRICKS));
+        simpleBlock(CRACKED_DECAYED_STONE_BRICKS);
+        slabBlock(CRACKED_DECAYED_STONE_BRICK_SLAB, BlockModelDataGen.prefix(CRACKED_DECAYED_STONE_BRICKS), BlockModelDataGen.prefix(CRACKED_DECAYED_STONE_BRICKS));
+        stairsBlock(CRACKED_DECAYED_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(CRACKED_DECAYED_STONE_BRICKS));
+        wallBlock(CRACKED_DECAYED_STONE_BRICK_WALL, BlockModelDataGen.prefix(CRACKED_DECAYED_STONE_BRICKS));
+        simpleBlock(CRACKED_SOUL_STONE_BRICKS);
+        slabBlock(CRACKED_SOUL_STONE_BRICK_SLAB, BlockModelDataGen.prefix(CRACKED_SOUL_STONE_BRICKS), BlockModelDataGen.prefix(CRACKED_SOUL_STONE_BRICKS));
+        stairsBlock(CRACKED_SOUL_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(CRACKED_SOUL_STONE_BRICKS));
+        wallBlock(CRACKED_SOUL_STONE_BRICK_WALL, BlockModelDataGen.prefix(CRACKED_SOUL_STONE_BRICKS));
+        simpleBlock(CRIMSON_HYPHAL_SOIL, modelFromBlock(CRIMSON_HYPHAL_SOIL));
+        simpleBlock(DECAYED_STONE);
+        slabBlock(DECAYED_STONE_BRICK_SLAB, BlockModelDataGen.prefix(DECAYED_STONE_BRICKS), BlockModelDataGen.prefix(DECAYED_STONE_BRICKS));
+        stairsBlock(DECAYED_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(DECAYED_STONE_BRICKS));
+        wallBlock(DECAYED_STONE_BRICK_WALL, BlockModelDataGen.prefix(DECAYED_STONE_BRICKS));
+        simpleBlock(DECAYED_STONE_BRICKS);
+        slabBlock(DECAYED_STONE_SLAB, BlockModelDataGen.prefix(DECAYED_STONE), BlockModelDataGen.prefix(DECAYED_STONE));
+        stairsBlock(DECAYED_STONE_STAIRS, BlockModelDataGen.prefix(DECAYED_STONE));
+        wallBlock(DECAYED_STONE_WALL, BlockModelDataGen.prefix(DECAYED_STONE));
+        fire(INFERNO);
+        simpleBlock(PARCHED_SOIL);
+        fire(POISONOUS_FIRE);
+        simpleBlock(POTTED_SOULIFIED_BUSH, modelFromBlock(POTTED_SOULIFIED_BUSH));
+        fire(PURE_SOUL_FIRE);
+        simpleBlock(REFINED_SOUL_METAL_BLOCK);
+        simpleBlock(REFINED_SOUL_SAND);
+        simpleBlock(REFINED_SOUL_SOIL);
+        simpleBlock(SMOOTH_SOUL_STONE);
+        slabBlock(SMOOTH_SOUL_STONE_SLAB, BlockModelDataGen.prefix(SMOOTH_SOUL_STONE), BlockModelDataGen.prefix(SMOOTH_SOUL_STONE));
+        stairsBlock(SMOOTH_SOUL_STONE_STAIRS, BlockModelDataGen.prefix(SMOOTH_SOUL_STONE));
+        wallBlock(SMOOTH_SOUL_STONE_WALL, BlockModelDataGen.prefix(SMOOTH_SOUL_STONE));
         for (int i = 0; i <= SEStorageTileEntity.MAX_SOUL_ENERGY_LEVEL; i++) {
-            getVariantBuilder(ModBlocks.SOUL_ENERGY_STORAGE)
+            getVariantBuilder(SOUL_ENERGY_STORAGE)
                     .partialState()
                     .with(ModBlockStateProperties.SOUL_ENERGY_LEVEL, i)
                     .addModels(new ConfiguredModel(models().cubeColumn(
-                            String.format("%s_%d", BlockModelDataGen.prefix(ModBlocks.SOUL_ENERGY_STORAGE), i),
-                            BlockModelDataGen.prefix(String.format("%s_%d", name(ModBlocks.SOUL_ENERGY_STORAGE), i)),
+                            String.format("%s_%d", BlockModelDataGen.prefix(SOUL_ENERGY_STORAGE), i),
+                            BlockModelDataGen.prefix(String.format("%s_%d", name(SOUL_ENERGY_STORAGE), i)),
                             BlockModelDataGen.prefix(BlockModelDataGen.SIMPLE_MACHINE_SIDE))));
         }
         for (int i = 0; i <= SEStorageTileEntity.MAX_SOUL_ENERGY_LEVEL; i++) {
-            getVariantBuilder(ModBlocks.SOUL_ENERGY_STORAGE_II)
+            getVariantBuilder(SOUL_ENERGY_STORAGE_II)
                     .partialState()
                     .with(ModBlockStateProperties.SOUL_ENERGY_LEVEL, i)
                     .addModels(new ConfiguredModel(models().cubeColumn(
-                            String.format("%s_%d", BlockModelDataGen.prefix(ModBlocks.SOUL_ENERGY_STORAGE_II), i),
-                            BlockModelDataGen.prefix(String.format("%s_%d", name(ModBlocks.SOUL_ENERGY_STORAGE_II), i)),
+                            String.format("%s_%d", BlockModelDataGen.prefix(SOUL_ENERGY_STORAGE_II), i),
+                            BlockModelDataGen.prefix(String.format("%s_%d", name(SOUL_ENERGY_STORAGE_II), i)),
                             BlockModelDataGen.prefix(BlockModelDataGen.SIMPLE_L2_MACHINE_SIDE))));
         }
         segens();
-        simpleBlock(ModBlocks.SOUL_LAVA_FLUID_BLOCK, modelFromBlock(ModBlocks.SOUL_LAVA_FLUID_BLOCK));
-        simpleBlock(ModBlocks.SOUL_METAL_BLOCK);
-        simpleBlock(ModBlocks.SOUL_STONE);
-        slabBlock(ModBlocks.SOUL_STONE_BRICK_SLAB, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE_BRICKS), BlockModelDataGen.prefix(ModBlocks.SOUL_STONE_BRICKS));
-        stairsBlock(ModBlocks.SOUL_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE_BRICKS));
-        wallBlock(ModBlocks.SOUL_STONE_BRICK_WALL, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE_BRICKS));
-        simpleBlock(ModBlocks.SOUL_STONE_BRICKS);
-        slabBlock(ModBlocks.SOUL_STONE_SLAB, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE), BlockModelDataGen.prefix(ModBlocks.SOUL_STONE));
-        stairsBlock(ModBlocks.SOUL_STONE_STAIRS, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE));
-        wallBlock(ModBlocks.SOUL_STONE_WALL, BlockModelDataGen.prefix(ModBlocks.SOUL_STONE));
-        cropsBlock(ModBlocks.SOUL_WART, BlockStateProperties.AGE_3, 0, 1, 1, 2);
-        simpleBlock(ModBlocks.WARPED_HYPHAL_SOIL, modelFromBlock(ModBlocks.WARPED_HYPHAL_SOIL));
+        simpleBlock(SOUL_LAVA_FLUID_BLOCK, modelFromBlock(SOUL_LAVA_FLUID_BLOCK));
+        simpleBlock(SOUL_METAL_BLOCK);
+        simpleBlock(SOUL_STONE);
+        slabBlock(SOUL_STONE_BRICK_SLAB, BlockModelDataGen.prefix(SOUL_STONE_BRICKS), BlockModelDataGen.prefix(SOUL_STONE_BRICKS));
+        stairsBlock(SOUL_STONE_BRICK_STAIRS, BlockModelDataGen.prefix(SOUL_STONE_BRICKS));
+        wallBlock(SOUL_STONE_BRICK_WALL, BlockModelDataGen.prefix(SOUL_STONE_BRICKS));
+        simpleBlock(SOUL_STONE_BRICKS);
+        slabBlock(SOUL_STONE_SLAB, BlockModelDataGen.prefix(SOUL_STONE), BlockModelDataGen.prefix(SOUL_STONE));
+        stairsBlock(SOUL_STONE_STAIRS, BlockModelDataGen.prefix(SOUL_STONE));
+        wallBlock(SOUL_STONE_WALL, BlockModelDataGen.prefix(SOUL_STONE));
+        cropsBlock(SOUL_WART, BlockStateProperties.AGE_3, 0, 1, 1, 2);
+        simpleBlock(SOULIFIED_BUSH, modelFromBlock(SOULIFIED_BUSH));
+        simpleBlock(WARPED_HYPHAL_SOIL, modelFromBlock(WARPED_HYPHAL_SOIL));
     }
 
     private void segens() {
-        sidedSegen(ModBlocks.DEPTH_SEGEN, "depth_segen_side");
-        sidedSegen(ModBlocks.DEPTH_SEGEN_II, "depth_segen_l2_side");
-        segen(ModBlocks.HEAT_SEGEN);
-        segen(ModBlocks.HEAT_SEGEN_II);
-        segen(ModBlocks.NETHER_SEGEN);
-        segen(ModBlocks.NETHER_SEGEN_II);
-        segen(ModBlocks.SEGEN);
-        segen(ModBlocks.SEGEN_II);
-        segen(ModBlocks.SKY_SEGEN);
-        segen(ModBlocks.SKY_SEGEN_II);
-        sidedSegen(ModBlocks.SOLAR_SEGEN, false);
-        sidedSegen(ModBlocks.SOLAR_SEGEN_II, true);
+        sidedSegen(DEPTH_SEGEN, "depth_segen_side");
+        sidedSegen(DEPTH_SEGEN_II, "depth_segen_l2_side");
+        segen(HEAT_SEGEN);
+        segen(HEAT_SEGEN_II);
+        segen(NETHER_SEGEN);
+        segen(NETHER_SEGEN_II);
+        segen(SEGEN);
+        segen(SEGEN_II);
+        segen(SKY_SEGEN);
+        segen(SKY_SEGEN_II);
+        sidedSegen(SOLAR_SEGEN, false);
+        sidedSegen(SOLAR_SEGEN_II, true);
     }
 
     private void segen(Block segen) {
         getVariantBuilder(segen)
                 .partialState()
                 .with(ModBlockStateProperties.IS_GENERATING_SE, false)
-                .addModels(new ConfiguredModel(models().singleTexture(BlockModelDataGen.prefix(segen).toString(), BlockModelDataGen.CUBE_ALL.getLocation(), BlockModelDataGen.ALL, BlockModelDataGen.prefix(segen))))
+                .addModels(new ConfiguredModel(models().singleTexture(BlockModelDataGen.prefix(segen).toString(), BlockModelDataGen.CUBE_ALL.getLocation(), BlockModelDataGen.ALL_NAME, BlockModelDataGen.prefix(segen))))
                 .partialState()
                 .with(ModBlockStateProperties.IS_GENERATING_SE, true)
-                .addModels(new ConfiguredModel(models().singleTexture(BlockModelDataGen.prefix(segen) + "_gs", BlockModelDataGen.CUBE_ALL.getLocation(), BlockModelDataGen.ALL, BlockModelDataGen.prefix(name(segen) + "_gs"))));
+                .addModels(new ConfiguredModel(models().singleTexture(BlockModelDataGen.prefix(segen) + "_gs", BlockModelDataGen.CUBE_ALL.getLocation(), BlockModelDataGen.ALL_NAME, BlockModelDataGen.prefix(name(segen) + "_gs"))));
     }
 
     private void sidedSegen(Block segen, boolean l2) {

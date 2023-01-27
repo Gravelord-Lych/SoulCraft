@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.item.Items;
 import net.minecraft.loot.*;
 import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.loot.functions.ApplyBonus;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static lych.soulcraft.block.ModBlocks.*;
-import static net.minecraft.block.Blocks.*;
+import static net.minecraft.block.Blocks.SOUL_SOIL;
 
 public class ModBlockLootTables extends BlockLootTables {
     private final Set<Block> knownBlocks = new HashSet<>();
@@ -43,6 +44,7 @@ public class ModBlockLootTables extends BlockLootTables {
         dropSelf(DECAYED_STONE_STAIRS);
         dropSelf(DECAYED_STONE_WALL);
         dropSelf(PARCHED_SOIL);
+        dropPottedContents(POTTED_SOULIFIED_BUSH);
         dropSelf(REFINED_SOUL_METAL_BLOCK);
         dropSelf(REFINED_SOUL_SAND);
         dropSelf(REFINED_SOUL_SOIL);
@@ -72,6 +74,7 @@ public class ModBlockLootTables extends BlockLootTables {
                                         .when(BlockStateProperty.hasBlockStateProperties(block)
                                                 .setProperties(StatePropertiesPredicate.Builder.properties()
                                                         .hasProperty(NetherWartBlock.AGE, 3))))))));
+        add(SOULIFIED_BUSH, block -> createShearsDispatchTable(block, applyExplosionDecay(block, ItemLootEntry.lootTableItem(Items.STICK).apply(SetCount.setCount(RandomValueRange.between(0, 2))))));
         dropSelfIfSilkTouch(WARPED_HYPHAL_SOIL, SOUL_SOIL);
     }
 

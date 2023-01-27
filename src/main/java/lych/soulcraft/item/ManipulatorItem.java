@@ -63,7 +63,7 @@ public class ManipulatorItem extends Item {
 
     @Nullable
     private static MobEntity getVictim(ItemStack stack, World world) {
-        int id = stack.getOrCreateTag().getInt(TAG + "Victim");
+        int id = stack.hasTag() ? stack.getTag().getInt(TAG + "Victim") : -1;
         if (id == -1) {
             return null;
         }

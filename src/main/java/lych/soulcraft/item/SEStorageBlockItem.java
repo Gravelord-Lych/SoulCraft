@@ -34,7 +34,7 @@ public class SEStorageBlockItem extends BlockItem implements ItemSEContainer {
         TileEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SEStorageTileEntity) {
             SEStorageTileEntity storage = (SEStorageTileEntity) blockEntity;
-            storage.setSoulEnergyStored(stack.getOrCreateTag().getInt(ENERGY_TAG));
+            storage.setSoulEnergyStored(getSEStoredIn(stack));
         }
         return super.updateCustomBlockEntityTag(pos, world, player, stack, state);
     }
@@ -46,7 +46,11 @@ public class SEStorageBlockItem extends BlockItem implements ItemSEContainer {
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return 1 - (double) stack.getOrCreateTag().getInt(ENERGY_TAG) / getCapacity(stack);
+        return 1 - (double) getSEStoredIn(stack) / getCapacity(stack);
+    }
+
+    private static int getSEStoredIn(ItemStack stack) {
+        return stack.hasTag() ? stack.getTag().getInt(ENERGY_TAG) : 0;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class SEStorageBlockItem extends BlockItem implements ItemSEContainer {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tips, ITooltipFlag flag) {
         super.appendHoverText(stack, world, tips, flag);
-        SoulEnergies.addSEToolTip(stack, tips, stackIn -> stackIn.getOrCreateTag().getInt(ENERGY_TAG), this::getCapacity);
+        SoulEnergies.addSEToolTip(stack, tips, SEStorageBlockItem::getSEStoredIn, this::getCapacity);
     }
 
     @Override

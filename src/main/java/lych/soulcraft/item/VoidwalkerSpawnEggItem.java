@@ -85,7 +85,7 @@ public class VoidwalkerSpawnEggItem extends ForgeSpawnEggItem {
         if (!stack.hasTag()) {
             return VoidwalkerTier.ORDINARY;
         }
-        return VoidwalkerTier.byId(stack.getOrCreateTag().getInt(TAG));
+        return VoidwalkerTier.byId(stack.getTag().getInt(TAG));
     }
 
     public static void setTier(ItemStack stack, VoidwalkerTier tier) {

@@ -3,6 +3,7 @@ package lych.soulcraft.block;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.block.entity.*;
 import lych.soulcraft.block.plant.SoulWartBlock;
+import lych.soulcraft.block.plant.SoulifiedBushBlock;
 import lych.soulcraft.fluid.ModFluids;
 import lych.soulcraft.item.ModMaterials;
 import lych.soulcraft.tag.ModBlockTags;
@@ -39,6 +40,7 @@ public final class ModBlocks {
     public static final Block NETHER_SEGEN_II = createSegenBlock(MaterialColor.NETHER, 3, 3, 10, () -> new NetherSEGeneratorTileEntity(ModTileEntities.NETHER_SEGEN_II, 2));
     public static final Block PARCHED_SOIL = new Block(of(Material.DIRT, MaterialColor.COLOR_RED).strength(0.5F).sound(SoundType.SOUL_SOIL));
     public static final AdvancedFireBlock POISONOUS_FIRE = new AdvancedFireBlock(fireProperties(MaterialColor.COLOR_LIGHT_GREEN, ModConstants.POISONOUS_FIRE_LIGHT_LEVEL), ModBlocks.POISONOUS_FIRE, ModBlockTags.POISONOUS_FIRE_BASE_BLOCKS);
+    public static final Block POTTED_SOULIFIED_BUSH = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> ModBlocks.SOULIFIED_BUSH, copy(Blocks.DEAD_BUSH));
     public static final SimpleFireBlock PURE_SOUL_FIRE = new SimpleFireBlock(fireProperties(MaterialColor.COLOR_BLUE, ModConstants.PURE_SOUL_FIRE_LIGHT_LEVEL), ModBlockTags.PURE_SOUL_FIRE_BASED_BLOCKS);
     public static final Block REFINED_SOUL_METAL_BLOCK = new Block(of(Material.METAL, MaterialColor.COLOR_BLUE).harvestTool(ToolType.PICKAXE).harvestLevel(3).requiresCorrectToolForDrops().strength(8, 24).sound(SoundType.METAL).lightLevel(state -> 10));
     public static final Block REFINED_SOUL_SAND = new SoulSandBlock(of(Material.SAND, MaterialColor.COLOR_BROWN).strength(0.5F).speedFactor(0.4F).sound(SoundType.SOUL_SAND).isValidSpawn(ModBlocks::always).isRedstoneConductor(ModBlocks::always).isViewBlocking(ModBlocks::always).isSuffocating(ModBlocks::always));
@@ -56,6 +58,7 @@ public final class ModBlocks {
     public static final Block SOUL_REINFORCEMENT_TABLE = new SoulReinforcementTableBlock(of(Material.STONE, MaterialColor.COLOR_LIGHT_BLUE).harvestTool(ToolType.PICKAXE).harvestLevel(0).requiresCorrectToolForDrops().strength(1.5f, 6));
     public static final Block SOUL_STONE = new Block(of(Material.STONE, MaterialColor.COLOR_BLUE).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(1.5f, 6));
     public static final Block SOUL_WART = new SoulWartBlock(of(Material.PLANT, MaterialColor.COLOR_CYAN).noCollission().randomTicks().sound(SoundType.NETHER_WART));
+    public static final Block SOULIFIED_BUSH = new SoulifiedBushBlock(copy(Blocks.DEAD_BUSH));
     public static final Block WARPED_HYPHAL_SOIL = new HyphalSoulSoilBlock(of(Material.DIRT, MaterialColor.WARPED_NYLIUM).randomTicks().strength(0.5f).sound(SoundType.SOUL_SOIL));
 
 //  ----------------------------------------EXTENSIONS----------------------------------------
@@ -136,6 +139,7 @@ public final class ModBlocks {
         registry.register(make(NETHER_SEGEN_II, ModBlockNames.NETHER_SEGEN_II));
         registry.register(make(PARCHED_SOIL, ModBlockNames.PARCHED_SOIL));
         registry.register(make(POISONOUS_FIRE, ModBlockNames.POISONOUS_FIRE));
+        registry.register(make(POTTED_SOULIFIED_BUSH, ModBlockNames.POTTED_SOULIFIED_BUSH));
         registry.register(make(PURE_SOUL_FIRE, ModBlockNames.PURE_SOUL_FIRE));
         registry.register(make(REFINED_SOUL_METAL_BLOCK, ModBlockNames.REFINED_SOUL_METAL_BLOCK));
         registry.register(make(REFINED_SOUL_SAND, ModBlockNames.REFINED_SOUL_SAND));
@@ -164,6 +168,7 @@ public final class ModBlocks {
         registry.register(make(SOUL_STONE_STAIRS, ModBlockNames.SOUL_STONE_STAIRS));
         registry.register(make(SOUL_STONE_WALL, ModBlockNames.SOUL_STONE_WALL));
         registry.register(make(SOUL_WART, ModBlockNames.SOUL_WART));
+        registry.register(make(SOULIFIED_BUSH, ModBlockNames.SOULIFIED_BUSH));
         registry.register(make(WARPED_HYPHAL_SOIL, ModBlockNames.WARPED_HYPHAL_SOIL));
     }
 }

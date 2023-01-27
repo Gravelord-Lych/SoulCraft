@@ -1,6 +1,8 @@
 package lych.soulcraft.data;
 
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.block.ModBlocks;
+import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SEGemItem;
 import lych.soulcraft.item.SoulBowItem;
 import lych.soulcraft.util.SoulEnergies;
@@ -16,7 +18,6 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import lych.soulcraft.item.ModItems;
 
 import java.util.Objects;
 
@@ -166,6 +167,7 @@ public class ItemModelDataGen extends ItemModelProvider {
         blockItem(ModItems.SOUL_STONE_STAIRS);
         blockItem(ModItems.SOUL_STONE_WALL);
         simple(registryNameToString(ModItems.SOUL_WART), GENERATED, prefix(ModItems.SOUL_WART));
+        simple(registryNameToString(ModItems.SOULIFIED_BUSH), GENERATED, BlockModelDataGen.prefix(ModBlocks.SOULIFIED_BUSH));
         blockItem(ModItems.WARPED_HYPHAL_SOIL);
     }
 

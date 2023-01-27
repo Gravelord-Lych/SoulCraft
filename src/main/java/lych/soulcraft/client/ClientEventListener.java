@@ -200,10 +200,12 @@ public final class ClientEventListener {
         }
 
         private static void registerRenderLayers() {
-            RenderTypeLookup.setRenderLayer(ModBlocks.SOUL_WART, RenderType.cutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.INFERNO, RenderType.cutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.POISONOUS_FIRE, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.POTTED_SOULIFIED_BUSH, RenderType.cutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.PURE_SOUL_FIRE, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.SOUL_WART, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.SOULIFIED_BUSH, RenderType.cutout());
         }
 
         private static void bindScreens() {

@@ -54,11 +54,16 @@ public class SoulPieceItem extends Item {
 
     @Nullable
     public static EntityType<?> getType(ItemStack stack) {
-        if (!stack.getOrCreateTag().contains(TAG + "EntityType")) {
+        if (!stack.hasTag() || !stack.getTag().contains(TAG + "EntityType")) {
             return null;
         }
-        ResourceLocation location = new ResourceLocation(stack.getOrCreateTag().getString(TAG + "EntityType"));
-        return ForgeRegistries.ENTITIES.containsKey(location) ? ForgeRegistries.ENTITIES.getValue(location) : null;
+        ResourceLocation location;
+        if (stack.hasTag()) {
+            location = new ResourceLocation(stack.getTag().getString(TAG + "EntityType"));
+        } else {
+            location = null;
+        }
+        return location != null && ForgeRegistries.ENTITIES.containsKey(location) ? ForgeRegistries.ENTITIES.getValue(location) : null;
     }
 
     public static void setType(ItemStack stack, EntityType<?> type) {

@@ -151,7 +151,7 @@ public final class ReinforcementHelper {
             }
             removeReinforcement(stack, reinforcement);
         }
-        if (!stack.getOrCreateTag().contains(TAG, NBT.TAG_LIST)) {
+        if (!stack.hasTag() || !stack.getTag().contains(TAG, NBT.TAG_LIST)) {
             stack.getOrCreateTag().put(TAG, new ListNBT());
         }
         addReinforcementDirectly(getReinforcementTags(stack), reinforcement, level);
@@ -179,7 +179,10 @@ public final class ReinforcementHelper {
     }
 
     public static ListNBT getReinforcementTags(ItemStack stack) {
-        return stack.getOrCreateTag().getList(TAG, NBT.TAG_COMPOUND);
+        if (!stack.hasTag()) {
+            return new ListNBT();
+        }
+        return stack.getTag().getList(TAG, NBT.TAG_COMPOUND);
     }
 
     public static int getReinforcementCount(ItemStack stack) {
