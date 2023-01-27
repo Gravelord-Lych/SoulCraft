@@ -83,6 +83,7 @@ public class ModBiomes {
         addTypes(SOUL_MOUNTAINS, Type.MOUNTAIN, Type.HOT, Type.DRY, Type.MOUNTAIN, SOUL_TYPE, SOUL_LAND_TYPE);
         addTypes(SOUL_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE, SOUL_LAND_TYPE);
         addTypes(SOUL_LAVA_OCEAN, Type.OCEAN, Type.HOT, Type.DRY, SOUL_TYPE, SOUL_LAND_TYPE);
+        addTypes(SPIKED_SOUL_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE, SOUL_LAND_TYPE);
         addTypes(UNSTABLE_SOUL_LAVA_OCEAN, Type.OCEAN, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE, SOUL_LAND_TYPE);
         addTypes(WARPED_HILLS, Type.PLAINS, Type.HOT, Type.DRY, Type.HILLS, SOUL_LAND_TYPE);
         addTypes(WARPED_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_LAND_TYPE);

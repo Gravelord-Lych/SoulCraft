@@ -85,7 +85,6 @@ public class SoulRabbitEntity extends RabbitEntity {
         return rabbit;
     }
 
-
     public void setSoulRabbitType(Type type) {
         super.setRabbitType(type.getId());
     }
@@ -94,6 +93,10 @@ public class SoulRabbitEntity extends RabbitEntity {
         return Type.byId(getRabbitType());
     }
 
+    /**
+     * Use {@link SoulRabbitEntity#setSoulRabbitType(Type)}
+     */
+    @Deprecated
     @Override
     public void setRabbitType(int type) {
 //      Vanilla hardcode causes this additional step
