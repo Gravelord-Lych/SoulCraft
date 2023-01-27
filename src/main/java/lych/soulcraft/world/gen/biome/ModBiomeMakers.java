@@ -106,7 +106,7 @@ public final class ModBiomeMakers {
         MobSpawnInfo.Builder spawnBuilder = new MobSpawnInfo.Builder();
         spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.BLAZE, 100, 1, 1));
         spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ZOMBIFIED_PIGLIN, 50, 1, 2));
-        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.SOUL_SKELETON, 20, 2, 2));
+        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.SOUL_SKELETON, 65, 2, 2));
         spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ENDERMAN, 1, 1, 1));
         spawnBuilder.addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.SOUL_RABBIT, 100, 2, 3));
         spawnBuilder.addMobCharge(EntityType.BLAZE, 0.4, 0.4);
