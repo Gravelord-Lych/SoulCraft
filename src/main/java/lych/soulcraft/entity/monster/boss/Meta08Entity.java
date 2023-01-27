@@ -1217,7 +1217,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
         public void addModifiersTo(RobotEntity robot, Meta08Entity meta8) {}
 
         public String getName(ITextComponent name) {
-            return Objects.requireNonNull(matchName.redirect(name.getString()), "Name was not found");
+            return matchName.redirect(name.getString(), s -> { throw new IllegalStateException("Name was not found"); });
         }
 
         @Nullable
