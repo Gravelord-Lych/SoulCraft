@@ -6,7 +6,10 @@ import lych.soulcraft.entity.monster.raider.EngineerEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.IllagerRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class EngineerRenderer extends IllagerRenderer<EngineerEntity> {
     private static final ResourceLocation ENGINEER = SoulCraft.prefixTex("entity/raider/illager/engineer.png");
 

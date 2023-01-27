@@ -6,7 +6,10 @@ import lych.soulcraft.entity.passive.IllusoryHorseEntity;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class IllusoryHorseRenderer extends AbstractHorseRenderer<IllusoryHorseEntity, IllusoryHorseModel<IllusoryHorseEntity>> {
     private static final ResourceLocation ILLUSORY_HORSE = SoulCraft.prefixTex("entity/esv/illusory_horse.png");
     private static final ResourceLocation ILLUSORY_HORSE_ETHEREAL = SoulCraft.prefixTex("entity/esv/illusory_horse_ethereal.png");

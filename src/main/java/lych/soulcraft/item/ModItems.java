@@ -131,6 +131,7 @@ public final class ModItems {
     public static final Item ILLUSORY_HORSE_SPAWN_EGG = makeSpawnEgg(ModEntities.ILLUSORY_HORSE, VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, 0x49dfea);
     public static final Item REDSTONE_MORTAR_SPAWN_EGG = makeSpawnEgg(ModEntities.REDSTONE_MORTAR, 0x452d15, 0x474747);
     public static final Item REDSTONE_TURRET_SPAWN_EGG = makeSpawnEgg(ModEntities.REDSTONE_TURRET, 0x452d15, 0x7e7e7e);
+    public static final Item SOUL_RABBIT_SPAWN_EGG = makeSpawnEgg(ModEntities.SOUL_RABBIT, 0x277df6, 0x12dada);
     public static final Item SOUL_SKELETON_SPAWN_EGG = makeSpawnEgg(ModEntities.SOUL_SKELETON, 0x79eef2, 0x00797d);
     public static final Item VOID_ALCHEMIST_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_ALCHEMIST, 0xe8d1ff);
     public static final Item VOID_ARCHER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_ARCHER, 0x906248);
@@ -271,6 +272,7 @@ public final class ModItems {
         registerSpawnEgg(registry, ILLUSORY_HORSE_SPAWN_EGG, ModEntityNames.ILLUSORY_HORSE);
         registerSpawnEgg(registry, REDSTONE_MORTAR_SPAWN_EGG, ModEntityNames.REDSTONE_MORTAR);
         registerSpawnEgg(registry, REDSTONE_TURRET_SPAWN_EGG, ModEntityNames.REDSTONE_TURRET);
+        registerSpawnEgg(registry, SOUL_RABBIT_SPAWN_EGG, ModEntityNames.SOUL_RABBIT);
         registerSpawnEgg(registry, SOUL_SKELETON_SPAWN_EGG, ModEntityNames.SOUL_SKELETON);
         registerSpawnEgg(registry, VOID_ALCHEMIST_SPAWN_EGG, ModEntityNames.VOID_ALCHEMIST);
         registerSpawnEgg(registry, VOID_ARCHER_SPAWN_EGG, ModEntityNames.VOID_ARCHER);

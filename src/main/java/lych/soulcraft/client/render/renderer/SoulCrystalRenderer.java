@@ -15,7 +15,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class SoulCrystalRenderer extends EntityRenderer<SoulCrystalEntity> {
     private static final float BASE_SCALE = 2;
     private static final float OFFSET_SCALE = 0.875f;
@@ -47,9 +50,7 @@ public class SoulCrystalRenderer extends EntityRenderer<SoulCrystalEntity> {
         p_225623_4_.scale(BASE_SCALE , BASE_SCALE, BASE_SCALE);
         p_225623_4_.translate(0.0D, -0.5D, 0.0D);
         int i = OverlayTexture.NO_OVERLAY;
-        if (true) {
-            this.base.render(p_225623_4_, ivertexbuilder, p_225623_6_, i);
-        }
+        this.base.render(p_225623_4_, ivertexbuilder, p_225623_6_, i);
 
         p_225623_4_.mulPose(Vector3f.YP.rotationDegrees(f1));
         p_225623_4_.translate(0.0D, 1.5F + f / 2.0F, 0.0D);

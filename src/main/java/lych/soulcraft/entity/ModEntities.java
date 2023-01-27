@@ -15,6 +15,7 @@ import lych.soulcraft.entity.monster.raider.RedstoneMortarEntity;
 import lych.soulcraft.entity.monster.raider.RedstoneTurretEntity;
 import lych.soulcraft.entity.monster.voidwalker.*;
 import lych.soulcraft.entity.passive.IllusoryHorseEntity;
+import lych.soulcraft.entity.passive.SoulRabbitEntity;
 import lych.soulcraft.entity.projectile.*;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
@@ -24,6 +25,7 @@ import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -59,6 +61,7 @@ public final class ModEntities {
     public static final EntityType<SoulBoltEntity> SOUL_BOLT = Builder.of(SoulBoltEntity::new, EntityClassification.MISC).sized(0.0F, 0.0F).clientTrackingRange(24).updateInterval(Integer.MAX_VALUE).build(ModEntityNames.SOUL_BOLT);
     public static final EntityType<SoulControllerEntity> SOUL_CONTROLLER = Builder.of(SoulControllerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(24).build(ModEntityNames.SOUL_CONTROLLER);
     public static final EntityType<SoulCrystalEntity> SOUL_CRYSTAL = Builder.of(SoulCrystalEntity::new, EntityClassification.MONSTER).sized(1, 4).clientTrackingRange(24).build(ModEntityNames.SOUL_CRYSTAL);
+    public static final EntityType<SoulRabbitEntity> SOUL_RABBIT = Builder.of(SoulRabbitEntity::new, EntityClassification.CREATURE).sized(0.4F, 0.5F).fireImmune().clientTrackingRange(8).build(ModEntityNames.SOUL_RABBIT);
     public static final EntityType<SoulSkeletonEntity> SOUL_SKELETON = Builder.of(SoulSkeletonEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.99f).fireImmune().clientTrackingRange(8).build(ModEntityNames.SOUL_SKELETON);
     public static final EntityType<SubZombieEntity> SUB_ZOMBIE = Builder.of(SubZombieEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(8).build(ModEntityNames.SUB_ZOMBIE);
     public static final EntityType<VoidAlchemistEntity> VOID_ALCHEMIST = Builder.of(VoidAlchemistEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.VOID_ALCHEMIST);
@@ -95,6 +98,7 @@ public final class ModEntities {
         registry.register(make(SOUL_BOLT, ModEntityNames.SOUL_BOLT));
         registry.register(make(SOUL_CONTROLLER, ModEntityNames.SOUL_CONTROLLER));
         registry.register(make(SOUL_CRYSTAL, ModEntityNames.SOUL_CRYSTAL));
+        registry.register(make(SOUL_RABBIT, ModEntityNames.SOUL_RABBIT));
         registry.register(make(SOUL_SKELETON, ModEntityNames.SOUL_SKELETON));
         registry.register(make(SUB_ZOMBIE, ModEntityNames.SUB_ZOMBIE));
         registry.register(make(VOID_ALCHEMIST, ModEntityNames.VOID_ALCHEMIST));
@@ -119,6 +123,7 @@ public final class ModEntities {
         event.put(SKELETON_KING, SkeletonKingEntity.createAttributes().build());
         event.put(SOUL_CONTROLLER, SoulControllerEntity.createAttributes().build());
         event.put(SOUL_CRYSTAL, SoulCrystalEntity.createAttributes().build());
+        event.put(SOUL_RABBIT, RabbitEntity.createAttributes().build());
         event.put(SOUL_SKELETON, SoulSkeletonEntity.createAttributes().build());
         event.put(SUB_ZOMBIE, ZombieEntity.createAttributes().build());
         event.put(VOID_ALCHEMIST, VoidAlchemistEntity.createAttributes().build());
@@ -138,6 +143,7 @@ public final class ModEntities {
         register(SKELETON_FOLLOWER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(SOUL_CONTROLLER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(SOUL_CRYSTAL, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
+        register(SOUL_RABBIT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, SoulRabbitEntity::checkSoulRabbitSpawnRules);
         register(SOUL_SKELETON, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(SUB_ZOMBIE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(VOID_ALCHEMIST, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);

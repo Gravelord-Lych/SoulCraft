@@ -9,7 +9,10 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.monster.AbstractIllagerEntity.ArmPose;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class EngineerModel extends IllagerModel<EngineerEntity> {
     private final ModelRenderer head;
     private final ModelRenderer hat;

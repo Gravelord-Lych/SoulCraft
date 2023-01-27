@@ -103,9 +103,22 @@ public final class ModBiomeMakers {
     }
 
     public static Biome makeParchedDesertBiome(float depth, float scale) {
+        MobSpawnInfo.Builder spawnBuilder = new MobSpawnInfo.Builder();
+        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.BLAZE, 100, 1, 1));
+        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ZOMBIFIED_PIGLIN, 50, 1, 2));
+        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.SOUL_SKELETON, 20, 2, 2));
+        spawnBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ENDERMAN, 1, 1, 1));
+        spawnBuilder.addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.SOUL_RABBIT, 100, 2, 3));
+        spawnBuilder.addMobCharge(EntityType.BLAZE, 0.4, 0.4);
+        spawnBuilder.addMobCharge(EntityType.ZOMBIFIED_PIGLIN, 0.8, 0.2);
+
         BiomeGenerationSettings.Builder genBuilder = new BiomeGenerationSettings.Builder();
         genBuilder.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PATCH_INFERNO);
         genBuilder.surfaceBuilder(ModConfiguredSurfaceBuilders.PARCHED_DESERT);
+        genBuilder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.PATCH_SOULIFIED_BUSH);
+        if (depth < 0.2f) {
+            genBuilder.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModConfiguredFeatures.PARCHED_SOIL_SPIKE);
+        }
         return new Biome.Builder()
                 .precipitation(Biome.RainType.NONE)
                 .biomeCategory(Biome.Category.NONE)
@@ -121,7 +134,7 @@ public final class ModBiomeMakers {
                         .ambientParticle(new ParticleEffectAmbience(ParticleTypes.SMOKE, 0.002f))
                         .ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS)
                         .build())
-                .mobSpawnSettings(MobSpawnInfo.EMPTY)
+                .mobSpawnSettings(spawnBuilder.build())
                 .generationSettings(genBuilder.build())
                 .build();
     }
@@ -277,6 +290,7 @@ public final class ModBiomeMakers {
     private static void soulMobs(MobSpawnInfo.Builder builder) {
         builder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.SOUL_SKELETON, 100, 4, 4));
         builder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ENDERMAN, 10, 1, 1));
+        builder.addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.SOUL_RABBIT, 100, 2, 3));
     }
 
     private static void addDefaultSoulBiomeCarvers(BiomeGenerationSettings.Builder builder) {

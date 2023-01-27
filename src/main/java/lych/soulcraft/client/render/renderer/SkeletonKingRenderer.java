@@ -7,7 +7,10 @@ import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class SkeletonKingRenderer extends BipedRenderer<SkeletonKingEntity, SkeletonKingModel<SkeletonKingEntity>> {
     private static final ResourceLocation SKELETON_KING = SoulCraft.prefixTex("entity/skeleton_king.png");
 

@@ -177,6 +177,7 @@ public class ItemModelDataGen extends ItemModelProvider {
         spawnEgg(ModItems.ILLUSORY_HORSE_SPAWN_EGG);
         spawnEgg(ModItems.REDSTONE_MORTAR_SPAWN_EGG);
         spawnEgg(ModItems.REDSTONE_TURRET_SPAWN_EGG);
+        spawnEgg(ModItems.SOUL_RABBIT_SPAWN_EGG);
         spawnEgg(ModItems.SOUL_SKELETON_SPAWN_EGG);
         spawnEgg(ModItems.VOID_ALCHEMIST_SPAWN_EGG);
         spawnEgg(ModItems.VOID_ARCHER_SPAWN_EGG);

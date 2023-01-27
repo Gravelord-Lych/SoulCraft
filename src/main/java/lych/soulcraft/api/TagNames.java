@@ -27,6 +27,10 @@ public final class TagNames {
      */
     public static final ResourceLocation SOUL_LAVA = new ResourceLocation(SoulCraftAPI.MOD_ID, "soul_lava");
     /**
+     * Soul Rabbits can spawn on these blocks.
+     */
+    public static final ResourceLocation SOUL_RABBIT_SPAWNABLE_BLOCKS = new ResourceLocation(SoulCraftAPI.MOD_ID, "soul_rabbit_spawnable_blocks");
+    /**
      * For blocks which soulified bush can be placed on.
      */
     public static final ResourceLocation SOULIFIED_BUSH_PLACEABLE_BLOCKS = new ResourceLocation(SoulCraftAPI.MOD_ID, "soulified_bush_placeable_blocks");

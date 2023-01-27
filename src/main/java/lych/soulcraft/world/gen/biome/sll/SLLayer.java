@@ -67,6 +67,7 @@ public final class SLLayer {
         remapColors.put(getId(ModBiomes.PARCHED_DESERT), 0x572F2F);
         remapColors.put(getId(ModBiomes.PARCHED_DESERT_HILLS), 0x834747);
         remapColors.put(getId(ModBiomes.SOUL_SAND_BEACH), 0xEFA420);
+        remapColors.put(getId(ModBiomes.SPIKED_SOUL_PLAINS), 0xB28E51);
         remapColors.put(getId(ModBiomes.WARPED_PLAINS), 0x8C0094);
         remapColors.put(getId(ModBiomes.WARPED_HILLS), 0xCA00D5);
         remapColors.put(getId(ModBiomes.WARPED_PLAINS_EDGE), 0x831BD2);

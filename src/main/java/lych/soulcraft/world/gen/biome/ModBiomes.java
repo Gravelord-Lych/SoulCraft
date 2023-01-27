@@ -20,6 +20,8 @@ import static net.minecraftforge.common.BiomeDictionary.addTypes;
 public class ModBiomes {
     public static final Type ESV_TYPE = Type.getType("ESV");
     public static final Type SOUL_TYPE = Type.getType("SOUL");
+    public static final Type SOUL_LAND_TYPE = Type.getType("SOULLAND");
+    public static final Type PURE_TYPE = Type.getType("PURE");
     public static final RegistryKey<Biome> CRIMSON_HILLS = makeKey(ModBiomeNames.CRIMSON_HILLS);
     public static final RegistryKey<Biome> CRIMSON_PLAINS = makeKey(ModBiomeNames.CRIMSON_PLAINS);
     public static final RegistryKey<Biome> CRIMSON_PLAINS_EDGE = makeKey(ModBiomeNames.CRIMSON_PLAINS_EDGE);
@@ -70,19 +72,20 @@ public class ModBiomes {
     }
 
     static {
-        addTypes(CRIMSON_HILLS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(CRIMSON_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(CRIMSON_PLAINS_EDGE, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
+        addTypes(CRIMSON_HILLS, Type.PLAINS, Type.HOT, Type.DRY, Type.HILLS, SOUL_LAND_TYPE);
+        addTypes(CRIMSON_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_LAND_TYPE);
+        addTypes(CRIMSON_PLAINS_EDGE, Type.PLAINS, Type.HOT, Type.DRY, SOUL_LAND_TYPE);
         addTypes(ESV, Type.COLD, Type.DRY, ESV_TYPE);
-        addTypes(INNERMOST_PLATEAU, Type.PLATEAU, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE);
-        addTypes(INNERMOST_SOUL_LAND, Type.PLAINS, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE);
-        addTypes(PARCHED_DESERT, Type.SANDY, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(SOUL_MOUNTAINS, Type.MOUNTAIN, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(SOUL_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(SOUL_LAVA_OCEAN, Type.OCEAN, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(UNSTABLE_SOUL_LAVA_OCEAN, Type.OCEAN, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE);
-        addTypes(WARPED_HILLS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(WARPED_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
-        addTypes(WARPED_PLAINS_EDGE, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE);
+        addTypes(INNERMOST_PLATEAU, Type.PLATEAU, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE, SOUL_LAND_TYPE, PURE_TYPE);
+        addTypes(INNERMOST_SOUL_LAND, Type.PLAINS, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE, SOUL_LAND_TYPE, PURE_TYPE);
+        addTypes(PARCHED_DESERT, Type.SANDY, Type.HOT, Type.DRY, SOUL_LAND_TYPE);
+        addTypes(PARCHED_DESERT, Type.SANDY, Type.HOT, Type.DRY, Type.HILLS, SOUL_LAND_TYPE);
+        addTypes(SOUL_MOUNTAINS, Type.MOUNTAIN, Type.HOT, Type.DRY, Type.MOUNTAIN, SOUL_TYPE, SOUL_LAND_TYPE);
+        addTypes(SOUL_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_TYPE, SOUL_LAND_TYPE);
+        addTypes(SOUL_LAVA_OCEAN, Type.OCEAN, Type.HOT, Type.DRY, SOUL_TYPE, SOUL_LAND_TYPE);
+        addTypes(UNSTABLE_SOUL_LAVA_OCEAN, Type.OCEAN, Type.HOT, Type.DRY, Type.RARE, SOUL_TYPE, SOUL_LAND_TYPE);
+        addTypes(WARPED_HILLS, Type.PLAINS, Type.HOT, Type.DRY, Type.HILLS, SOUL_LAND_TYPE);
+        addTypes(WARPED_PLAINS, Type.PLAINS, Type.HOT, Type.DRY, SOUL_LAND_TYPE);
+        addTypes(WARPED_PLAINS_EDGE, Type.PLAINS, Type.HOT, Type.DRY, SOUL_LAND_TYPE);
     }
 }

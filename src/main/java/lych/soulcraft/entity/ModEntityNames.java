@@ -24,6 +24,7 @@ public class ModEntityNames {
     public static final String SOUL_BOLT = "soul_bolt";
     public static final String SOUL_CONTROLLER = "soul_controller";
     public static final String SOUL_CRYSTAL = "soul_crystal";
+    public static final String SOUL_RABBIT = "soul_rabbit";
     public static final String SOUL_SKELETON = "soul_skeleton";
     public static final String SUB_ZOMBIE = "sub_zombie";
     public static final String VOID_ALCHEMIST = "void_alchemist";

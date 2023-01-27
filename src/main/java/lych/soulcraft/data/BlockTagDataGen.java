@@ -41,6 +41,13 @@ public class BlockTagDataGen extends ForgeBlockTagsProvider {
                 .addTag(BlockTags.WARPED_STEMS)
                 .add(WARPED_NYLIUM, WARPED_PLANKS, WARPED_WART_BLOCK, WARPED_HYPHAL_SOIL);
         tag(ModBlockTags.PURE_SOUL_FIRE_BASED_BLOCKS).add(REFINED_SOUL_SAND, REFINED_SOUL_SOIL);
+        tag(ModBlockTags.SOUL_RABBIT_SPAWNABLE_BLOCKS).add(CRIMSON_HYPHAL_SOIL,
+                PARCHED_SOIL,
+                REFINED_SOUL_SAND,
+                REFINED_SOUL_SOIL,
+                SOUL_SAND,
+                SOUL_SOIL,
+                WARPED_HYPHAL_SOIL);
         tag(ModBlockTags.SOULIFIED_BUSH_PLACEABLE_BLOCKS).add(CRIMSON_HYPHAL_SOIL,
                 PARCHED_SOIL,
                 REFINED_SOUL_SAND,

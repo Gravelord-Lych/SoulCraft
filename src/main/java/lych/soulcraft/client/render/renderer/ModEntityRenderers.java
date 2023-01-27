@@ -38,6 +38,7 @@ public final class ModEntityRenderers {
         registerEntityRenderingHandler(SOUL_BOLT, SoulBoltRenderer::new);
         registerEntityRenderingHandler(SOUL_CONTROLLER, SoulControllerRenderer::new);
         registerEntityRenderingHandler(SOUL_CRYSTAL, SoulCrystalRenderer::new);
+        registerEntityRenderingHandler(SOUL_RABBIT, SoulRabbitRenderer::new);
         registerEntityRenderingHandler(SOUL_SKELETON, SoulSkeletonRenderer::new);
         registerEntityRenderingHandler(SUB_ZOMBIE, ZombieRenderer::new);
         registerEntityRenderingHandler(VOID_ALCHEMIST, VoidAlchemistRenderer::new);

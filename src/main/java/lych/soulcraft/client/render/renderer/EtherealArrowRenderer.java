@@ -15,7 +15,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class EtherealArrowRenderer extends EntityRenderer<EtherealArrowEntity> {
     private static final ResourceLocation ETHEREAL_ARROW = SoulCraft.prefixTex("entity/projectiles/ethereal_arrow.png");
     private static final ResourceLocation ENHANCED_ETHEREAL_ARROW = SoulCraft.prefixTex("entity/projectiles/enhanced_ethereal_arrow.png");

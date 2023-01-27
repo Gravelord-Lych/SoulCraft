@@ -7,7 +7,10 @@ import lych.soulcraft.entity.monster.RobotEntity;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class RobotRenderer extends BipedRenderer<RobotEntity, BipedModels.Size64<RobotEntity>> {
     private static final ResourceLocation ROBOT = SoulCraft.prefixTex("entity/meta8/robot.png");
 

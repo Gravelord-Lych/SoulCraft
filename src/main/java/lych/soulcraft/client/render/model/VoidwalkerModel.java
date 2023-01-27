@@ -7,7 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class VoidwalkerModel<T extends AbstractVoidwalkerEntity> extends BipedModels.Size64<T> {
     public VoidwalkerModel(float offs) {
         super(RenderType::entityTranslucent, offs, 0, 64, 64);
