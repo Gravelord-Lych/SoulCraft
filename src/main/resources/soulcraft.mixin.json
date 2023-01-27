@@ -12,6 +12,7 @@
     "BowItemMixin",
     "BrainMixin",
     "DimensionGeneratorSettingsMixin",
+    "EnchantmentMixin",
     "EntityDamageSourceAccessor",
     "EntityMixin",
     "FireBlockAccessor",

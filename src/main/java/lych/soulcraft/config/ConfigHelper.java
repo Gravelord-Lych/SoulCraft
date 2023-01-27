@@ -28,4 +28,12 @@ public final class ConfigHelper {
     public static boolean shouldFailhard() {
         return SharedConstants.IS_RUNNING_IN_IDE || CommonConfig.FAILHARD.get();
     }
+
+    public static boolean shouldUseRomanNumeralGenerator() {
+        return CommonConfig.ROMAN_GENERATOR.get();
+    }
+
+    public static int getRomanLimit() {
+        return CommonConfig.ROMAN_LIMIT.get();
+    }
 }

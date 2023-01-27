@@ -2,8 +2,10 @@ package lych.soulcraft.mixin;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.extension.soulpower.reinforce.ReinforcementHelper;
+import lych.soulcraft.util.RomanNumeralGenerator;
 import lych.soulcraft.util.mixin.IItemMixin;
 import lych.soulcraft.util.mixin.IItemStackMixin;
 import net.minecraft.client.util.ITooltipFlag;
@@ -93,7 +95,13 @@ public abstract class ItemStackMixin implements IItemStackMixin {
                 TextFormatting formatting = entry.getKey().getStyle();
                 IFormattableTextComponent component = entry.getKey().getType().getDescription().copy().withStyle(formatting);
                 if (entry.getValue() != 1 || entry.getKey().getMaxLevel() != 1) {
-                    component = component.append(" ").append(new TranslationTextComponent("enchantment.level." + entry.getValue()));
+                    ITextComponent text;
+                    if (ConfigHelper.shouldUseRomanNumeralGenerator()) {
+                        text = new StringTextComponent(RomanNumeralGenerator.getRomanNumeral(entry.getValue()));
+                    } else {
+                        text = new TranslationTextComponent("enchantment.level." + entry.getValue());
+                    }
+                    component = component.append(" ").append(text);
                 }
                 list.add(component);
             }

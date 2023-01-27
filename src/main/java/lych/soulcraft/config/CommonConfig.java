@@ -2,6 +2,7 @@ package lych.soulcraft.config;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.util.ExtraAbilityConstants;
+import lych.soulcraft.util.RomanNumeralGenerator;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
@@ -16,6 +17,8 @@ public class CommonConfig {
     static final BooleanValue TIERED_BOSSES;
     static final IntValue ULTRAREACH_LENGTHEN_PICKUP_DELAY_AMOUNT;
     static final BooleanValue FAILHARD;
+    static final BooleanValue ROMAN_GENERATOR;
+    static final IntValue ROMAN_LIMIT;
 
     static {
         ForgeConfigSpec.Builder commonBuilder = new ForgeConfigSpec.Builder();
@@ -52,6 +55,12 @@ public class CommonConfig {
                 .comment("If true, Fail-hard behavior will be enabled for " + SoulCraft.MOD_NAME + " Mod.", "This behavior makes the program throw an exception instead of logging an error when something went wrong. May cause more crashes but is useful for finding out bugs.")
                 .define("failhard", false);
         commonBuilder.pop();
+        ROMAN_GENERATOR = commonBuilder
+                .comment("If true, " + SoulCraft.MOD_NAME + " Mod will use Roman numeral generator instead of using language file(\"enchantment.level.XX\") to generate Roman numbers.")
+                .define("usingRomanNumeralGenerator", true);
+        ROMAN_LIMIT = commonBuilder
+                .comment("The maximum number that can be converted to Roman numeral by the Roman numeral generator. Numbers which are bigger than this number will not be converted to Roman numerals.")
+                .defineInRange("maxConvertibleNumber", 100, 10, RomanNumeralGenerator.MAX_CONVERTIBLE);
 
         COMMON_CONFIG = commonBuilder.build();
     }
