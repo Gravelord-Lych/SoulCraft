@@ -70,6 +70,8 @@ public abstract class EntityMixin implements IEntityMixin {
 
     @Shadow public abstract void remove();
 
+    @Shadow public abstract boolean fireImmune();
+
     @Unique
     private static final DataParameter<Integer> DATA_FIRE_ID = EntityDataManager.defineId(Entity.class, DataSerializers.INT);
     @Unique
@@ -169,11 +171,15 @@ public abstract class EntityMixin implements IEntityMixin {
         if (getRemainingFireTicks() <= 0) {
             Fire oldFire = getFireOnSelf();
             doSetFireOnSelf(Fire.empty());
-            oldFire.stopApplyingTo((Entity) (Object) this, Fire.empty());
-            Fire.empty().startApplyingTo((Entity) (Object) this, oldFire);
+            if (!fireImmune()) {
+                oldFire.stopApplyingTo((Entity) (Object) this, Fire.empty());
+                Fire.empty().startApplyingTo((Entity) (Object) this, oldFire);
+            }
         }
         adjustLava();
-        getFireOnSelf().entityOnFire((Entity) (Object) this);
+        if (!fireImmune()) {
+            getFireOnSelf().entityOnFire((Entity) (Object) this);
+        }
     }
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;setSharedFlag(IZ)V", shift = At.Shift.AFTER))
@@ -185,8 +191,10 @@ public abstract class EntityMixin implements IEntityMixin {
     private void updateFire(int ticks, CallbackInfo ci) {
         if (ticks > 0 && !getFireOnSelf().isRealFire()) {
             doSetFireOnSelf(Fires.FIRE);
-            Fire.empty().stopApplyingTo((Entity) (Object) this, Fires.FIRE);
-            Fires.FIRE.startApplyingTo((Entity) (Object) this, Fire.empty());
+            if (!fireImmune()) {
+                Fire.empty().stopApplyingTo((Entity) (Object) this, Fires.FIRE);
+                Fires.FIRE.startApplyingTo((Entity) (Object) this, Fire.empty());
+            }
         }
     }
 
