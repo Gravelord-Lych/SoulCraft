@@ -79,7 +79,7 @@ public final class SLLayer {
     private SLLayer() {}
 
     public static Layer getDefaultLayer(long seed, int biomeSize, int riverSize) {
-        int maxCache = DEBUG ? 2500 : 25;
+        int maxCache = 25;
         IAreaFactory<LazyArea> factory = makeDefaultLayer(biomeSize, riverSize, seed2 -> new LazyAreaLayerContext(maxCache, seed, seed2));
         return new Layer(factory);
     }
@@ -175,7 +175,7 @@ public final class SLLayer {
     }
 
     public static boolean isSame(int... ids) {
-        if (ids.length == 0) {
+        if (ids.length < 2) {
             return true;
         }
         int first = ids[0];
