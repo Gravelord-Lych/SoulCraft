@@ -111,16 +111,26 @@ public final class Fires {
         @Override
         public void startApplyingTo(Entity entity, Fire newFire, Fire oldFire) {
             if (entity instanceof LivingEntity && EntityPredicates.NO_CREATIVE_OR_SPECTATOR.test(entity)) {
-                EntityUtils.addTransientModifierIfAbsent((LivingEntity) entity, Attributes.MOVEMENT_SPEED, SLOWNESS);
-                EntityUtils.addTransientModifierIfAbsent((LivingEntity) entity, Attributes.ATTACK_DAMAGE, WEAKNESS);
+                LivingEntity living = (LivingEntity) entity;
+                if (living.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
+                    EntityUtils.addTransientModifierIfAbsent(living, Attributes.MOVEMENT_SPEED, SLOWNESS);
+                }
+                if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                    EntityUtils.addTransientModifierIfAbsent(living, Attributes.ATTACK_DAMAGE, WEAKNESS);
+                }
             }
         }
 
         @Override
         public void stopApplyingTo(Entity entity, Fire oldFire, Fire newFireOrEmpty) {
             if (entity instanceof LivingEntity) {
-                EntityUtils.getAttribute((LivingEntity) entity, Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_UUID);
-                EntityUtils.getAttribute((LivingEntity) entity, Attributes.ATTACK_DAMAGE).removeModifier(WEAKNESS_UUID);
+                LivingEntity living = (LivingEntity) entity;
+                if (living.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
+                    EntityUtils.getAttribute((LivingEntity) entity, Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_UUID);
+                }
+                if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                    EntityUtils.getAttribute((LivingEntity) entity, Attributes.ATTACK_DAMAGE).removeModifier(WEAKNESS_UUID);
+                }
             }
         }
     }
