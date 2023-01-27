@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "soulcraft:block/soulified_bush"
+  }
+}

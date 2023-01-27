@@ -1,0 +1,90 @@
+{
+  "multipart": [
+    {
+      "apply": [
+        {
+          "model": "soulcraft:block/inferno_floor0"
+        },
+        {
+          "model": "soulcraft:block/inferno_floor1"
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "soulcraft:block/inferno_side0"
+        },
+        {
+          "model": "soulcraft:block/inferno_side1"
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt0"
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt1"
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "soulcraft:block/inferno_side0",
+          "y": 90
+        },
+        {
+          "model": "soulcraft:block/inferno_side1",
+          "y": 90
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt0",
+          "y": 90
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt1",
+          "y": 90
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "soulcraft:block/inferno_side0",
+          "y": 180
+        },
+        {
+          "model": "soulcraft:block/inferno_side1",
+          "y": 180
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt0",
+          "y": 180
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt1",
+          "y": 180
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "soulcraft:block/inferno_side0",
+          "y": 270
+        },
+        {
+          "model": "soulcraft:block/inferno_side1",
+          "y": 270
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt0",
+          "y": 270
+        },
+        {
+          "model": "soulcraft:block/inferno_side_alt1",
+          "y": 270
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "soulcraft:crimson_hyphal_soil",
+    "soulcraft:parched_soil",
+    "soulcraft:refined_soul_sand",
+    "soulcraft:refined_soul_soil",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "soulcraft:warped_hyphal_soil"
+  ]
+}
