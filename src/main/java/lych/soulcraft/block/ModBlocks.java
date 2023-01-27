@@ -18,6 +18,7 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
@@ -107,6 +108,12 @@ public final class ModBlocks {
 
     private static AbstractBlock.Properties fireProperties(MaterialColor color, int light) {
         return of(Material.FIRE, color).noCollission().instabreak().lightLevel(state -> light).sound(SoundType.WOOL);
+    }
+
+    @SubscribeEvent
+    public static void registerPlants(FMLCommonSetupEvent event) {
+        FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
+        pot.addPlant(SOULIFIED_BUSH.getRegistryName(), POTTED_SOULIFIED_BUSH.delegate);
     }
 
     @SubscribeEvent
