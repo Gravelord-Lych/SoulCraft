@@ -1,21 +1,36 @@
 package lych.soulcraft.util.redirectable;
 
 public abstract class StringRedirector extends Redirector<String, String> implements StringRedirectable {
-    protected StringRedirector(String value, String... aliases) {
+    private final boolean trim;
+
+    protected StringRedirector(String value, boolean trim, String... aliases) {
         super(value, aliases);
+        this.trim = trim;
     }
 
     public static StringRedirectable caseSensitive(String value, String... aliases) {
-        return new Cased(value, aliases);
+        return new Cased(value, true, aliases);
+    }
+
+    public static StringRedirectable caseSensitive(String value, boolean trim, String... aliases) {
+        return new Cased(value, trim, aliases);
     }
 
     public static StringRedirectable caseInsensitive(String value, String... aliases) {
-        return new Caseless(value, aliases);
+        return new Caseless(value, true, aliases);
+    }
+
+    public static StringRedirectable caseInsensitive(String value, boolean trim, String... aliases) {
+        return new Caseless(value, trim, aliases);
     }
 
     @SuppressWarnings("all")
     @Override
     protected boolean isEqual(String s, String alias) {
+        if (trim) {
+            s = s.trim();
+            alias = alias.trim();
+        }
         if (s == alias) {
             return true;
         }
@@ -28,8 +43,8 @@ public abstract class StringRedirector extends Redirector<String, String> implem
     protected abstract boolean isEqualIn(String s, String alias);
 
     private static class Cased extends StringRedirector {
-        private Cased(String value, String... aliases) {
-            super(value, aliases);
+        private Cased(String value, boolean trim, String... aliases) {
+            super(value, trim, aliases);
         }
 
         @Override
@@ -39,8 +54,8 @@ public abstract class StringRedirector extends Redirector<String, String> implem
     }
 
     private static class Caseless extends StringRedirector {
-        private Caseless(String value, String... aliases) {
-            super(value, aliases);
+        private Caseless(String value, boolean trim, String... aliases) {
+            super(value, trim, aliases);
         }
 
         @Override
