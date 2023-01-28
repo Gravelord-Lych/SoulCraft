@@ -52,7 +52,6 @@ public final class RomanNumeralGenerator {
             if (value <= num) {
                 builder.append(pair.getSymbol());
                 num -= value;
-                index = 0;
             } else {
                 index++;
             }
