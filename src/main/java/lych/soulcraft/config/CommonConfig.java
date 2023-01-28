@@ -55,7 +55,7 @@ public class CommonConfig {
                 .comment("If true, Fail-hard behavior will be enabled for " + SoulCraft.MOD_NAME + " Mod.", "This behavior makes the program throw an exception instead of logging an error when something went wrong. May cause more crashes but is useful for finding out bugs.")
                 .define("failhard", false);
         ROMAN_GENERATOR = commonBuilder
-                .comment("If true, " + SoulCraft.MOD_NAME + " Mod will use Roman numeral generator instead of using language file(\"enchantment.level.XX\") to generate Roman numbers.")
+                .comment("If true, " + SoulCraft.MOD_NAME + " Mod will use Roman numeral generator instead of using translation key(\"enchantment.level.XX\") to generate Roman numbers.")
                 .define("usingRomanNumeralGenerator", true);
         ROMAN_LIMIT = commonBuilder
                 .comment("The maximum number that can be converted to Roman numeral by the Roman numeral generator. Numbers which are bigger than this number will not be converted to Roman numerals.")
