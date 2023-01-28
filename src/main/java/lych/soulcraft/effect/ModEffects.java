@@ -12,15 +12,17 @@ import static lych.soulcraft.SoulCraft.make;
 
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModEffects {
-    public static final Effect REVERSION = new CommonEffect(EffectType.HARMFUL, 0xf800f8);
     public static final Effect CATASTROPHE_OMEN = new CatastropheOmenEffect(EffectType.NEUTRAL, 0x441818);
+    public static final Effect REVERSION = new CommonEffect(EffectType.HARMFUL, 0xf800f8);
+    public static final Effect SOUL_POLLUTION = new PollutionEffect(EffectType.HARMFUL, 0x00dddd);
 
     private ModEffects() {}
 
     @SubscribeEvent
     public static void registerEffects(RegistryEvent.Register<Effect> event) {
         IForgeRegistry<Effect> registry = event.getRegistry();
-        registry.register(make(REVERSION, ModEffectNames.REVERSION));
         registry.register(make(CATASTROPHE_OMEN, ModEffectNames.CATASTROPHE_OMEN));
+        registry.register(make(REVERSION, ModEffectNames.REVERSION));
+        registry.register(make(SOUL_POLLUTION, ModEffectNames.SOUL_POLLUTION));
     }
 }

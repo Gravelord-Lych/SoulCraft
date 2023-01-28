@@ -11,6 +11,8 @@ import lych.soulcraft.client.gui.screen.SoulReinforcementTableScreen;
 import lych.soulcraft.client.render.renderer.ModEntityRenderers;
 import lych.soulcraft.client.render.world.dimension.ModDimensionRenderers;
 import lych.soulcraft.client.shader.ModShaders;
+import lych.soulcraft.effect.ModEffects;
+import lych.soulcraft.effect.SoulPollutionHandler;
 import lych.soulcraft.gui.container.ModContainers;
 import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SoulBowItem;
@@ -140,6 +142,9 @@ public final class ClientEventListener {
             }
             ((IPlayerEntityMixin) event.getPlayer()).setStatic(input.leftImpulse == 0 && input.forwardImpulse == 0 && !input.jumping);
             StaticStatusHandler.INSTANCE.sendToServer(((IPlayerEntityMixin) event.getPlayer()).isStatic());
+            if (event.getPlayer().hasEffect(ModEffects.SOUL_POLLUTION)) {
+                SoulPollutionHandler.handleInput(event.getPlayer(), event.getPlayer().getRandom(), event.getMovementInput());
+            }
         }
 
         @SubscribeEvent

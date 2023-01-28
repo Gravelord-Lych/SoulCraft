@@ -1,6 +1,7 @@
 package lych.soulcraft.listener;
 
 import lych.soulcraft.SoulCraft;
+import lych.soulcraft.api.event.PostLivingHurtEvent;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
@@ -14,6 +15,7 @@ import lych.soulcraft.capability.IChallengeMob;
 import lych.soulcraft.capability.NonAPICapabilities;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.effect.ModEffects;
+import lych.soulcraft.effect.SoulPollutionHandler;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.entity.ai.goal.wrapper.Goals;
 import lych.soulcraft.entity.iface.*;
@@ -244,6 +246,20 @@ public final class CommonEventListener {
     }
 
     @SubscribeEvent
+    public static void onPostHurt(PostLivingHurtEvent event) {
+        if (event.isSuccessfullyHurt()) {
+            Entity attacker = event.getSource().getEntity();
+            Entity target = event.getEntity();
+            if (attacker instanceof PlayerEntity) {
+                SoulPollutionHandler.mayPollute((PlayerEntity) attacker, attacker.level, SoulPollutionHandler.POLLUTE_PROBABILITY_SPECIAL);
+            }
+            if (target instanceof PlayerEntity) {
+                SoulPollutionHandler.mayPollute((PlayerEntity) target, target.level, SoulPollutionHandler.POLLUTE_PROBABILITY_SPECIAL);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onSpecialSpawn(LivingSpawnEvent.SpecialSpawn event) {
         if (event.getEntity() instanceof AbstractVoidwalkerEntity && event.getSpawnReason() == SpawnReason.SPAWN_EGG) {
             ((AbstractVoidwalkerEntity) event.getEntity()).setTier(VoidwalkerSpawnEggItem.getCurrentTier());
@@ -321,9 +337,11 @@ public final class CommonEventListener {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerDestroyBlock(BlockEvent.BreakEvent event) {
-        if (handleArmoredBlockBreak((World) event.getWorld(), event.getPos())) {
+        World world = (World) event.getWorld();
+        if (handleArmoredBlockBreak(world, event.getPos())) {
             event.setCanceled(true);
         }
+        SoulPollutionHandler.mayPollute(event.getPlayer(), world, SoulPollutionHandler.POLLUTE_PROBABILITY_SPECIAL);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -415,6 +433,9 @@ public final class CommonEventListener {
                 }
             }
             ((IPlayerEntityMixin) event.player).getAdditionalCooldowns().tick();
+            if (event.side == LogicalSide.SERVER) {
+                SoulPollutionHandler.mayPollute(event.player, event.player.level, SoulPollutionHandler.POLLUTE_PROBABILITY);
+            }
         }
     }
 
