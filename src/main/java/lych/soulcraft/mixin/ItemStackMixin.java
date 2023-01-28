@@ -36,6 +36,11 @@ public abstract class ItemStackMixin implements IItemStackMixin {
     @Shadow public abstract Item getItem();
 
     @Override
+    public int getMaxReinforcementCount() {
+        return ((IItemMixin) getItem()).getMaxReinforcementCount((ItemStack) (Object) this);
+    }
+
+    @Override
     public boolean hasSoulFoil() {
         if (ReinforcementHelper.hasReinforcements((ItemStack) (Object) this)) {
             return true;
