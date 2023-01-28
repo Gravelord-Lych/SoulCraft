@@ -34,6 +34,10 @@ public class ImmutableEffectInstance extends EffectInstance {
         super(effectInstance);
     }
 
+    public EffectInstance copy() {
+        return new EffectInstance(this);
+    }
+
     @Override
     public boolean update(EffectInstance effect) {
         throw new UnsupportedOperationException();
