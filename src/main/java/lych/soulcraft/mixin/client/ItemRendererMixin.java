@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -25,13 +24,13 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class ItemRendererMixin {
     @Shadow public abstract void renderModelLists(IBakedModel p_229114_1_, ItemStack p_229114_2_, int p_229114_3_, int p_229114_4_, MatrixStack p_229114_5_, IVertexBuilder p_229114_6_);
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemRenderer;renderModelLists(Lnet/minecraft/client/renderer/model/IBakedModel;Lnet/minecraft/item/ItemStack;IILcom/mojang/blaze3d/matrix/MatrixStack;Lcom/mojang/blaze3d/vertex/IVertexBuilder;)V"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-    private void renderSoulFoil(ItemStack stack, ItemCameraTransforms.TransformType type, boolean leftHandHackery, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, IBakedModel model, CallbackInfo ci, boolean flag, boolean flag1, RenderType rendertype) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemRenderer;renderModelLists(Lnet/minecraft/client/renderer/model/IBakedModel;Lnet/minecraft/item/ItemStack;IILcom/mojang/blaze3d/matrix/MatrixStack;Lcom/mojang/blaze3d/vertex/IVertexBuilder;)V"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true, require = 0)
+    private void renderSoulFoil(ItemStack stack, ItemCameraTransforms.TransformType type, boolean leftHandHackery, MatrixStack mStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, IBakedModel model, CallbackInfo ci, boolean flag, boolean flag1, RenderType rendertype) {
         if (((IItemStackMixin) (Object) stack).hasSoulFoil()) {
             IVertexBuilder newBuilder;
             if (stack.getItem() == Items.COMPASS) {
-                matrix.pushPose();
-                MatrixStack.Entry entry = matrix.last();
+                mStack.pushPose();
+                MatrixStack.Entry entry = mStack.last();
 
                 if (type == ItemCameraTransforms.TransformType.GUI) {
                     entry.pose().multiply(0.5F);
@@ -45,41 +44,36 @@ public abstract class ItemRendererMixin {
                     newBuilder = SoulRenderers.getCompassSoulFoilBuffer(buffer, rendertype, entry);
                 }
 
-                matrix.popPose();
+                mStack.popPose();
             } else if (flag1) {
                 newBuilder = SoulRenderers.getSoulFoilBufferDirect(buffer, rendertype, true);
             } else {
                 newBuilder = SoulRenderers.getSoulFoilBuffer(buffer, rendertype, true);
             }
-            renderModelLists(model, stack, combinedLight, combinedOverlay, matrix, newBuilder);
-            matrix.popPose();
+            renderModelLists(model, stack, combinedLight, combinedOverlay, mStack, newBuilder);
+            mStack.popPose();
             ci.cancel();
         }
     }
 
-//  Fail-safe, OptiFine seems to redirect this.
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/ForgeHooksClient;drawItemLayered(Lnet/minecraft/client/renderer/ItemRenderer;Lnet/minecraft/client/renderer/model/IBakedModel;Lnet/minecraft/item/ItemStack;Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;IIZ)V", remap = false), require = 0)
-    private void redirectToRenderSoulFoil(ItemRenderer renderer, IBakedModel modelIn, ItemStack itemStackIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, boolean fabulous) {
-        for (Pair<IBakedModel, RenderType> layerModel : modelIn.getLayerModels(itemStackIn, fabulous)) {
-            IBakedModel layer = layerModel.getFirst();
-            RenderType type = layerModel.getSecond();
-            ForgeHooksClient.setRenderLayer(type);
-            IVertexBuilder builder;
-            if (((IItemStackMixin) (Object) itemStackIn).hasSoulFoil()) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/ForgeHooksClient;drawItemLayered(Lnet/minecraft/client/renderer/ItemRenderer;Lnet/minecraft/client/renderer/model/IBakedModel;Lnet/minecraft/item/ItemStack;Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;IIZ)V", remap = false), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0, cancellable = true)
+    private void renderSoulFoilForLayeredItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, boolean leftHandHackery, MatrixStack mStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, IBakedModel model, CallbackInfo ci, boolean flag, boolean fabulous) {
+        if (((IItemStackMixin) (Object) stack).hasSoulFoil()) {
+            for (Pair<IBakedModel, RenderType> layerModel : model.getLayerModels(stack, fabulous)) {
+                IBakedModel layer = layerModel.getFirst();
+                RenderType type = layerModel.getSecond();
+                ForgeHooksClient.setRenderLayer(type);
+                IVertexBuilder builder;
                 if (fabulous) {
-                    builder = SoulRenderers.getSoulFoilBufferDirect(bufferIn, type, true);
+                    builder = SoulRenderers.getSoulFoilBufferDirect(buffer, type, true);
                 } else {
-                    builder = SoulRenderers.getSoulFoilBuffer(bufferIn, type, true);
+                    builder = SoulRenderers.getSoulFoilBuffer(buffer, type, true);
                 }
-            } else {
-                if (fabulous) {
-                    builder = ItemRenderer.getFoilBufferDirect(bufferIn, type, true, itemStackIn.hasFoil());
-                } else {
-                    builder = ItemRenderer.getFoilBuffer(bufferIn, type, true, itemStackIn.hasFoil());
-                }
+                renderModelLists(layer, stack, combinedLight, combinedOverlay, mStack, builder);
             }
-            renderer.renderModelLists(layer, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, builder);
+            ForgeHooksClient.setRenderLayer(null);
+            mStack.popPose();
+            ci.cancel();
         }
-        ForgeHooksClient.setRenderLayer(null);
     }
 }

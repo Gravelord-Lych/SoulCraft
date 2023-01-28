@@ -56,7 +56,8 @@ public abstract class WorldRendererMixin implements IWorldRendererMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/IRenderTypeBuffer$Impl;endBatch(Lnet/minecraft/client/renderer/RenderType;)V",
                     ordinal = 1
-            ))
+            ),
+            require = 0)
     private void renderSoulGlints(MatrixStack stack, float partialTicks, long nanoTime, boolean shouldRenderBlockOutline, ActiveRenderInfo info, GameRenderer renderer, LightTexture texture, Matrix4f matrix4f, CallbackInfo ci) {
         renderBuffers.bufferSource().endBatch(ModRenderTypes.ARMOR_SOUL_GLINT);
         renderBuffers.bufferSource().endBatch(ModRenderTypes.ARMOR_ENTITY_SOUL_GLINT);

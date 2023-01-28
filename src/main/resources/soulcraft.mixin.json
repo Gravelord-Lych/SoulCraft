@@ -42,6 +42,7 @@
     "SmallFireballEntityMixin",
     "client.BipedArmorLayerMixin",
     "client.ClientPlayerEntityMixin",
+    "client.ClientPlayNetHandlerMixin",
     "client.DisplayEffectsScreenMixin",
     "client.ElytraLayerMixin",
     "client.EntityRendererManagerMixin",

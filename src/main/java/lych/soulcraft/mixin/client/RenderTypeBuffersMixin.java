@@ -21,7 +21,7 @@ public abstract class RenderTypeBuffersMixin {
     @Shadow
     private static void put(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, RenderType type) {}
 
-    @Inject(method = "<init>", at = @At(value = "RETURN"))
+    @Inject(method = "<init>", at = @At("RETURN"), require = 0)
     private void initModRenderTypes(CallbackInfo ci) {
         castAndPut(fixedBuffers, ModRenderTypes.ARMOR_ENTITY_SOUL_GLINT);
         castAndPut(fixedBuffers, ModRenderTypes.ARMOR_SOUL_GLINT);

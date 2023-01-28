@@ -51,7 +51,11 @@ public class SoulRenderers {
         return VertexBuilderUtils.create(buffer.getBuffer(useArmorGlint ? ModRenderTypes.ARMOR_SOUL_GLINT : ModRenderTypes.ARMOR_ENTITY_SOUL_GLINT), buffer.getBuffer(type));
     }
 
+    @SuppressWarnings("resource")
     public static void renderBannerPatterns(MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, ModelRenderer renderer, RenderMaterial material, boolean isBanner, List<Pair<BannerPattern, DyeColor>> list, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
         if (((IItemStackMixin) (Object) stack).hasSoulFoil()) {
             renderer.render(matrix, material.sprite().wrap(getSoulFoilBufferDirect(buffer, material.renderType(RenderType::entitySolid), true)), combinedLight, combinedOverlay);
         } else {

@@ -29,12 +29,11 @@ public abstract class ItemStackTileEntityRendererMixin {
     @NotNull
     private ItemStack stack = ItemStack.EMPTY;
 
-    @Inject(method = "renderByItem", at = @At(value = "HEAD"))
+    @Inject(method = "renderByItem", at = @At(value = "HEAD"), require = 0)
     private void initItemStack(ItemStack stack, ItemCameraTransforms.TransformType type, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn, CallbackInfo ci) {
         this.stack = stack;
     }
 
-//  Fail-safe for OptiFine.
     @Redirect(method = "renderByItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/BannerTileEntityRenderer;renderPatterns(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;IILnet/minecraft/client/renderer/model/ModelRenderer;Lnet/minecraft/client/renderer/model/RenderMaterial;ZLjava/util/List;Z)V"), require = 0)
     private void renderBannerPatterns(MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, ModelRenderer renderer, RenderMaterial material, boolean isBanner, List<Pair<BannerPattern, DyeColor>> list, boolean hasFoil) {
         SoulRenderers.renderBannerPatterns(matrix, buffer, combinedLight, combinedOverlay, renderer, material, isBanner, list, stack);
