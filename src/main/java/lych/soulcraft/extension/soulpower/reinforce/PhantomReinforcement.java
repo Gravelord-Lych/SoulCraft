@@ -23,7 +23,7 @@ public class PhantomReinforcement extends TickableReinforcement {
 
     @Override
     protected boolean isItemPosSuitable(ItemStack stack) {
-        return stack.getItem().canBeDepleted();
+        return stack.getItem().isDamageable(stack);
     }
 
     @Override

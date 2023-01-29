@@ -35,7 +35,7 @@ public class CowReinforcement extends Reinforcement {
 
     @Override
     protected boolean isItemPosSuitable(ItemStack stack) {
-        return stack.getItem().canBeDepleted();
+        return stack.getItem().isDamageable(stack);
     }
 
     @SubscribeEvent
