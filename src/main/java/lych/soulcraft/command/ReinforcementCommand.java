@@ -81,7 +81,7 @@ public final class ReinforcementCommand {
         }
         ReinforcementHelper.ApplicationStatus status = ReinforcementHelper.addReinforcement(stack, reinforcement, level);
         if (!status.isOk() && ConfigHelper.shouldFailhard()) {
-            throw new IllegalStateException("Reinforcement not added for status " + status);
+            throw new IllegalStateException(ConfigHelper.FAILHARD_MESSAGE + "Reinforcement not added for status " + status);
         }
         context.getSource().sendSuccess(new TranslationTextComponent(SoulCraft.prefixMsg("commands", "reinforcement.add_success"), reinforcement.getType().getDescription().copy().withStyle(reinforcement.getStyle()), player.getDisplayName()), true);
         return Command.SINGLE_SUCCESS;

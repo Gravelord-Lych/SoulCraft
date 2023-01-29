@@ -135,6 +135,7 @@ public final class ModItems {
     public static final Item SOUL_SKELETON_SPAWN_EGG = makeSpawnEgg(ModEntities.SOUL_SKELETON, 0x79eef2, 0x00797d);
     public static final Item VOID_ALCHEMIST_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_ALCHEMIST, 0xe8d1ff);
     public static final Item VOID_ARCHER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_ARCHER, 0x906248);
+    public static final Item ETHE_ARMORER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.ETHE_ARMORER, 0x797979);
     public static final Item VOID_DEFENDER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOID_DEFENDER, 0x7881e5);
     public static final Item VOIDWALKER_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.VOIDWALKER, 0x346b94);
     public static final Item WANDERER_SPAWN_EGG = makeSpawnEgg(ModEntities.WANDERER, 0x022330, 0x53feff);
@@ -269,6 +270,7 @@ public final class ModItems {
     private static void registerSpawnEggs(IForgeRegistry<Item> registry) {
         registerSpawnEgg(registry, DARK_EVOKER_SPAWN_EGG, ModEntityNames.DARK_EVOKER);
         registerSpawnEgg(registry, ENGINEER_SPAWN_EGG, ModEntityNames.ENGINEER);
+        registerSpawnEgg(registry, ETHE_ARMORER_SPAWN_EGG, ModEntityNames.ETHE_ARMORER);
         registerSpawnEgg(registry, ILLUSORY_HORSE_SPAWN_EGG, ModEntityNames.ILLUSORY_HORSE);
         registerSpawnEgg(registry, REDSTONE_MORTAR_SPAWN_EGG, ModEntityNames.REDSTONE_MORTAR);
         registerSpawnEgg(registry, REDSTONE_TURRET_SPAWN_EGG, ModEntityNames.REDSTONE_TURRET);

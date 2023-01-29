@@ -110,13 +110,25 @@ public final class ReinforcementHelper {
     }
 
     public static void putReinforcements(ItemStack stack, Map<Reinforcement, Integer> map) {
-        if (map.size() > maxCountOf(stack)) {
-            throw new IllegalArgumentException("Too many reinforcements, expected <= " + maxCountOf(stack));
+        putReinforcements(stack, map, false);
+    }
+
+    public static void putReinforcements(ItemStack stack, Map<Reinforcement, Integer> map, boolean forcePut) {
+        if (map.isEmpty()) {
+            if (stack.hasTag() && hasReinforcements(stack)) {
+                stack.removeTagKey(TAG);
+            }
+            return;
         }
-        if (!Reinforcement.checkCompatibility(map.keySet())) {
-            throw new IllegalArgumentException("Given reinforcements are incompatible with each other");
+        if (!forcePut) {
+            if (map.size() > maxCountOf(stack)) {
+                throw new IllegalArgumentException("Too many reinforcements, expected <= " + maxCountOf(stack));
+            }
+            if (!Reinforcement.checkCompatibility(map.keySet())) {
+                throw new IllegalArgumentException("Given reinforcements are incompatible with each other");
+            }
+            map.entrySet().removeIf(e -> !e.getKey().isItemSuitable(stack));
         }
-        map.entrySet().removeIf(e -> !e.getKey().isItemSuitable(stack));
         stack.getOrCreateTag().put(TAG, serializeNBT(map));
     }
 

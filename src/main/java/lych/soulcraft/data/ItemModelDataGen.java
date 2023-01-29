@@ -174,6 +174,7 @@ public class ItemModelDataGen extends ItemModelProvider {
     private void registerSpawnEggModels() {
         spawnEgg(ModItems.DARK_EVOKER_SPAWN_EGG);
         spawnEgg(ModItems.ENGINEER_SPAWN_EGG);
+        spawnEgg(ModItems.ETHE_ARMORER_SPAWN_EGG);
         spawnEgg(ModItems.ILLUSORY_HORSE_SPAWN_EGG);
         spawnEgg(ModItems.REDSTONE_MORTAR_SPAWN_EGG);
         spawnEgg(ModItems.REDSTONE_TURRET_SPAWN_EGG);

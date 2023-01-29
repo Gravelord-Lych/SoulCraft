@@ -71,6 +71,11 @@ public class VoidwalkerEntity extends AbstractVoidwalkerEntity {
     }
 
     @Override
+    public boolean canCreateWeapon() {
+        return true;
+    }
+
+    @Override
     public ItemStack createWeapon() {
         return new ItemStack(ModItems.REFINED_SOUL_METAL_SWORD);
     }

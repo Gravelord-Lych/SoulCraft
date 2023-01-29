@@ -42,6 +42,7 @@ public final class ModEntities {
     public static final EntityType<DarkEvokerEntity> DARK_EVOKER = Builder.of(DarkEvokerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(8).build(ModEntityNames.DARK_EVOKER);
     public static final EntityType<DroppingMortarShellEntity> DROPPING_MORTAR_SHELL = Builder.<DroppingMortarShellEntity>of(DroppingMortarShellEntity::new, EntityClassification.MISC).sized(1.2f, 1.2f).clientTrackingRange(12).updateInterval(10).build(ModEntityNames.DROPPING_MORTAR_SHELL);
     public static final EntityType<EngineerEntity> ENGINEER = Builder.of(EngineerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.ENGINEER);
+    public static final EntityType<EtheArmorerEntity> ETHE_ARMORER = Builder.of(EtheArmorerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.ETHE_ARMORER);
     public static final EntityType<EtherealArrowEntity> ETHEREAL_ARROW = Builder.<EtherealArrowEntity>of(EtherealArrowEntity::new, EntityClassification.MISC).sized(0.5f, 0.5f).clientTrackingRange(8).updateInterval(10).build(ModEntityNames.ETHEREAL_ARROW);
     public static final EntityType<FangsEntity> FANGS = Builder.<FangsEntity>of(FangsEntity::new, EntityClassification.MISC).sized(0.5f, 0.8f).clientTrackingRange(6).updateInterval(2).build(ModEntityNames.FANGS);
     public static final EntityType<FangsSummonerEntity> FANGS_SUMMONER = Builder.<FangsSummonerEntity>of(FangsSummonerEntity::new, EntityClassification.MISC).sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20).build(ModEntityNames.FANGS_SUMMONER);
@@ -79,6 +80,7 @@ public final class ModEntities {
         registry.register(make(DARK_EVOKER, ModEntityNames.DARK_EVOKER));
         registry.register(make(DROPPING_MORTAR_SHELL, ModEntityNames.DROPPING_MORTAR_SHELL));
         registry.register(make(ENGINEER, ModEntityNames.ENGINEER));
+        registry.register(make(ETHE_ARMORER, ModEntityNames.ETHE_ARMORER));
         registry.register(make(ETHEREAL_ARROW, ModEntityNames.ETHEREAL_ARROW));
         registry.register(make(FANGS, ModEntityNames.FANGS));
         registry.register(make(FANGS_SUMMONER, ModEntityNames.FANGS_SUMMONER));
@@ -113,6 +115,7 @@ public final class ModEntities {
         event.put(CLONED_SKELETON_KING, SkeletonKingEntity.createAttributes().build());
         event.put(DARK_EVOKER, EvokerEntity.createAttributes().build());
         event.put(ENGINEER, EngineerEntity.createAttributes().build());
+        event.put(ETHE_ARMORER, AbstractVoidwalkerEntity.createVoidwalkerAttributes().build());
         event.put(GIANT_X, GiantXEntity.createAttributes().build());
         event.put(ILLUSORY_HORSE, IllusoryHorseEntity.createAttributes().build());
         event.put(META8, Meta08Entity.createAttributes().build());
@@ -136,6 +139,7 @@ public final class ModEntities {
     public static void registerEntitySpawnPlacements() {
         register(DARK_EVOKER, PlacementType.NO_RESTRICTIONS, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(ENGINEER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
+        register(ETHE_ARMORER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(ILLUSORY_HORSE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::checkAnimalSpawnRules);
         register(REDSTONE_MORTAR, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(REDSTONE_TURRET, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);

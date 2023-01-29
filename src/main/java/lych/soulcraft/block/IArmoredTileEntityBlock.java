@@ -55,14 +55,14 @@ public interface IArmoredTileEntityBlock<C extends TileEntity, P extends TileEnt
 class ExceptionHandler {
     static void handleNull(BlockPos pos, BlockState parent) {
         if (ConfigHelper.shouldFailhard()) {
-            throw new NullPointerException(String.format("Exception in handling armored block %s at [%s, %s, %s] -> null", parent.getBlock().getClass().getName(), pos.getX(), pos.getY(), pos.getZ()));
+            throw new NullPointerException(ConfigHelper.FAILHARD_MESSAGE + String.format("Exception in handling armored block %s at [%s, %s, %s] -> null", parent.getBlock().getClass().getName(), pos.getX(), pos.getY(), pos.getZ()));
         }
         SoulCraft.LOGGER.error("Failed to handle armored block {} at [{}, {}, {}] because BlockEntity does not exist. ", parent.getBlock().getRegistryName(), pos.getX(), pos.getY(), pos.getZ());
     }
 
     static void handleMismatch(BlockPos pos, BlockState parent, ClassCastException e) {
         if (ConfigHelper.shouldFailhard()) {
-            throw new IllegalStateException(String.format("Exception in handling armored block %s at [%s, %s, %s] -> Type mismatch", parent.getBlock().getClass().getName(), pos.getX(), pos.getY(), pos.getZ()), e);
+            throw new IllegalStateException(ConfigHelper.FAILHARD_MESSAGE + String.format("Exception in handling armored block %s at [%s, %s, %s] -> Type mismatch", parent.getBlock().getClass().getName(), pos.getX(), pos.getY(), pos.getZ()), e);
         }
         String[] msg = e.getMessage().split(" ");
         SoulCraft.LOGGER.error("Failed to handle armored block {} at [{}, {}, {}] " +

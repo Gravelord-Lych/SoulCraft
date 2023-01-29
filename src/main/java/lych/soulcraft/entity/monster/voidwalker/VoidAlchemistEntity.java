@@ -3,11 +3,12 @@ package lych.soulcraft.entity.monster.voidwalker;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import lych.soulcraft.entity.ModEntities;
-import lych.soulcraft.entity.ai.goal.AttackMainTargetGoal;
-import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.*;
+import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.FindTargetExpiringGoal;
+import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.HealOthersGoal;
+import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.RetreatGoal;
+import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.VoidwalkerRandomWalkingGoal;
 import lych.soulcraft.entity.ai.goal.wrapper.Goals;
 import lych.soulcraft.entity.iface.ESVMob;
-import lych.soulcraft.entity.monster.boss.esv.SoulControllerEntity;
 import lych.soulcraft.potion.ModPotions;
 import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.util.ModEffectUtils;
@@ -18,12 +19,10 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MoveTowardsTargetGoal;
 import net.minecraft.entity.ai.goal.RangedAttackGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.monster.WitchEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -108,23 +107,24 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
 
     @Override
     protected void registerGoals() {
+        super.registerGoals();
         healVoidwalkersGoal = new FindTargetExpiringGoal<>(this, AbstractVoidwalkerEntity.class, 100, true, false, entity -> entity != null && entity.getType() != ModEntities.VOID_ALCHEMIST);
-        goalSelector.addGoal(0, new SwimGoal(this));
         goalSelector.addGoal(2, new RangedAttackGoal(this, 1, 60, 10));
         EntityUtils.directlyAddGoal(goalSelector, Goals.of(new RetreatGoal(this, 150)).getAsPrioritized(() -> isLowHealth() ? 1 : 4));
+        goalSelector.addGoal(5, Goals.of(new MoveTowardsTargetGoal(this, 1.2, 48)).executeIf(() -> getAttributeValue(Attributes.FOLLOW_RANGE) > 30).get());
         goalSelector.addGoal(6, new HealOthersGoal(this, HEAL_RANGE, HEAL_INTERVAL));
         goalSelector.addGoal(8, new VoidwalkerRandomWalkingGoal(this, 0.75));
         goalSelector.addGoal(9, new LookRandomlyGoal(this));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this, ESVMob.class).setAlertOthers(SoulControllerEntity.class));
-        targetSelector.addGoal(2, healVoidwalkersGoal);
-        targetSelector.addGoal(3, Goals.of(new AttackMainTargetGoal(this, false, this::getMainTargetAsEntity)).executeIf(this::canAttack).get());
-        targetSelector.addGoal(4, Goals.of(new FindTargetGoal<>(this, PlayerEntity.class, 10, true, false, null)).executeIf(this::canAttack).get());
-        targetSelector.addGoal(5, Goals.of(new FindTargetGoal<>(this, IronGolemEntity.class, false)).executeIf(this::canAttack).get());
-        targetSelector.addGoal(6, Goals.of(new FindTargetGoal<>(this, MobEntity.class, 20, false, false, ESVMob::nonESVMob)).executeIf(this::canAttackAllMobs).get());
+        targetSelector.addGoal(1, healVoidwalkersGoal);
     }
 
     @Override
     public boolean isMeleeAttacker() {
+        return false;
+    }
+
+    @Override
+    public boolean canCreateWeapon() {
         return false;
     }
 
@@ -344,6 +344,7 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
         return super.canAttackAllMobs() && canAttack();
     }
 
+    @Override
     public boolean canAttack() {
         return canAttack;
     }

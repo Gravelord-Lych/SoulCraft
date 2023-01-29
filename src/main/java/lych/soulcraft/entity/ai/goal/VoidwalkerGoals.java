@@ -48,6 +48,18 @@ public final class VoidwalkerGoals {
         }
 
         @Override
+        public boolean canUse() {
+            if (!canMobAttack()) {
+                return false;
+            }
+            return super.canUse();
+        }
+
+        protected boolean canMobAttack() {
+            return ((AbstractVoidwalkerEntity) mob).canAttack();
+        }
+
+        @Override
         public void start() {
             super.start();
             AbstractVoidwalkerEntity voidwalker = (AbstractVoidwalkerEntity) mob;
@@ -104,6 +116,11 @@ public final class VoidwalkerGoals {
 
         public void decrementCooldown() {
             cooldown--;
+        }
+
+        @Override
+        protected boolean canMobAttack() {
+            return true;
         }
 
         @Override

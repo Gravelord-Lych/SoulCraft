@@ -10,7 +10,6 @@ import lych.soulcraft.util.RedstoneParticles;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.DifficultyInstance;
@@ -61,11 +60,6 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     @Override
     public void doHealTarget(AbstractVoidwalkerEntity healTarget) {
         healTarget.heal(getTier().strongerThan(VoidwalkerTier.EXTRAORDINARY) ? HEAL_AMOUNT_ELITE : HEAL_AMOUNT);
-    }
-
-    @Override
-    public ItemStack createWeapon() {
-        return ItemStack.EMPTY;
     }
 
     @Override

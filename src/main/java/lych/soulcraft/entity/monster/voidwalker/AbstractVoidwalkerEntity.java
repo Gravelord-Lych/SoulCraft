@@ -119,6 +119,8 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
 
     public abstract boolean isMeleeAttacker();
 
+    public abstract boolean canCreateWeapon();
+
     public abstract ItemStack createWeapon();
 
     public static AttributeModifierMap.MutableAttribute createVoidwalkerAttributes() {
@@ -139,11 +141,15 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
     protected void registerGoals() {
         super.registerGoals();
         goalSelector.addGoal(0, new SwimGoal(this));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this, ESVMob.class).setAlertOthers(SoulControllerEntity.class));
+        targetSelector.addGoal(0, new HurtByTargetGoal(this, ESVMob.class).setAlertOthers(SoulControllerEntity.class));
         targetSelector.addGoal(2, new AttackMainTargetGoal(this, false, this::getMainTargetAsEntity));
         targetSelector.addGoal(3, new FindTargetGoal<>(this, PlayerEntity.class, false));
         targetSelector.addGoal(4, new FindTargetGoal<>(this, IronGolemEntity.class, false));
         targetSelector.addGoal(5, Goals.of(new FindTargetGoal<>(this, MobEntity.class, 20, false, false, ESVMob::nonESVMob)).executeIf(this::canAttackAllMobs).get());
+    }
+
+    public boolean canAttack() {
+        return true;
     }
 
     public EntityPredicate customizeTargetConditions(EntityPredicate targetConditions) {
@@ -571,7 +577,7 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         }
         if (tier.weakerThan(oldTier)) {
             if (ConfigHelper.shouldFailhard()) {
-                throw new IllegalArgumentException(String.format("The method must not be used to weaken self. OldTier is %s, but newTier is %s", oldTier, tier));
+                throw new IllegalArgumentException(ConfigHelper.FAILHARD_MESSAGE + String.format("The method must not be used to weaken self. OldTier is %s, but newTier is %s", oldTier, tier));
             } else {
                 return false;
             }

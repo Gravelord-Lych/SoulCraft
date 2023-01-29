@@ -62,7 +62,7 @@ public final class DefaultValues {
         return true;
     }
 
-    public static <T> boolean always(T o) {
+    public static <T> boolean always(T t) {
         return true;
     }
 

@@ -88,7 +88,7 @@ public abstract class EventManager<T extends WorldEvent> extends WorldSavedData 
                 SoulCraft.LOGGER.warn(EVENTS, "Unknown Event: {}, ignored", e.getUnknownLocation());
             } catch (NotLoadedException e) {
                 if (ConfigHelper.shouldFailhard()) {
-                    throw new IllegalStateException("Event not loaded", e);
+                    throw new IllegalStateException(ConfigHelper.FAILHARD_MESSAGE + "Event not loaded", e);
                 }
                 SoulCraft.LOGGER.error(EVENTS, StringUtils.isBlank(e.getMessage()) ? "Event not loaded, ignored" : String.format("Event not loaded because %s, ignored", e.getMessage()));
             }

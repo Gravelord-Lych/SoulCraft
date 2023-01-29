@@ -19,6 +19,7 @@ public final class ModEntityRenderers {
         registerEntityRenderingHandler(DARK_EVOKER, DarkEvokerRenderer::new);
         registerEntityRenderingHandler(DROPPING_MORTAR_SHELL, ModEntityRenderers::createRenderForMortarShells);
         registerEntityRenderingHandler(ENGINEER, EngineerRenderer::new);
+        registerEntityRenderingHandler(ETHE_ARMORER, EtheArmorerRenderer::new);
         registerEntityRenderingHandler(ETHEREAL_ARROW, EtherealArrowRenderer::new);
         registerEntityRenderingHandler(FANGS, FangsRenderer::new);
         registerEntityRenderingHandler(FANGS_SUMMONER, TippedArrowRenderer::new);

@@ -1,9 +1,10 @@
 package lych.soulcraft.config;
 
+import lych.soulcraft.SoulCraft;
 import net.minecraft.util.SharedConstants;
 
 public final class ConfigHelper {
-    public static final String FAILHARD_MESSAGE = "This Throwable has been thrown because of Failhard --- ";
+    public static final String FAILHARD_MESSAGE = SoulCraft.MOD_NAME + ": This Throwable has been thrown because of Failhard --- ";
 
     private ConfigHelper() {}
 

@@ -41,6 +41,11 @@ public class VoidArcherEntity extends SpellCastingVoidwalkerEntity implements IS
     }
 
     @Override
+    public boolean canCreateWeapon() {
+        return true;
+    }
+
+    @Override
     public ItemStack createWeapon() {
         return new ItemStack(ModItems.SOUL_BOW);
     }
