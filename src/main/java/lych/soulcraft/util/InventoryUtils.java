@@ -1,5 +1,6 @@
 package lych.soulcraft.util;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -8,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.NonNullList;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public final class InventoryUtils {
@@ -84,5 +83,13 @@ public final class InventoryUtils {
 
     public static boolean isInHand(ItemStack stack, PlayerEntity player, boolean selected) {
         return selected || player.inventory.offhand.contains(stack);
+    }
+
+    public static List<ItemStack> getInventoryItemsIfIsPlayer(LivingEntity entity) {
+        if (!(entity instanceof PlayerEntity)) {
+            return Collections.emptyList();
+        }
+        PlayerEntity player = (PlayerEntity) entity;
+        return new ArrayList<>(player.inventory.items);
     }
 }
