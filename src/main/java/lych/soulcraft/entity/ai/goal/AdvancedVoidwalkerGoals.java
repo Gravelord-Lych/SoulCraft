@@ -95,7 +95,8 @@ public final class AdvancedVoidwalkerGoals {
                 return false;
             }
             LivingEntity target = armorer.getTarget();
-            if (EntityUtils.isAlive(target)) {
+//          Double-check
+            if (EntityUtils.isAlive(target) && getAttackType().canUse(armorer, target)) {
                 this.target = target;
                 return true;
             }
