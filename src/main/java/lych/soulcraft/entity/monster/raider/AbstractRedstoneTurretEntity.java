@@ -165,7 +165,7 @@ public abstract class AbstractRedstoneTurretEntity extends MonsterEntity impleme
                 }
                 if (owner.getTurretMap().remove(this) < 0) {
                     if (ConfigHelper.shouldFailhard()) {
-                        throw new AssertionError(String.format("An engineer is trying to build %s without any turrets in his turret map", getType().getRegistryName()));
+                        throw new AssertionError(ConfigHelper.FAILHARD_MESSAGE + String.format("An engineer is trying to build %s without any turrets in his turret map", getType().getRegistryName()));
                     }
                     LOGGER.error("An engineer is trying to build {} without any turrets in his turret map", getType().getRegistryName());
                 }
