@@ -1,6 +1,7 @@
 package lych.soulcraft.effect;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import lych.soulcraft.SoulCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -23,6 +24,7 @@ public class PollutionEffect extends Effect {
         super(category, color);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, MatrixStack mStack, int x, int y, float z) {
         Minecraft mc = Minecraft.getInstance();
@@ -31,6 +33,7 @@ public class PollutionEffect extends Effect {
 //      Rerender the icon.
         TextureAtlasSprite sprite = mc.getMobEffectTextures().get(this);
         mc.getTextureManager().bind(sprite.atlas().location());
+        RenderSystem.color4f(1, 1, 1, 1);
         AbstractGui.blit(mStack, x + 6, y + 7, (int) z, 18, 18, sprite);
     }
 

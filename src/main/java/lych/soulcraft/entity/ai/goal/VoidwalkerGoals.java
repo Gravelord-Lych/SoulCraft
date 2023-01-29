@@ -157,7 +157,7 @@ public final class VoidwalkerGoals {
                 return false;
             }
             LivingEntity target = voidwalker.getTarget();
-            if (!EntityUtils.isAlive(target) || AbstractVoidwalkerEntity.isLowHealth(target)) {
+            if (!EntityUtils.isAlive(target) || voidwalker.isLowHealth(target)) {
                 return false;
             }
             if (voidwalker.getRandom().nextInt(retreatFreq) == 0) {

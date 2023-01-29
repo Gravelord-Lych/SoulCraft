@@ -15,7 +15,7 @@ import java.util.Random;
 public final class SoulPollutionHandler {
     public static final RangedInteger DURATION_RANGE = RangedInteger.of(100, 300);
     public static final double POLLUTE_PROBABILITY = 0.0005;
-    public static final double POLLUTE_PROBABILITY_SPECIAL = 0.1;
+    public static final double POLLUTE_PROBABILITY_SPECIAL = 0.04;
 
 
     private SoulPollutionHandler() {}
@@ -34,6 +34,9 @@ public final class SoulPollutionHandler {
     }
 
     public static void mayPollute(PlayerEntity player, World world, double probability) {
+        if (player.isCreative() || player.isSpectator()) {
+            return;
+        }
         if (world.dimension() == ModDimensions.SOUL_LAND && player.getRandom().nextDouble() < probability) {
             player.addEffect(new EffectInstance(ModEffects.SOUL_POLLUTION, DURATION_RANGE.randomValue(player.getRandom())));
         }

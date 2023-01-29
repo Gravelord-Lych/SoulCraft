@@ -347,7 +347,7 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         return super.isAlliedTo(entity);
     }
 
-    public static boolean isLowHealth(LivingEntity entity) {
+    public boolean isLowHealth(LivingEntity entity) {
         return entity.getHealth() < entity.getMaxHealth() * 0.25f;
     }
 
