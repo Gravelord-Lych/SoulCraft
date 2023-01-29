@@ -80,7 +80,7 @@ public class Soul<T extends LivingEntity> {
             location = new ResourceLocation(compoundNBT.getString("EntityType"));
         } catch (ResourceLocationException e) {
             if (ConfigHelper.shouldFailhard()) {
-                throw new RuntimeException("Failed to load a soul", e);
+                throw new RuntimeException(ConfigHelper.FAILHARD_MESSAGE + "Failed to load a soul", e);
             }
             SoulCraft.LOGGER.error("Failed to load a soul", e);
             return null;
@@ -95,7 +95,7 @@ public class Soul<T extends LivingEntity> {
             castedType = (EntityType<? extends T>) type;
         } catch (ClassCastException e) {
             if (ConfigHelper.shouldFailhard()) {
-                throw new RuntimeException("EntityType does not match the entity", e);
+                throw new RuntimeException(ConfigHelper.FAILHARD_MESSAGE + "EntityType does not match the entity", e);
             }
             SoulCraft.LOGGER.error("EntityType does not match the entity because {}", e.getMessage());
             return null;

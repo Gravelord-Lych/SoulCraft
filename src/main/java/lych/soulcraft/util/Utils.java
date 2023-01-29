@@ -10,10 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -115,5 +112,23 @@ public final class Utils {
         int g = color.getGreen();
         int b = color.getBlue();
         return new Color((int) MathHelper.lerp(partialTicks, ro, r), (int) MathHelper.lerp(partialTicks, go, g), (int) MathHelper.lerp(partialTicks, bo, b));
+    }
+
+    public static int randomlyCast(float num, Random random) {
+        int i = (int) num;
+        num -= i;
+        if (random.nextFloat() < num) {
+            i++;
+        }
+        return i;
+    }
+
+    public static int randomlyCast(double num, Random random) {
+        int i = (int) num;
+        num -= i;
+        if (random.nextDouble() < num) {
+            i++;
+        }
+        return i;
     }
 }
