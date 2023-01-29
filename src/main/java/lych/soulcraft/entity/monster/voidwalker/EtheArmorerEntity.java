@@ -2,6 +2,7 @@ package lych.soulcraft.entity.monster.voidwalker;
 
 import lych.soulcraft.entity.ai.goal.AdvancedVoidwalkerGoals.*;
 import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.FindTargetExpiringGoal;
+import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.RetreatGoal;
 import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.VoidwalkerRandomWalkingGoal;
 import lych.soulcraft.entity.iface.ESVMob;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
@@ -148,7 +149,7 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
         if (enchantments.keySet().stream().allMatch(Enchantment::isCurse)) {
             return false;
         }
-        return calculateEnchantmentsStrength(enchantments) >= keepEnchantmentThreshold;
+        return calculateEnchantmentsStrength(enchantments) > keepEnchantmentThreshold;
     }
 
     private boolean hasEnoughReinforcements(ItemStack stack) {
@@ -165,7 +166,7 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
             keepReinforcementThreshold = 2;
         }
         Map<Reinforcement, Integer> enchantments = ReinforcementHelper.getReinforcements(stack);
-        return calculateReinforcementsStrength(enchantments) >= keepReinforcementThreshold;
+        return calculateReinforcementsStrength(enchantments) > keepReinforcementThreshold;
     }
 
     private static int calculateEnchantmentsStrength(Map<Enchantment, Integer> enchantments) {
@@ -232,11 +233,20 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
         goalSelector.addGoal(3, new RandomlyRenameGoal(this, 1));
         goalSelector.addGoal(3, new WoodifyMainHandItemGoal(this, 1));
         goalSelector.addGoal(3, new DisenchantAndCurseGoal(this, 1));
-        goalSelector.addGoal(5, new VoidwalkerRandomWalkingGoal(this, 0.8));
-        goalSelector.addGoal(7, new LookAtGoal(this, AbstractVoidwalkerEntity.class, 12));
-        goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        goalSelector.addGoal(4, new RetreatGoal(this, 150));
+        goalSelector.addGoal(6, new VoidwalkerRandomWalkingGoal(this, 0.8));
+        goalSelector.addGoal(8, new LookAtGoal(this, AbstractVoidwalkerEntity.class, 12));
+        goalSelector.addGoal(9, new LookRandomlyGoal(this));
         reinforceVoidwalkersGoal = new FindTargetExpiringGoal<>(this, AbstractVoidwalkerEntity.class, 100, true, false, entity -> canReconstruct(entity) || canReinforce(entity));
         targetSelector.addGoal(1, reinforceVoidwalkersGoal);
+    }
+
+    @Override
+    public boolean isLowHealth(LivingEntity entity) {
+        if (entity == this) {
+            return entity.getHealth() < entity.getMaxHealth() * 0.5f;
+        }
+        return false;
     }
 
     @Override
