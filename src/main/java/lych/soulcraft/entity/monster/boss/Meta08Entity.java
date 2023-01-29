@@ -123,7 +123,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
     private static final int MAX_INVULNERABLE_TIME = 20 * 5;
     private static final int MIN_INVULNERABLE_TIME = 20 * 2;
     private static final double TELEPORT_PROBABILITY = 0.15;
-    private static final Pattern PREDECESSORS = Pattern.compile("(?i)M[e3]ta(0*)[1-7+]");
+    private static final Pattern PREDECESSORS = Pattern.compile("(?i)M[e3]ta(0*)[1-7]");
     private static final Pattern GRAVELORD_LYCH = Pattern.compile("(?i)Gravelord([ \\-_—]*)Lych");
     private static final RedstoneParticleData SPEEDY_META8_PARTICLE = RedstoneParticles.create(255, 245, 128);
     private static final DataParameter<Boolean> DATA_ATTACKING = EntityDataManager.defineId(Meta08Entity.class, DataSerializers.BOOLEAN);
@@ -459,7 +459,7 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
             }
         } catch (EnumConstantNotFoundException e) {
             if (ConfigHelper.shouldFailhard()) {
-                crash(new IllegalStateException(String.format("Trait indexed %s for Meta08 was not found", e.getId())));
+                crash(new IllegalStateException(ConfigHelper.FAILHARD_MESSAGE + String.format("Trait indexed %s for Meta08 was not found", e.getId())));
                 return;
             }
             LOGGER.warn("Trait indexed {} was not found, so ignore the trait", e.getId());

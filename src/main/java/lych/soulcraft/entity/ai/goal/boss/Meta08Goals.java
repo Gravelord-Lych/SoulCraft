@@ -448,7 +448,7 @@ public final class Meta08Goals {
             if (robots.isEmpty()) {
                 return StopReason.NEXT_PHASE;
             }
-            RobotEntity robot = CollectionUtils.getRandom(robots);
+            RobotEntity robot = CollectionUtils.getRandom(robots, meta8.getRandom());
             if (EntityUtils.isAlive(robot)) {
                 target = robot;
                 return null;
