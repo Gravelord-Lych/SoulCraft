@@ -7,6 +7,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public final class DefaultValues {
@@ -19,6 +20,8 @@ public final class DefaultValues {
     private static final Runnable DUMMY_RUNNABLE = () -> {};
     private static final Supplier<?> DUMMY_SUPPLIER = () -> null;
     private static final Function<?, ?> DUMMY_FUNCTION = o -> null;
+    private static final Predicate<?> TRUE = o -> true;
+    private static final Predicate<?> FALSE = o -> false;
 
     private DefaultValues() {}
 
@@ -43,5 +46,27 @@ public final class DefaultValues {
 
     public static StringTextComponent dummyTextComponent() {
         return DUMMY_TEXT_COMPONENT;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Predicate<T> alwaysTrue() {
+        return (Predicate<T>) TRUE;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Predicate<T> alwaysFalse() {
+        return (Predicate<T>) FALSE;
+    }
+
+    public static boolean always() {
+        return true;
+    }
+
+    public static <T> boolean always(T o) {
+        return true;
+    }
+
+    public static <T1, T2> boolean always(T1 t1, T2 t2) {
+        return true;
     }
 }

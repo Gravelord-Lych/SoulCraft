@@ -3,6 +3,8 @@ package lych.soulcraft.config;
 import net.minecraft.util.SharedConstants;
 
 public final class ConfigHelper {
+    public static final String FAILHARD_MESSAGE = "This Throwable has been thrown because of Failhard --- ";
+
     private ConfigHelper() {}
 
     public static boolean isBossesTiered() {
