@@ -310,7 +310,7 @@ public final class CommonEventListener {
         } else if (warped) {
             world.setBlock(pos, forWarped, Constants.BlockFlags.DEFAULT);
         } else if (ConfigHelper.shouldFailhard()) {
-            throw new AssertionError("Neither nylium nor hyphal soul soil found");
+            throw new AssertionError(ConfigHelper.FAILHARD_MESSAGE + "Neither nylium nor hyphal soul soil found");
         }
     }
 
