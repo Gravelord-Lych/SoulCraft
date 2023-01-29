@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class VoidwalkerRenderer extends AbstractVoidwalkerRenderer<VoidwalkerEntity> {
-    private static final ResourceLocation VOIDWALKER_CLOTHES = SoulCraft.prefixTex("entity/esv/voidwalker_clothes.png");
+    static final ResourceLocation VOIDWALKER_CLOTHES = SoulCraft.prefixTex("entity/esv/voidwalker_clothes.png");
 
     public VoidwalkerRenderer(EntityRendererManager manager) {
         super(manager);
