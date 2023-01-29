@@ -1,6 +1,5 @@
 package lych.soulcraft.world.gen.biome.sll;
 
-import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.world.gen.biome.ModBiomes;
@@ -24,13 +23,12 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.LongFunction;
 import java.util.stream.Stream;
@@ -42,14 +40,7 @@ public final class SLLayer {
     public static final int PURE = 2;
     public static final int PURE_PLATEAU = 3;
 
-    private static final List<RegistryKey<Biome>> ALL_BIOMES = ImmutableList.of(ModBiomes.INNERMOST_PLATEAU,
-            ModBiomes.INNERMOST_SOUL_LAND,
-            ModBiomes.PARCHED_DESERT,
-            ModBiomes.PARCHED_DESERT_HILLS,
-            ModBiomes.SOUL_LAVA_OCEAN,
-            ModBiomes.SOUL_MOUNTAINS,
-            ModBiomes.SOUL_PLAINS,
-            ModBiomes.UNSTABLE_SOUL_LAVA_OCEAN);
+    private static final List<RegistryKey<Biome>> ALL_BIOMES = new ArrayList<>();
     private static final Marker SLL = MarkerManager.getMarker("SoulLandBiomes");
     private static final Map<Integer, Integer> remapColors;
 
@@ -75,6 +66,20 @@ public final class SLLayer {
         remapColors.put(LAND, 0x00FF00);
         remapColors.put(PURE, 0x0000FF);
         remapColors.put(PURE_PLATEAU, 0x7F00FF);
+        initBiomes();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void initBiomes() {
+        for (Field field : ModBiomes.class.getFields()) {
+            if (field.getType() == RegistryKey.class && !field.isAnnotationPresent(NonSoulLandBiome.class)) {
+                try {
+                    ALL_BIOMES.add((RegistryKey<Biome>) field.get(null));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     private SLLayer() {}

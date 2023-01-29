@@ -2,6 +2,7 @@ package lych.soulcraft.world.gen.biome;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.world.gen.biome.provider.SoulLandBiomeProvider;
+import lych.soulcraft.world.gen.biome.sll.NonSoulLandBiome;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -25,6 +26,7 @@ public class ModBiomes {
     public static final RegistryKey<Biome> CRIMSON_HILLS = makeKey(ModBiomeNames.CRIMSON_HILLS);
     public static final RegistryKey<Biome> CRIMSON_PLAINS = makeKey(ModBiomeNames.CRIMSON_PLAINS);
     public static final RegistryKey<Biome> CRIMSON_PLAINS_EDGE = makeKey(ModBiomeNames.CRIMSON_PLAINS_EDGE);
+    @NonSoulLandBiome
     public static final RegistryKey<Biome> ESV = makeKey(ModBiomeNames.ESV);
     public static final RegistryKey<Biome> INNERMOST_PLATEAU = makeKey(ModBiomeNames.INNERMOST_PLATEAU);
     public static final RegistryKey<Biome> INNERMOST_SOUL_LAND = makeKey(ModBiomeNames.INNERMOST_SOUL_LAND);
