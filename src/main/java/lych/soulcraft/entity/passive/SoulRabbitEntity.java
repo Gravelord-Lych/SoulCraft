@@ -161,7 +161,7 @@ public class SoulRabbitEntity extends RabbitEntity {
                 return IIdentifiableEnum.byId(values(), id);
             } catch (EnumConstantNotFoundException e) {
                 if (ConfigHelper.shouldFailhard()) {
-                    throw new RuntimeException(String.format("Soul Rabbit's type not found. Current id: %d, Available id: %s",
+                    throw new RuntimeException(ConfigHelper.FAILHARD_MESSAGE + String.format("Soul Rabbit's type not found. Current id: %d, Available id: %s",
                             e.getId(),
                             Arrays.toString(Arrays.stream(values()).mapToInt(Type::getId).toArray())));
                 }

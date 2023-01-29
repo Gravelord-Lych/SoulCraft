@@ -139,6 +139,10 @@ public final class  EntityUtils {
         return new DoubleTierChoiceBuilder(map);
     }
 
+    public static boolean hasArmor(LivingEntity entity) {
+        return entity.getArmorCoverPercentage() > 0;
+    }
+
     public static void sharedShieldHitParticle(LivingEntity entity) {
         addParticlesAroundSelf(entity, RedstoneParticles.CYAN, 5);
         addParticlesAroundSelf(entity, ParticleTypes.POOF, 12);

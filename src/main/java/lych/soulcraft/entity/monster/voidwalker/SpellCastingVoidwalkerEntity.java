@@ -4,6 +4,7 @@ import lych.soulcraft.entity.ai.goal.CastingSpellGoal;
 import lych.soulcraft.entity.iface.ISpellCastable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -87,5 +88,17 @@ public abstract class SpellCastingVoidwalkerEntity extends AbstractVoidwalkerEnt
 
     private void setSpellId(int id) {
         entityData.set(DATA_SPELL_CASTING_ID, id);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT compoundNBT) {
+        super.addAdditionalSaveData(compoundNBT);
+        compoundNBT.putInt("SpellCastingTickCount", getSpellCastingTickCount());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT compoundNBT) {
+        super.readAdditionalSaveData(compoundNBT);
+        setSpellCastingTickCount(compoundNBT.getInt("SpellCastingTickCount"));
     }
 }

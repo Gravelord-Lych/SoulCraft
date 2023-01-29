@@ -104,7 +104,7 @@ public class EngineerTurretMap {
                     turretType = (EntityType<? extends AbstractRedstoneTurretEntity>) type;
                 } catch (ClassCastException e) {
                     if (ConfigHelper.shouldFailhard()) {
-                        throw new RuntimeException(typeName + " is not a turret", e);
+                        throw new RuntimeException(ConfigHelper.FAILHARD_MESSAGE + typeName + " is not a turret", e);
                     }
                     SoulCraft.LOGGER.error("{} is not a turret", typeName);
                     continue;
