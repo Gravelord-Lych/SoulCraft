@@ -30,6 +30,7 @@ public final class ExtraAbilityConstants {
     public static final ImmutableEffectInstance POISONER_POISON_EFFECT = new ImmutableEffectInstance(Effects.POISON, 20 * 4, 0);
     public static final double INITIAL_ARMOR_AMOUNT = 4;
     public static final double INITIAL_ARMOR_TOUGHNESS_AMOUNT = 4;
+    public static final int NETHERMAN_SET_ON_FIRE_SECONDS =  4;
     public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 14;
     public static final int OVERDRIVE_REGEN_INTERVAL = 60;
     public static final double IMITATOR_VISIBILITY_MODIFIER = 0.6;
