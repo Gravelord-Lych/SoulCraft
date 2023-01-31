@@ -39,6 +39,7 @@ import static net.minecraft.entity.EntitySpawnPlacementRegistry.register;
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModEntities {
     public static final EntityType<SkeletonKingEntity.Cloned> CLONED_SKELETON_KING = Builder.of(SkeletonKingEntity.Cloned::new, EntityClassification.MONSTER).sized(0.7f, 2.4f).noSummon().clientTrackingRange(8).build(ModEntityNames.CLONED_SKELETON_KING);
+    public static final EntityType<ComputerScientistEntity> COMPUTER_SCIENTIST = Builder.of(ComputerScientistEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.COMPUTER_SCIENTIST);
     public static final EntityType<DarkEvokerEntity> DARK_EVOKER = Builder.of(DarkEvokerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(8).build(ModEntityNames.DARK_EVOKER);
     public static final EntityType<DroppingMortarShellEntity> DROPPING_MORTAR_SHELL = Builder.<DroppingMortarShellEntity>of(DroppingMortarShellEntity::new, EntityClassification.MISC).sized(1.2f, 1.2f).clientTrackingRange(12).updateInterval(10).build(ModEntityNames.DROPPING_MORTAR_SHELL);
     public static final EntityType<EngineerEntity> ENGINEER = Builder.of(EngineerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.ENGINEER);
@@ -77,6 +78,7 @@ public final class ModEntities {
     public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
         IForgeRegistry<EntityType<?>> registry = event.getRegistry();
         registry.register(make(CLONED_SKELETON_KING, ModEntityNames.CLONED_SKELETON_KING));
+        registry.register(make(COMPUTER_SCIENTIST, ModEntityNames.COMPUTER_SCIENTIST));
         registry.register(make(DARK_EVOKER, ModEntityNames.DARK_EVOKER));
         registry.register(make(DROPPING_MORTAR_SHELL, ModEntityNames.DROPPING_MORTAR_SHELL));
         registry.register(make(ENGINEER, ModEntityNames.ENGINEER));
@@ -113,6 +115,7 @@ public final class ModEntities {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(CLONED_SKELETON_KING, SkeletonKingEntity.createAttributes().build());
+        event.put(COMPUTER_SCIENTIST, ComputerScientistEntity.createAttributes().build());
         event.put(DARK_EVOKER, EvokerEntity.createAttributes().build());
         event.put(ENGINEER, EngineerEntity.createAttributes().build());
         event.put(ETHE_ARMORER, AbstractVoidwalkerEntity.createVoidwalkerAttributes().build());
@@ -137,6 +140,7 @@ public final class ModEntities {
     }
 
     public static void registerEntitySpawnPlacements() {
+        register(COMPUTER_SCIENTIST, PlacementType.NO_RESTRICTIONS, Type.MOTION_BLOCKING, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(DARK_EVOKER, PlacementType.NO_RESTRICTIONS, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(ENGINEER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(ETHE_ARMORER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);

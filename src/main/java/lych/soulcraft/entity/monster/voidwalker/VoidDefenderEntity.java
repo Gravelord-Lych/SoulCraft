@@ -1,5 +1,6 @@
 package lych.soulcraft.entity.monster.voidwalker;
 
+import com.google.common.collect.ImmutableList;
 import lych.soulcraft.api.shield.ISharedShield;
 import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.FollowVoidwalkerGoal;
@@ -8,16 +9,21 @@ import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.util.RedstoneParticles;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser {
+import java.util.List;
+
+public class VoidDefenderEntity extends VoidwalkerEntity {
     static final double PROTECTIVE_RANGE = 6;
     static final float PROTECTED_DAMAGE_MULTIPLIER = 0.8f;
     private static final double HEAL_RANGE = 5;
@@ -26,7 +32,7 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     private static final float HEAL_AMOUNT_ELITE = 3;
 
     @Nullable
-    private ISharedShield sharedShield;
+    private ISharedShield myShield;
     private boolean shieldValid = true;
 
     public VoidDefenderEntity(EntityType<? extends VoidDefenderEntity> type, World world) {
@@ -38,6 +44,11 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
                 .add(Attributes.MAX_HEALTH, 20)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
                 .add(Attributes.ATTACK_DAMAGE, 5);
+    }
+
+    @Override
+    protected void syncShield() {
+        entityData.set(DATA_SHIELDED, getRealShieldProvider() != null && getRealShieldProvider().getSharedShield() != null);
     }
 
     @Override
@@ -99,7 +110,15 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
         }
         float passiveDefense = getMaxHealth();
         setHealth(getMaxHealth());
-        sharedShield = new SharedShield(absoluteDefense, passiveDefense, 40, regenAmount, false);
+        myShield = new SharedShield(absoluteDefense, passiveDefense, 40, regenAmount, false);
+    }
+
+    @Override
+    public boolean isLowHealth(LivingEntity entity) {
+        if (entity == this) {
+            return !isShieldValid() && getHealth() < getMaxHealth() * 0.5f;
+        }
+        return super.isLowHealth(entity);
     }
 
     @Override
@@ -124,7 +143,17 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     @Nullable
     @Override
     public ISharedShield getSharedShield() {
-        return sharedShield;
+        if (getRealShieldProvider() != null && getRealShieldProvider().getSharedShield() != null) {
+            return getRealShieldProvider().getSharedShield();
+        }
+        return myShield;
+    }
+
+    @NotNull
+    @Override
+    public IShieldUser getShieldProvider() {
+        IShieldUser provider = getRealShieldProvider();
+        return provider == null ? this : provider;
     }
 
     @Override
@@ -133,8 +162,18 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     }
 
     @Override
+    public boolean hasConsumableShield() {
+        return myShield != null && myShield.canBeConsumed();
+    }
+
+    @Override
     public boolean isShieldValid() {
-        return IShieldUser.super.isShieldValid() && shieldValid;
+        return super.isShieldValid() && shieldValid;
+    }
+
+    @Override
+    public boolean showHitParticles(DamageSource source, float amount) {
+        return true;
     }
 
     @Override
@@ -150,10 +189,33 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     }
 
     @Override
+    public List<ISharedShield> getAllShields() {
+        ImmutableList.Builder<ISharedShield> builder = ImmutableList.builder();
+        if (getRealShieldProvider() != null && getRealShieldProvider().getSharedShield() != null) {
+            builder.add(getRealShieldProvider().getSharedShield());
+        }
+        if (myShield != null) {
+            builder.add(myShield);
+        }
+        return builder.build();
+    }
+
+    @Nullable
+    private IShieldUser getRealShieldProvider() {
+        return super.getShieldProvider();
+    }
+
+    @Nullable
+    @Override
+    public ISharedShield getMainShield() {
+        return myShield;
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
         if (!level.isClientSide() && getSharedShield() != null) {
-            compoundNBT.put("SharedShield", getSharedShield().save());
+            compoundNBT.put("MySharedShield", getSharedShield().save());
         }
         compoundNBT.putBoolean("ShieldValid", isShieldValid());
     }
@@ -161,8 +223,8 @@ public class VoidDefenderEntity extends VoidwalkerEntity implements IShieldUser 
     @Override
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if (!level.isClientSide() && compoundNBT.contains("SharedShield")) {
-            sharedShield = new SharedShield(compoundNBT.getCompound("SharedShield"));
+        if (!level.isClientSide() && compoundNBT.contains("MySharedShield")) {
+            myShield = new SharedShield(compoundNBT.getCompound("MySharedShield"));
         }
         if (compoundNBT.contains("ShieldValid")) {
             shieldValid = compoundNBT.getBoolean("ShieldValid");

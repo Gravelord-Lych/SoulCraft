@@ -2,7 +2,7 @@ package lych.soulcraft.client.render.renderer;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.client.render.model.BipedModels;
-import lych.soulcraft.client.render.renderer.layer.Meta08ShieldLayer;
+import lych.soulcraft.client.render.renderer.layer.EnergyShieldLayer;
 import lych.soulcraft.entity.monster.RobotEntity;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -16,7 +16,7 @@ public class RobotRenderer extends BipedRenderer<RobotEntity, BipedModels.Size64
 
     public RobotRenderer(EntityRendererManager manager) {
         super(manager, new BipedModels.Size64<>(), 0.5f);
-        addLayer(new Meta08ShieldLayer<>(this, new BipedModels.Size64<>(0.5f)));
+        addLayer(new EnergyShieldLayer<>(this, new BipedModels.Size64<>(0.5f)));
     }
 
     @Override

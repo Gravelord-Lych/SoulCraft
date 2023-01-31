@@ -6,11 +6,13 @@ import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
+import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.capability.ItemSoulEnergyProvider;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
 import lych.soulcraft.extension.soulpower.debuff.MobDebuffMap;
+import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.util.SoulLandGenHelper;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import net.minecraft.block.Block;
@@ -18,12 +20,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -110,5 +114,10 @@ public enum SoulCraftAPIImpl implements SoulCraftAPI {
     @Override
     public ISharedShield loadShield(CompoundNBT compoundNBT) {
         return new SharedShield(compoundNBT);
+    }
+
+    @Override
+    public void disableShield(World world, IShieldUser user, @Nullable Random random) {
+        EntityUtils.disableShield(world, user, random);
     }
 }

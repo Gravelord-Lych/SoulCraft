@@ -1,18 +1,20 @@
-package lych.soulcraft.entity.monster.voidwalker;
+package lych.soulcraft.entity.ai;
 
 import com.google.common.collect.ImmutableList;
+import lych.soulcraft.entity.monster.voidwalker.AbstractVoidLasererEntity;
+import lych.soulcraft.entity.monster.voidwalker.EtheArmorerEntity;
 import lych.soulcraft.util.WeightedRandom;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.function.BiPredicate;
 
 import static lych.soulcraft.entity.monster.voidwalker.AbstractVoidLasererEntity.prefixTex;
 
-public final class EtheArmorerAttackType implements WeightedRandom.Item {
+public final class EtheArmorerAttackType implements WeightedRandom.Item, AbstractVoidLasererEntity.ILaserProvider<EtheArmorerEntity> {
     private static final ResourceLocation SGA_TEXTURE = prefixTex("ethe_armorer_enchant_beam.png");
     private static final ResourceLocation TEXTURE = prefixTex("ethe_armorer_destroy_beam.png");
     private static final ResourceLocation WOODIFY_TEXTURE = prefixTex("ethe_armorer_woodify_beam.png");
@@ -22,7 +24,7 @@ public final class EtheArmorerAttackType implements WeightedRandom.Item {
     public static final EtheArmorerAttackType REINFORCE = new EtheArmorerAttackType(SGA_TEXTURE, 100, 0xDDDDDD, 0xEEEEEE, EtheArmorerEntity::canReinforce);
     public static final EtheArmorerAttackType RENAME = new EtheArmorerAttackType(TEXTURE, 5, 0xCEAC6D, 0xE6C78C, EtheArmorerEntity::canRename);
     public static final EtheArmorerAttackType WOODIFY = new EtheArmorerAttackType(WOODIFY_TEXTURE, 10, 0x755821, 0x866526, EtheArmorerEntity::canWoodify);
-    private static List<EtheArmorerAttackType> ATTACK_TYPES;
+    private static EtheArmorerAttackType[] attackTypes;
     private static int nextId;
 
     private final int id;
@@ -34,14 +36,16 @@ public final class EtheArmorerAttackType implements WeightedRandom.Item {
 
     public EtheArmorerAttackType(ResourceLocation textureLocation, int weight, int srcColor, int destColor, BiPredicate<? super EtheArmorerEntity, ? super LivingEntity> canUsePredicate) {
         this.canUsePredicate = canUsePredicate;
-        if (ATTACK_TYPES == null) {
-            ATTACK_TYPES = new ArrayList<>();
+        if (attackTypes == null) {
+            attackTypes = new EtheArmorerAttackType[1];
+        } else {
+            attackTypes = Arrays.copyOf(attackTypes, nextId + 1);
         }
         this.weight = weight;
         this.textureLocation = textureLocation;
         this.srcColor = srcColor;
         this.destColor = destColor;
-        ATTACK_TYPES.add(this);
+        attackTypes[nextId] = this;
         id = nextId++;
     }
 
@@ -50,15 +54,18 @@ public final class EtheArmorerAttackType implements WeightedRandom.Item {
         return weight;
     }
 
-    public ResourceLocation getTextureLocation() {
+    @Override
+    public ResourceLocation getTextureLocation(EtheArmorerEntity armorer, Entity target) {
         return textureLocation;
     }
 
-    public int getSrcColor() {
+    @Override
+    public int getSrcColor(EtheArmorerEntity armorer, Entity target) {
         return srcColor;
     }
 
-    public int getDestColor() {
+    @Override
+    public int getDestColor(EtheArmorerEntity armorer, Entity target) {
         return destColor;
     }
 
@@ -72,13 +79,13 @@ public final class EtheArmorerAttackType implements WeightedRandom.Item {
 
     @Nullable
     public static EtheArmorerAttackType byId(int id) {
-        if (id >= 0 && id < ATTACK_TYPES.size()) {
-            return ATTACK_TYPES.get(id);
+        if (id >= 0 && id < attackTypes.length) {
+            return attackTypes[id];
         }
         return null;
     }
 
     public static ImmutableList<EtheArmorerAttackType> getAttackTypes() {
-        return ImmutableList.copyOf(ATTACK_TYPES);
+        return ImmutableList.copyOf(attackTypes);
     }
 }

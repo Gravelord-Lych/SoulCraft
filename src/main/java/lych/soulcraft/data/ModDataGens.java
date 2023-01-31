@@ -30,6 +30,7 @@ public final class ModDataGens {
         gen.addProvider(new ParticleDataGen(gen));
         gen.addProvider(new RecipeDataGen(gen));
         gen.addProvider(new ShaderDataGen(gen));
+        gen.addProvider(new SoundDataGen(gen, helper));
     }
 
     public static String registryNameToString(ForgeRegistryEntry<?> entry) {

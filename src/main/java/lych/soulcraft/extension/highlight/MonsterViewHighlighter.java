@@ -9,6 +9,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.server.ServerWorld;
 
 import java.awt.Color;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class MonsterViewHighlighter extends AbstractHighlighter {
@@ -28,9 +30,14 @@ public class MonsterViewHighlighter extends AbstractHighlighter {
             if (living.getAbsorptionAmount() > 0) {
                 hue += Math.min(MathHelper.lerp(living.getAbsorptionAmount() / living.getMaxHealth(), 0, 0.05f), 0.1f);
             }
-            if (living instanceof IShieldUser && ((IShieldUser) living).getSharedShield() != null && ((IShieldUser) living).isShieldValid()) {
-                ISharedShield shield = ((IShieldUser) living).getSharedShield();
-                hue = periodicallyLerp(1 - shield.getHealth() / shield.getPassiveDefense(), 0.5833333f, hue);
+            if (living instanceof IShieldUser && ((IShieldUser) living).isShieldValid()) {
+                List<ISharedShield> shields = ((IShieldUser) living).getAllShields();
+                if (!shields.isEmpty()) {
+                    float totalHealth = (float) shields.stream().mapToDouble(ISharedShield::getHealth).sum();
+                    Objects.requireNonNull(((IShieldUser) living).getMainShield(), "Main shield must not be null!");
+                    float passiveDefense = ((IShieldUser) living).getMainShield().getPassiveDefense();
+                    hue = periodicallyLerp(Math.max(-0.2f, 1 - totalHealth / passiveDefense), 0.5833333f, hue);
+                }
             }
             float saturation = 0.8f;
             float brightness = MathHelper.lerp(living.getHealth() / living.getMaxHealth(), 0.5f, 0.9f);

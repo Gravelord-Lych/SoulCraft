@@ -1,6 +1,5 @@
 package lych.soulcraft.mixin;
 
-import lych.soulcraft.extension.soulpower.control.BrainTaskHelper;
 import lych.soulcraft.util.mixin.IBrainMixin;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -74,31 +73,6 @@ public abstract class BrainMixin<E extends LivingEntity> implements IBrainMixin<
         }
         disabledBehaviors.clear();
         temporaryBehaviors.clear();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean adjustTask(Activity activity, List<? extends BrainTaskHelper> taskHelpers) {
-        for (BrainTaskHelper taskHelper : taskHelpers) {
-            for (Map<Activity, Set<Task<? super E>>> activityMap : availableBehaviorsByPriority.values()) {
-                for (Map.Entry<Activity, Set<Task<? super E>>> entry : activityMap.entrySet()) {
-                    if (entry.getKey() == activity) {
-                        Set<Task<? super E>> set = entry.getValue();
-                        Iterator<Task<? super E>> itr = set.iterator();
-                        while (itr.hasNext()) {
-                            Task<? super E> task = itr.next();
-                            if (taskHelper.test(task)) {
-                                itr.remove();
-                                disabledBehaviors.computeIfAbsent(activity, a -> new HashSet<>()).add(task);
-                            }
-                        }
-                        set.add((Task<? super E>) taskHelper.getTask());
-                        temporaryBehaviors.computeIfAbsent(activity, a -> new HashSet<>()).add((Task<? super E>) taskHelper.getTask());
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     @Inject(method = "tickSensors", at = @At(value = "TAIL"))

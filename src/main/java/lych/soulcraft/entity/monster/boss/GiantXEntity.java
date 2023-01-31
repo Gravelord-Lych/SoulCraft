@@ -515,6 +515,11 @@ public class GiantXEntity extends ZombieEntity implements ITieredBoss {
         this.jumped = jumped;
     }
 
+    @Override
+    protected float getStandingEyeHeight(Pose pose, EntitySize size) {
+        return super.getStandingEyeHeight(pose, size) * 6;
+    }
+
     public enum Phase implements IIdentifiableEnum {
         RUSH,
         JUMP

@@ -20,7 +20,6 @@ import lych.soulcraft.network.StaticStatusHandler;
 import lych.soulcraft.util.SoulEnergies;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
-import lych.soulcraft.world.IChallengeTimeTextComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.ScreenManager;
@@ -39,7 +38,10 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -124,13 +126,6 @@ public final class ClientEventListener {
             builder.vertex(positionMatrix, pos.getX()+dx2, pos.getY()+dy2, pos.getZ()+dz2)
                     .color(0.0f, 0.0f, 1.0f, 1.0f)
                     .endVertex();
-        }
-
-        @SubscribeEvent
-        public static void onBossInfoRendered(RenderGameOverlayEvent.BossInfo event) {
-            if (event.getBossInfo().getName() instanceof IChallengeTimeTextComponent) {
-                event.setIncrement(5);
-            }
         }
 
         @SubscribeEvent

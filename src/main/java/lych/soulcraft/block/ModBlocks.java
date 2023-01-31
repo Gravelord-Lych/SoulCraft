@@ -44,8 +44,8 @@ public final class ModBlocks {
     public static final Block POTTED_SOULIFIED_BUSH = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> ModBlocks.SOULIFIED_BUSH, copy(Blocks.DEAD_BUSH));
     public static final SimpleFireBlock PURE_SOUL_FIRE = new SimpleFireBlock(fireProperties(MaterialColor.COLOR_BLUE, ModConstants.PURE_SOUL_FIRE_LIGHT_LEVEL), ModBlockTags.PURE_SOUL_FIRE_BASED_BLOCKS);
     public static final Block REFINED_SOUL_METAL_BLOCK = new Block(of(Material.METAL, MaterialColor.COLOR_BLUE).harvestTool(ToolType.PICKAXE).harvestLevel(3).requiresCorrectToolForDrops().strength(8, 24).sound(SoundType.METAL).lightLevel(state -> 10));
-    public static final Block REFINED_SOUL_SAND = new SoulSandBlock(of(Material.SAND, MaterialColor.COLOR_BROWN).strength(0.5F).speedFactor(0.4F).sound(SoundType.SOUL_SAND).isValidSpawn(ModBlocks::always).isRedstoneConductor(ModBlocks::always).isViewBlocking(ModBlocks::always).isSuffocating(ModBlocks::always));
-    public static final Block REFINED_SOUL_SOIL = new Block(of(Material.DIRT, MaterialColor.COLOR_BROWN).strength(0.5F).sound(SoundType.SOUL_SOIL));
+    public static final Block REFINED_SOUL_SAND = new SoulSandBlock(of(Material.SAND, MaterialColor.COLOR_BROWN).strength(0.5F).speedFactor(0.2F).sound(SoundType.SOUL_SAND).isValidSpawn(ModBlocks::always).isRedstoneConductor(ModBlocks::always).isViewBlocking(ModBlocks::always).isSuffocating(ModBlocks::always));
+    public static final Block REFINED_SOUL_SOIL = new Block(of(Material.DIRT, MaterialColor.COLOR_BROWN).strength(0.5F).speedFactor(0.9F).sound(SoundType.SOUL_SOIL));
     public static final Block SEGEN = createSegenBlock(MaterialColor.COLOR_LIGHT_BLUE, 2, 1.5f, 5, () -> new SEGeneratorTileEntity(ModTileEntities.SEGEN, 1));
     public static final Block SEGEN_II = createSegenBlock(MaterialColor.COLOR_BLUE, 3, 3, 10, () -> new SEGeneratorTileEntity(ModTileEntities.SEGEN_II, 2));
     public static final Block SKY_SEGEN = createSegenBlock(MaterialColor.COLOR_LIGHT_BLUE, 2, 1.5f, 8, () -> new SkySEGeneratorTileEntity(ModTileEntities.SKY_SEGEN, 1));

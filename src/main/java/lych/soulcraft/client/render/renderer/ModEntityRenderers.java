@@ -16,6 +16,7 @@ public final class ModEntityRenderers {
 
     public static void registerEntityRenderers() {
         registerEntityRenderingHandler(CLONED_SKELETON_KING, SkeletonKingRenderer::new);
+        registerEntityRenderingHandler(COMPUTER_SCIENTIST, ComputerScientistRenderer::new);
         registerEntityRenderingHandler(DARK_EVOKER, DarkEvokerRenderer::new);
         registerEntityRenderingHandler(DROPPING_MORTAR_SHELL, ModEntityRenderers::createRenderForMortarShells);
         registerEntityRenderingHandler(ENGINEER, EngineerRenderer::new);

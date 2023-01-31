@@ -3,30 +3,51 @@ package lych.soulcraft.entity.ai.goal;
 import com.google.common.collect.Streams;
 import com.mojang.datafixers.util.Pair;
 import lych.soulcraft.config.ConfigHelper;
+import lych.soulcraft.entity.ai.ComputerOperation;
+import lych.soulcraft.entity.ai.EtheArmorerAttackType;
+import lych.soulcraft.entity.iface.ESVMob;
 import lych.soulcraft.entity.monster.voidwalker.AbstractVoidwalkerEntity;
-import lych.soulcraft.entity.monster.voidwalker.EtheArmorerAttackType;
+import lych.soulcraft.entity.monster.voidwalker.ComputerScientistEntity;
 import lych.soulcraft.entity.monster.voidwalker.EtheArmorerEntity;
 import lych.soulcraft.entity.monster.voidwalker.VoidwalkerTier;
+import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.extension.soulpower.reinforce.ReinforcementHelper;
 import lych.soulcraft.util.*;
 import lych.soulcraft.util.redirectable.PredicateRedirectable;
 import lych.soulcraft.util.redirectable.Redirectable;
+import lych.soulcraft.util.redirectable.Redirector;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -527,6 +548,7 @@ public final class AdvancedVoidwalkerGoals {
             PredicateRedirectable.Creator<ItemStack> planks = PredicateRedirectable.withFactory(() -> new ItemStack(Items.OAK_PLANKS));
             PredicateRedirectable.Creator<ItemStack> stick = PredicateRedirectable.withFactory(() -> new ItemStack(Items.STICK));
             REDIRECTABLES.add(PredicateRedirectable.createDirectly(() -> new ItemStack(Items.WOODEN_SWORD), stack -> stack.getItem() instanceof SwordItem && nonWood(stack)));
+            REDIRECTABLES.add(PredicateRedirectable.createDirectly(() -> new ItemStack(Items.BOW), stack -> stack.getItem() instanceof BowItem && nonWood(stack)));
             REDIRECTABLES.add(PredicateRedirectable.createDirectly(() -> new ItemStack(Items.WOODEN_PICKAXE), stack -> stack.getToolTypes().contains(ToolType.PICKAXE) && nonWood(stack)));
             REDIRECTABLES.add(PredicateRedirectable.createDirectly(() -> new ItemStack(Items.WOODEN_AXE), stack -> stack.getToolTypes().contains(ToolType.AXE) && nonWood(stack)));
             REDIRECTABLES.add(PredicateRedirectable.createDirectly(() -> new ItemStack(Items.WOODEN_SHOVEL), stack -> stack.getToolTypes().contains(ToolType.SHOVEL) && nonWood(stack)));
@@ -569,11 +591,15 @@ public final class AdvancedVoidwalkerGoals {
             wood.setCount(mainHandItem.getCount());
             if (wood.isDamageableItem()) {
                 wood.setTag(mainHandItem.getTag());
-                wood.setDamageValue(wood.getMaxDamage() - DURABILITY_REMAINING);
+                int durability = Math.min(mainHandItem.getMaxDamage() - mainHandItem.getDamageValue(), DURABILITY_REMAINING);
+                wood.setDamageValue(wood.getMaxDamage() - durability);
             }
         }
 
         private static boolean nonWood(ItemStack stack) {
+            if (stack.getItem() == Items.BOW) {
+                return false;
+            }
             return !(stack.getItem() instanceof TieredItem) || ((TieredItem) stack.getItem()).getTier() != ItemTier.WOOD;
         }
 
@@ -590,6 +616,669 @@ public final class AdvancedVoidwalkerGoals {
         @Override
         protected EtheArmorerAttackType getAttackType() {
             return EtheArmorerAttackType.WOODIFY;
+        }
+    }
+
+    public static abstract class ComputerScientistGoal extends Goal {
+        protected static final double SNEAK_PROBABILITY = 0.2;
+        protected final ComputerScientistEntity cs;
+        protected final double speedModifier;
+        protected final DoubleSupplier attackRadius;
+        protected final double escapeRadius;
+        protected final ServerWorld level;
+        protected final Random random;
+        protected LivingEntity target;
+        protected boolean continuable = true;
+
+        protected ComputerScientistGoal(ComputerScientistEntity cs) {
+            this(cs, 1, () -> 18, 6);
+        }
+
+        protected ComputerScientistGoal(ComputerScientistEntity cs, double speedModifier, DoubleSupplier attackRadius, double escapeRadius) {
+            this.escapeRadius = escapeRadius;
+            EntityUtils.checkGoalInstantiationServerside(cs);
+            this.cs = cs;
+            this.speedModifier = speedModifier;
+            this.attackRadius = attackRadius;
+            this.level = (ServerWorld) cs.level;
+            this.random = cs.getRandom();
+            setFlags(makeFlags());
+        }
+
+        protected abstract EnumSet<Flag> makeFlags();
+
+        @Override
+        public boolean canUse() {
+            if (cs.getAttackIntervalTicks() > 0) {
+                return false;
+            }
+            if (cs.getOperation() != null && cs.getOperation() != operation()) {
+                return false;
+            }
+            LivingEntity target = cs.getTarget();
+            if (target != null) {
+                this.target = target;
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            ComputerOperation operation = operation();
+            if (operation != null) {
+                cs.setOperation(operation);
+                cs.setLaserTarget(target);
+            } else {
+                resetComputerEngineer();
+            }
+            if (target != null) {
+                target.sendMessage(cs.formatSRGNameOperation(getName(), target, isAggressive()), Util.NIL_UUID);
+            }
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            try {
+                LivingEntity entity = next();
+                if (entity != null) {
+                    target = entity;
+//                  Reset operation to prevent null
+                    cs.setOperation(operation());
+                    cs.setLaserTarget(entity);
+                    updateTarget(entity);
+                }
+            } catch (UnableToContinueException e) {
+                continuable = false;
+            }
+            if (target != null) {
+                cs.getLookControl().setLookAt(target, 30, 30);
+                followTarget(target, true);
+            }
+        }
+
+        protected void followTarget(LivingEntity target, boolean shouldEscape) {
+            if (cs.distanceToSqr(target) > attackRadius.getAsDouble() * attackRadius.getAsDouble()) {
+                moveTo(null, target);
+            } else if (shouldEscape && cs.distanceToSqr(target) < escapeRadius * escapeRadius) {
+                Vector3d pos = null;
+                for (int i = 0; i < 3; i++) {
+                    pos = RandomPositionGenerator.getPosAvoid(cs, (int) attackRadius.getAsDouble(), (int) (attackRadius.getAsDouble() / 3), target.position());
+                    if (pos != null) {
+                        break;
+                    }
+                }
+                if (pos != null) {
+                    moveTo(pos, target);
+                }
+            } else {
+                cs.getNavigation().stop();
+            }
+        }
+
+        protected void moveTo(@Nullable Vector3d pos, @Nullable LivingEntity target) {
+            if (pos == null && target == null) {
+                throw new NullPointerException();
+            }
+            if (pos == null) {
+                pos = target.position();
+            }
+            if (random.nextDouble() < SNEAK_PROBABILITY && cs.canBeEtherealToAttack() || target != null && !EntityUtils.canReach(cs, target)) {
+                cs.setSneakTarget(pos);
+                cs.setEtherealCooldown(AbstractVoidwalkerEntity.LONG_ETHEREAL_COOLDOWN);
+            } else {
+                if (target != null) {
+                    cs.getNavigation().moveTo(target, speedModifier);
+                } else {
+                    cs.getNavigation().moveTo(pos.x, pos.y, pos.z, speedModifier);
+                }
+            }
+        }
+
+        protected void updateTarget(LivingEntity entity) {
+            cs.setTarget(entity);
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            resetComputerEngineer();
+            continuable = true;
+            cs.setAttackIntervalTicks(getAttackInterval());
+        }
+
+        protected void resetComputerEngineer() {
+            cs.setLaserTarget(null);
+            cs.setOperation(null);
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return super.canContinueToUse() && continuable;
+        }
+
+        protected boolean isAggressive() {
+            return true;
+        }
+
+        @Nullable
+        protected abstract LivingEntity next() throws UnableToContinueException;
+
+        @Nullable
+        protected abstract ComputerOperation operation();
+
+        protected abstract String getName();
+
+        protected int getAttackInterval() {
+            return 20;
+        }
+
+        protected static class UnableToContinueException extends Exception {}
+    }
+
+    public static class ShieldSelfGoal extends ComputerScientistGoal {
+        private static final String SRG_NAME_SWING = "func_184609_a";
+        private int waitingTicks;
+
+        public ShieldSelfGoal(ComputerScientistEntity cs) {
+            super(cs);
+        }
+
+        @Override
+        protected EnumSet<Flag> makeFlags() {
+            return EnumSet.of(Flag.LOOK);
+        }
+
+        @Override
+        public boolean canUse() {
+            if (cs.isShieldValid() || cs.getShieldCooldown() > 0) {
+                return false;
+            }
+            return super.canUse();
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            waitingTicks = 20;
+            cs.setShieldCooldown(20 * 30);
+            cs.setSharedShield(new SharedShield(0, cs.getMaxHealth()));
+            EntityUtils.addParticlesAroundSelfServerside(cs, level, ParticleTypes.ENCHANT, 4 + random.nextInt(5));
+        }
+
+        @Nullable
+        @Override
+        protected LivingEntity next() throws UnableToContinueException {
+            if (waitingTicks > 0) {
+                waitingTicks--;
+                return null;
+            }
+            throw new UnableToContinueException();
+        }
+
+        @Override
+        protected ComputerOperation operation() {
+            return null;
+        }
+
+        @Override
+        protected int getAttackInterval() {
+            return 10;
+        }
+
+        @Override
+        protected boolean isAggressive() {
+            return false;
+        }
+
+        /**
+         * {@link LivingEntity#swing(Hand) swing}
+         */
+        @Override
+        protected String getName() {
+            return SRG_NAME_SWING;
+        }
+    }
+
+    public static class ShieldOthersGoal extends ComputerScientistGoal {
+        private static final String SRG_NAME_SET_LOOK_AT = "func_75651_a";
+        private static final int MAX_COUNT = 5;
+        private final Queue<AbstractVoidwalkerEntity> shieldableEntities = new ArrayDeque<>();
+        private int tickCounter;
+        private AbstractVoidwalkerEntity curr;
+        private boolean preparingToStop;
+
+        public ShieldOthersGoal(ComputerScientistEntity cs) {
+            super(cs);
+        }
+
+        @Override
+        protected EnumSet<Flag> makeFlags() {
+            return EnumSet.of(Flag.MOVE, Flag.LOOK);
+        }
+
+        @Override
+        protected void updateTarget(LivingEntity entity) {}
+
+        @Override
+        public boolean canUse() {
+            if (cs.getAttackIntervalTicks() > 0) {
+                return false;
+            }
+            if (!canProvideShield() || cs.getUsers().size() >= MAX_COUNT) {
+                return false;
+            }
+            List<AbstractVoidwalkerEntity> nearby = cs.getNearbyVoidwalkers(AbstractVoidwalkerEntity.class, getFollowRange(), this::stillValid);
+            if (!nearby.isEmpty()) {
+                nearby.sort(Comparator.comparingDouble(v -> v.distanceToSqr(cs)));
+                CollectionUtils.refill(shieldableEntities, nearby);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void start() {
+            try {
+                next();
+                ComputerOperation operation = operation();
+                if (operation != null) {
+                    cs.setOperation(operation);
+                    cs.setLaserTarget(curr);
+                } else if (ConfigHelper.shouldFailhard()) {
+                    throw new NullPointerException("Operation is null");
+                }
+            } catch (UnableToContinueException e) {
+                continuable = false;
+            }
+            if (target != null) {
+                target.sendMessage(cs.formatSRGNameOperation(getName(), target, false), Util.NIL_UUID);
+            }
+        }
+
+        @Override
+        public void tick() {
+            if (tickCounter > 0) {
+                tickCounter--;
+            }
+            if (curr != null) {
+                cs.getLookControl().setLookAt(curr, 30, 30);
+            }
+            try {
+                next();
+                cs.setOperation(operation());
+                cs.setLaserTarget(curr);
+            } catch (UnableToContinueException e) {
+                continuable = false;
+            }
+            if (curr != null) {
+                followTarget(curr, false);
+            }
+        }
+
+        private double getFollowRange() {
+            return cs.getAttributeValue(Attributes.FOLLOW_RANGE);
+        }
+
+        @Nullable
+        @Override
+        protected AbstractVoidwalkerEntity next() throws UnableToContinueException {
+            if (tickCounter > 0) {
+                return null;
+            }
+            if (preparingToStop) {
+                throw new UnableToContinueException();
+            }
+            do {
+                curr = shieldableEntities.poll();
+                if (curr == null) {
+                    throw new UnableToContinueException();
+                }
+            } while (!stillValid(curr));
+            curr.setShieldProvider(cs);
+            cs.addShieldUser(curr);
+            if (cs.getUsers().size() >= MAX_COUNT) {
+                preparingToStop = true;
+            }
+            tickCounter = 20;
+            return curr;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return canProvideShield() && continuable;
+        }
+
+        private boolean canProvideShield() {
+            return cs.getSharedShield() != null && cs.isShieldValid();
+        }
+
+        @Override
+        public void stop() {
+            resetComputerEngineer();
+            continuable = true;
+            preparingToStop = false;
+            curr = null;
+            shieldableEntities.clear();
+            tickCounter = 0;
+            cs.setAttackIntervalTicks(getAttackInterval());
+        }
+
+        private boolean stillValid(AbstractVoidwalkerEntity voidwalker) {
+            if (voidwalker instanceof ComputerScientistEntity) {
+                return false;
+            }
+            return EntityUtils.isAlive(voidwalker) && (voidwalker.getShieldProvider() == null || voidwalker.getShieldProvider() == voidwalker) && cs.distanceToSqr(voidwalker) <= getFollowRange() * getFollowRange();
+        }
+
+        @Nullable
+        @Override
+        protected ComputerOperation operation() {
+            return ComputerOperation.SHIELD;
+        }
+
+        @Override
+        protected boolean isAggressive() {
+            return false;
+        }
+
+        /**
+         * {@link net.minecraft.entity.ai.controller.LookController#setLookAt(Entity, float, float) setLookAt}
+         */
+        @Override
+        protected String getName() {
+            return SRG_NAME_SET_LOOK_AT;
+        }
+    }
+
+    public static class ComputerScientistRetreatGoal extends VoidwalkerGoals.RetreatGoal {
+        private final ComputerScientistEntity cs;
+
+        public ComputerScientistRetreatGoal(ComputerScientistEntity cs, int retreatFreq) {
+            super(cs, retreatFreq);
+            this.cs = cs;
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            if (cs.getTarget() != null) {
+                cs.sendMessage(cs.formatRetreatOperation(), Util.NIL_UUID);
+            }
+        }
+    }
+
+    public static abstract class RegularOperationGoal extends ComputerScientistGoal {
+        protected final Set<LivingEntity> visited = new HashSet<>();
+        private int ticksRemaining;
+
+        protected RegularOperationGoal(ComputerScientistEntity cs) {
+            super(cs);
+        }
+
+        protected RegularOperationGoal(ComputerScientistEntity cs, double speedModifier, DoubleSupplier attackRadius, double escapeRadius) {
+            super(cs, speedModifier, attackRadius, escapeRadius);
+        }
+
+        @Override
+        public boolean canUse() {
+            if (cs.hasCooldown(operation())) {
+                return false;
+            }
+            return super.canUse();
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            ticksRemaining = getOperationTime(target);
+        }
+
+        @Nullable
+        @Override
+        protected LivingEntity next() throws UnableToContinueException {
+            if (!EntityUtils.isAlive(target)) {
+                throw new UnableToContinueException();
+            }
+            if (ticksRemaining > 0) {
+                ticksRemaining--;
+                return null;
+            }
+            LivingEntity next = doOperate(target);
+            if (next == null) {
+                throw new UnableToContinueException();
+            }
+            ticksRemaining = getOperationTime(next);
+            return next;
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            cs.addCooldown(operation(), getOperationCooldown());
+            ticksRemaining = 0;
+            visited.clear();
+        }
+
+        @Nullable
+        protected LivingEntity findAnotherTarget(LivingEntity target, double range) {
+            return findAnotherTarget(target, range, DefaultValues.alwaysTrue());
+        }
+
+        @Nullable
+        protected LivingEntity findAnotherTarget(LivingEntity target, double range, Predicate<LivingEntity> predicate) {
+            return level.getNearestLoadedEntity(LivingEntity.class,
+                    cs.customizeTargetConditions(EntityPredicate.DEFAULT)
+                            .range(range)
+                            .selector(predicate.and(l -> ESVMob.nonESVMob(l) && !visited.contains(l) && EntityPredicates.ATTACK_ALLOWED.test(l))),
+                    target,
+                    target.getX(),
+                    target.getY(),
+                    target.getZ(),
+                    target.getBoundingBox().inflate(range));
+        }
+
+        protected abstract int getOperationTime(LivingEntity target);
+
+        protected abstract int getOperationCooldown();
+
+        @Nullable
+        protected abstract LivingEntity doOperate(LivingEntity target);
+
+        @NotNull
+        @Override
+        protected abstract ComputerOperation operation();
+    }
+
+    public static class ApplyMutationGoal extends RegularOperationGoal {
+        private static final String SRG_NAME_ADD_EFFECT = "func_195064_c";
+        private static final List<Redirectable<Effect, Effect>> REDIRECTABLES = new ArrayList<>();
+        private static final double FIND_ANOTHER_TARGET_RANGE = 4;
+
+        static {
+            REDIRECTABLES.add(new Redirector<>(Effects.POISON, Effects.REGENERATION));
+            REDIRECTABLES.add(new Redirector<>(Effects.WEAKNESS, Effects.DAMAGE_BOOST));
+            REDIRECTABLES.add(new Redirector<>(Effects.MOVEMENT_SLOWDOWN, Effects.MOVEMENT_SPEED));
+            REDIRECTABLES.add(new Redirector<>(Effects.DIG_SLOWDOWN, Effects.DIG_SPEED));
+            REDIRECTABLES.add(new Redirector<>(Effects.BLINDNESS, Effects.NIGHT_VISION, Effects.INVISIBILITY));
+            REDIRECTABLES.add(new Redirector<>(Effects.LEVITATION, Effects.SLOW_FALLING));
+            REDIRECTABLES.add(new Redirector<>(Effects.BAD_OMEN, Effects.HERO_OF_THE_VILLAGE));
+        }
+
+        public ApplyMutationGoal(ComputerScientistEntity cs) {
+            super(cs);
+        }
+
+        @Override
+        protected EnumSet<Flag> makeFlags() {
+            return EnumSet.of(Flag.MOVE, Flag.LOOK);
+        }
+
+        @Override
+        public boolean canUse() {
+            return super.canUse() && target.getActiveEffects().stream().anyMatch(ModEffectUtils::isBeneficial);
+        }
+
+        @NotNull
+        @Override
+        protected ComputerOperation operation() {
+            return ComputerOperation.MUTATE;
+        }
+
+        @Override
+        protected String getName() {
+            return SRG_NAME_ADD_EFFECT;
+        }
+
+        @Override
+        protected int getOperationTime(LivingEntity target) {
+            int strength = target.getActiveEffects().stream().filter(ModEffectUtils::isBeneficial).mapToInt(ModEffectUtils::calculateEffectStrength).sum();
+            return MathHelper.clamp(16 + strength / 100, 20, 80);
+        }
+
+        @Override
+        protected int getOperationCooldown() {
+            return 300;
+        }
+
+        @Nullable
+        @Override
+        protected LivingEntity doOperate(LivingEntity target) {
+            Map<Effect, EffectInstance> effectsMap = new HashMap<>(target.getActiveEffectsMap());
+            List<EffectInstance> newEffects = new ArrayList<>();
+            Outer:
+            for (Map.Entry<Effect, EffectInstance> entry : effectsMap.entrySet()) {
+                if (!entry.getKey().isBeneficial()) {
+                    continue;
+                }
+                for (Redirectable<Effect, Effect> redirectable : REDIRECTABLES) {
+                    if (redirectable.test(entry.getKey())) {
+                        target.removeEffect(entry.getKey());
+                        newEffects.add(ModEffectUtils.copyAttributes(redirectable.redirect(entry.getKey()), entry.getValue()));
+                        continue Outer;
+                    }
+                }
+                if (entry.getKey().isBeneficial()) {
+                    target.removeEffect(entry.getKey());
+                }
+            }
+            newEffects.forEach(target::addEffect);
+            visited.add(target);
+            return findAnotherTarget(target, FIND_ANOTHER_TARGET_RANGE);
+        }
+    }
+
+    public static class ShuffleInventoryGoal extends RegularOperationGoal {
+        private static final String SRG_NAME_INVENTORY = "field_71071_by";
+        private static final double FIND_ANOTHER_TARGET_RANGE = 6;
+
+        public ShuffleInventoryGoal(ComputerScientistEntity cs) {
+            super(cs);
+        }
+
+        @Override
+        public boolean canUse() {
+            if (super.canUse()) {
+                return target instanceof PlayerEntity;
+            }
+            return false;
+        }
+
+        @Override
+        protected EnumSet<Flag> makeFlags() {
+            return EnumSet.of(Flag.MOVE, Flag.LOOK);
+        }
+
+        /**
+         * {@link PlayerEntity#inventory inventory}
+         */
+        @Override
+        protected String getName() {
+            return SRG_NAME_INVENTORY;
+        }
+
+        @Override
+        protected int getOperationTime(LivingEntity target) {
+            return 40;
+        }
+
+        @Override
+        protected int getOperationCooldown() {
+            return 600;
+        }
+
+        @Nullable
+        @Override
+        protected LivingEntity doOperate(LivingEntity target) {
+            PlayerEntity playerTarget = (PlayerEntity) target;
+            PlayerInventory inventory = playerTarget.inventory;
+            List<ItemStack> items = inventory.items;
+            if (mixHotbar()) {
+                Collections.shuffle(items, random);
+            } else {
+                int sls = PlayerInventory.getSelectionSize();
+                for (int i = items.size(); i > sls; i--) {
+                    Collections.swap(items, i - 1, sls + random.nextInt(i - sls));
+                }
+                for (int i = sls; i > 1; i--) {
+                    Collections.swap(items, i - 1, random.nextInt(i));
+                }
+            }
+            return findAnotherTarget(playerTarget, FIND_ANOTHER_TARGET_RANGE, entity -> entity instanceof PlayerEntity);
+        }
+
+        @NotNull
+        @Override
+        protected ComputerOperation operation() {
+            return ComputerOperation.SHUFFLE;
+        }
+
+        private boolean mixHotbar() {
+            return cs.getTier().strongerThan(VoidwalkerTier.ORDINARY);
+        }
+    }
+
+    public static class RegularlyAttackGoal extends RegularOperationGoal {
+        private static final String SRG_NAME_HURT = "func_70097_a";
+        private static final double FIND_ANOTHER_TARGET_RANGE = 16;
+
+        public RegularlyAttackGoal(ComputerScientistEntity cs) {
+            super(cs, 1, () -> cs.getAttributeValue(Attributes.FOLLOW_RANGE) * 0.75, 6);
+        }
+
+        @Override
+        protected EnumSet<Flag> makeFlags() {
+            return EnumSet.of(Flag.MOVE, Flag.LOOK);
+        }
+
+        @Override
+        protected String getName() {
+            return SRG_NAME_HURT;
+        }
+
+        @Override
+        protected int getOperationTime(LivingEntity target) {
+            return cs.getTier().strongerThan(VoidwalkerTier.EXTRAORDINARY) ? 15 : 20;
+        }
+
+        @Override
+        protected int getOperationCooldown() {
+            return 20;
+        }
+
+        @Nullable
+        @Override
+        protected LivingEntity doOperate(LivingEntity target) {
+            target.hurt(DamageSource.mobAttack(cs).bypassArmor().bypassMagic(), (float) cs.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            return findAnotherTarget(target, FIND_ANOTHER_TARGET_RANGE);
+        }
+
+        @NotNull
+        @Override
+        protected ComputerOperation operation() {
+            return ComputerOperation.CYBERATTACK;
         }
     }
 }

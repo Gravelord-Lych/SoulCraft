@@ -3,6 +3,7 @@ package lych.soulcraft.client.render.renderer;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.client.render.model.BipedModels;
 import lych.soulcraft.client.render.model.VoidwalkerModel;
+import lych.soulcraft.client.render.renderer.layer.EnergyShieldLayer;
 import lych.soulcraft.client.render.renderer.layer.VoidwalkerClothesLayer;
 import lych.soulcraft.entity.monster.voidwalker.AbstractVoidwalkerEntity;
 import lych.soulcraft.entity.monster.voidwalker.VoidwalkerTier;
@@ -25,6 +26,7 @@ public abstract class AbstractVoidwalkerRenderer<T extends AbstractVoidwalkerEnt
     public AbstractVoidwalkerRenderer(EntityRendererManager manager) {
         super(manager, new VoidwalkerModel<>(0), 0.5f);
         addLayer(new VoidwalkerClothesLayer<>(this));
+        addLayer(new EnergyShieldLayer<>(this, new VoidwalkerModel<>(0.5f)));
     }
 
     @Override

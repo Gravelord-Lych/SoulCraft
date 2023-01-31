@@ -1,10 +1,14 @@
 package lych.soulcraft.api.shield;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.util.DamageSource;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
- * A shield user that can use {@link ISharedShield shared shield}
+ * A shield user that can use {@link ISharedShield shared shield}.
+ * See Void Defender for an example
  */
 public interface IShieldUser {
     /**
@@ -25,7 +29,7 @@ public interface IShieldUser {
      * @return True if the shield is valid
      */
     default boolean isShieldValid() {
-        return getSharedShield() != null;
+        return !getAllShields().isEmpty();
     }
 
     /**
@@ -53,10 +57,32 @@ public interface IShieldUser {
     }
 
     /**
-     * @see ISharedShield#canBeConsumed() canBeConsumed
+     * This method may need to be overridden if the entity has multiple shields.
+     * @see ISharedShield#canBeConsumed() canBeConsumed.
      * @return True if the entity has a consumable shield
      */
     default boolean hasConsumableShield() {
         return getSharedShield() != null && getSharedShield().canBeConsumed();
+    }
+
+    /**
+     * Gets all shields that the entity has no matter whether they are active or not. Used for the calculation
+     * of the entity's highlight's color.<br>
+     * The method do not need to be overridden unless the entity has multiple shields.
+     * @return The entity's all shields
+     */
+    default List<ISharedShield> getAllShields() {
+        return getSharedShield() == null ? ImmutableList.of() : ImmutableList.of(getSharedShield());
+    }
+
+    /**
+     * Gets the main shield. The main shield's PD is used to calculate the entity's highlight's color.<br>
+     * The method do not need to be overridden unless the entity has multiple shields. <strong>However, it must not
+     * return <code>null</code> if the entity's shield is {@link IShieldUser#isShieldValid() valid}</strong>
+     * @return The main shield
+     */
+    @Nullable
+    default ISharedShield getMainShield() {
+        return getSharedShield();
     }
 }

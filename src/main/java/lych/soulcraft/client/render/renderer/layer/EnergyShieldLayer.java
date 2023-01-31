@@ -12,11 +12,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class Meta08ShieldLayer<T extends Entity & IChargeableMob, M extends EntityModel<T>> extends EnergyLayer<T, M> {
+public class EnergyShieldLayer<T extends Entity & IChargeableMob, M extends EntityModel<T>> extends EnergyLayer<T, M> {
     private static final ResourceLocation ENERGY_LAYER = SoulCraft.prefixTex("entity/meta8/meta8_armor.png");
     private final M model;
 
-    public Meta08ShieldLayer(IEntityRenderer<T, M> renderer, M model) {
+    public EnergyShieldLayer(IEntityRenderer<T, M> renderer, M model) {
         super(renderer);
         this.model = model;
     }

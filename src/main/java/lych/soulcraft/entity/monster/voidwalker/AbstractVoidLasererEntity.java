@@ -16,10 +16,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractVoidLasererEntity extends AbstractVoidwalkerEntity {
+public abstract class AbstractVoidLasererEntity<T extends AbstractVoidLasererEntity<T>> extends AbstractVoidwalkerEntity {
+    protected static final DataParameter<Integer> DATA_LASER_ID = EntityDataManager.defineId(AbstractVoidLasererEntity.class, DataSerializers.INT);
     private static final DataParameter<Integer> DATA_LASER_TARGET = EntityDataManager.defineId(AbstractVoidLasererEntity.class, DataSerializers.INT);
 
-    protected AbstractVoidLasererEntity(EntityType<? extends AbstractVoidLasererEntity> type, World world) {
+    protected AbstractVoidLasererEntity(EntityType<? extends T> type, World world) {
         super(type, world);
     }
 
@@ -27,6 +28,7 @@ public abstract class AbstractVoidLasererEntity extends AbstractVoidwalkerEntity
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(DATA_LASER_TARGET, -1);
+        entityData.define(DATA_LASER_ID, -1);
     }
 
     @Override
@@ -83,5 +85,26 @@ public abstract class AbstractVoidLasererEntity extends AbstractVoidwalkerEntity
 
     public static ResourceLocation prefixTex(String name) {
         return SoulCraft.prefixTex("entity/esv/void_laserer/" + name);
+    }
+
+    @Nullable
+    public abstract ILaserProvider<? super T> provideLaser();
+
+    public interface ILaserProvider<T extends AbstractVoidLasererEntity<T>> {
+        float DEFAULT_LASER_SCALE = 0.2f;
+
+        ResourceLocation getTextureLocation(T armorer, Entity target);
+
+        int getSrcColor(T laserer, Entity target);
+
+        int getDestColor(T laserer, Entity target);
+
+        default float getSrcScale(T laserer, Entity target) {
+            return DEFAULT_LASER_SCALE;
+        }
+
+        default float getDestScale(T laserer, Entity target) {
+            return DEFAULT_LASER_SCALE;
+        }
     }
 }

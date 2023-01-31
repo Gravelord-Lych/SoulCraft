@@ -4,6 +4,7 @@ import lych.soulcraft.config.CommonConfig;
 import lych.soulcraft.entity.ModAttributes;
 import lych.soulcraft.item.crafting.ModRecipeSerializers;
 import lych.soulcraft.potion.ModPotions;
+import lych.soulcraft.util.ModSoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedConstants;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,6 +33,7 @@ public class SoulCraft {
         ModRecipeSerializers.RECIPES.register(bus);
         ModAttributes.ATTRIBUTES.register(bus);
         ModPotions.POTIONS.register(bus);
+        ModSoundEvents.SOUNDS.register(bus);
     }
 
     public static <T extends ForgeRegistryEntry<T>> T make(T value, String name) {

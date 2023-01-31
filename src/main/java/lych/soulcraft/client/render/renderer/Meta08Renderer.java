@@ -3,7 +3,7 @@ package lych.soulcraft.client.render.renderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.client.render.model.BipedModels;
-import lych.soulcraft.client.render.renderer.layer.Meta08ShieldLayer;
+import lych.soulcraft.client.render.renderer.layer.EnergyShieldLayer;
 import lych.soulcraft.client.render.renderer.layer.Meta08EyesLayer;
 import lych.soulcraft.entity.monster.boss.Meta08Entity;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -19,7 +19,7 @@ public class Meta08Renderer extends BipedRenderer<Meta08Entity, BipedModels.Size
     public Meta08Renderer(EntityRendererManager manager) {
         super(manager, new BipedModels.Size64<>(), 1);
         addLayer(new Meta08EyesLayer(this));
-        addLayer(new Meta08ShieldLayer<>(this, new BipedModels.Size64<>(0.5f)));
+        addLayer(new EnergyShieldLayer<>(this, new BipedModels.Size64<>(0.5f)));
     }
 
     @Override

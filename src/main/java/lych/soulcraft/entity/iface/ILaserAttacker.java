@@ -33,6 +33,8 @@ public interface ILaserAttacker extends IRangedAttackMob, ICustomLaserUser {
 
     void setAttacking(boolean attacking);
 
+    void playLaserSound();
+
     @Deprecated
     @Override
     default void performRangedAttack(LivingEntity target, float power) {
@@ -58,6 +60,7 @@ public interface ILaserAttacker extends IRangedAttackMob, ICustomLaserUser {
             renderLaser(target, result);
         }
         postLaserAttack(target, result);
+        playLaserSound();
         return result;
     }
 

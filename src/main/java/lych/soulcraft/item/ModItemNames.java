@@ -1,14 +1,9 @@
 package lych.soulcraft.item;
 
 public final class ModItemNames {
-    public static final String DIAMOND_CHALLENGE_MEDAL = "diamond_challenge_medal";
-    public static final String GOLD_CHALLENGE_MEDAL = "gold_challenge_medal";
     public static final String HALF_USED_LINGERING_POTION = "half_used_lingering_potion";
     public static final String HALF_USED_POTION = "half_used_potion";
     public static final String HALF_USED_SPLASH_POTION = "half_used_splash_potion";
-    public static final String IRON_CHALLENGE_MEDAL = "iron_challenge_medal";
-    public static final String MANIPULATOR = "manipulator";
-    public static final String NETHERITE_CHALLENGE_MEDAL = "netherite_challenge_medal";
     public static final String REFINED_SOUL_METAL_AXE = "refined_soul_metal_axe";
     public static final String REFINED_SOUL_METAL_BOOTS = "refined_soul_metal_boots";
     public static final String REFINED_SOUL_METAL_CHESTPLATE = "refined_soul_metal_chestplate";

@@ -15,7 +15,6 @@ import lych.soulcraft.item.potion.HalfUsedPotionItem;
 import lych.soulcraft.item.potion.HalfUsedSplashPotionItem;
 import lych.soulcraft.util.ModConstants;
 import lych.soulcraft.util.SoulEnergies;
-import lych.soulcraft.world.event.challenge.ChallengeMedalType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -36,16 +35,9 @@ import static lych.soulcraft.util.ModConstants.VOIDWALKER_SPAWN_EGG_BACKGROUND_C
 public final class ModItems {
     public static final String TAG = ".Tag.";
     public static final String SPAWN_EGG_SUFFIX = "_spawn_egg";
-    public static final Item CHALLENGE_TEST = new ChallengeTestItem(common().fireResistant());
-    public static final ChallengeMedalItem DIAMOND_CHALLENGE_MEDAL = new ChallengeMedalItem(common().stacksTo(1), ChallengeMedalType.DIAMOND);
-    public static final ChallengeMedalItem GOLD_CHALLENGE_MEDAL = new ChallengeMedalItem(common().stacksTo(1), ChallengeMedalType.GOLD);
     public static final Item HALF_USED_LINGERING_POTION = new HalfUsedLingeringPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
     public static final Item HALF_USED_POTION = new HalfUsedPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
     public static final Item HALF_USED_SPLASH_POTION = new HalfUsedSplashPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
-
-    public static final ChallengeMedalItem IRON_CHALLENGE_MEDAL = new ChallengeMedalItem(common().stacksTo(1), ChallengeMedalType.IRON);
-    public static final Item MANIPULATOR = new ManipulatorItem(common().rarity(Rarity.RARE).stacksTo(1));
-    public static final ChallengeMedalItem NETHERITE_CHALLENGE_MEDAL = new ChallengeMedalItem(common().fireResistant().stacksTo(1), ChallengeMedalType.NETHERITE);
     public static final Item REFINED_SOUL_METAL_AXE = new AxeItem(Tool.REFINED_SOUL_METAL, 5, -3, common().fireResistant());
     public static final Item REFINED_SOUL_METAL_BOOTS = new ArmorItem(Armor.REFINED_SOUL_METAL, EquipmentSlotType.FEET, common().fireResistant());
     public static final Item REFINED_SOUL_METAL_CHESTPLATE = new ArmorItem(Armor.REFINED_SOUL_METAL, EquipmentSlotType.CHEST, common().fireResistant());
@@ -126,6 +118,7 @@ public final class ModItems {
     public static final BlockItem SOULIFIED_BUSH = new BlockItem(ModBlocks.SOULIFIED_BUSH, common());
     public static final BlockItem WARPED_HYPHAL_SOIL = new BlockItem(ModBlocks.WARPED_HYPHAL_SOIL, common());
 
+    public static final Item COMPUTER_SCIENTIST_SPAWN_EGG = makeVoidwalkerSpawnEgg(ModEntities.COMPUTER_SCIENTIST, 0x159415);
     public static final Item DARK_EVOKER_SPAWN_EGG = makeSpawnEgg(ModEntities.DARK_EVOKER, 0x959b9b, 0xd62fd6);
     public static final Item ENGINEER_SPAWN_EGG = makeSpawnEgg(ModEntities.ENGINEER, 0x959b9b, 0xff0000);
     public static final Item ILLUSORY_HORSE_SPAWN_EGG = makeSpawnEgg(ModEntities.ILLUSORY_HORSE, VOIDWALKER_SPAWN_EGG_BACKGROUND_COLOR, 0x49dfea);
@@ -173,15 +166,9 @@ public final class ModItems {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
-        registry.register(make(CHALLENGE_TEST, "challenge_test"));
-        registry.register(make(DIAMOND_CHALLENGE_MEDAL, ModItemNames.DIAMOND_CHALLENGE_MEDAL));
-        registry.register(make(GOLD_CHALLENGE_MEDAL, ModItemNames.GOLD_CHALLENGE_MEDAL));
         registry.register(make(HALF_USED_LINGERING_POTION, ModItemNames.HALF_USED_LINGERING_POTION));
         registry.register(make(HALF_USED_POTION, ModItemNames.HALF_USED_POTION));
         registry.register(make(HALF_USED_SPLASH_POTION, ModItemNames.HALF_USED_SPLASH_POTION));
-        registry.register(make(IRON_CHALLENGE_MEDAL, ModItemNames.IRON_CHALLENGE_MEDAL));
-        registry.register(make(MANIPULATOR, ModItemNames.MANIPULATOR));
-        registry.register(make(NETHERITE_CHALLENGE_MEDAL, ModItemNames.NETHERITE_CHALLENGE_MEDAL));
         registry.register(make(REFINED_SOUL_METAL_AXE, ModItemNames.REFINED_SOUL_METAL_AXE));
         registry.register(make(REFINED_SOUL_METAL_BOOTS, ModItemNames.REFINED_SOUL_METAL_BOOTS));
         registry.register(make(REFINED_SOUL_METAL_CHESTPLATE, ModItemNames.REFINED_SOUL_METAL_CHESTPLATE));
@@ -268,6 +255,7 @@ public final class ModItems {
     }
 
     private static void registerSpawnEggs(IForgeRegistry<Item> registry) {
+        registerSpawnEgg(registry, COMPUTER_SCIENTIST_SPAWN_EGG, ModEntityNames.COMPUTER_SCIENTIST);
         registerSpawnEgg(registry, DARK_EVOKER_SPAWN_EGG, ModEntityNames.DARK_EVOKER);
         registerSpawnEgg(registry, ENGINEER_SPAWN_EGG, ModEntityNames.ENGINEER);
         registerSpawnEgg(registry, ETHE_ARMORER_SPAWN_EGG, ModEntityNames.ETHE_ARMORER);

@@ -2,6 +2,7 @@ package lych.soulcraft.client.render.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.monster.voidwalker.AbstractVoidLasererEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -18,7 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractVoidLasererRenderer<T extends AbstractVoidLasererEntity> extends AbstractVoidwalkerRenderer<T> {
+public abstract class AbstractVoidLasererRenderer<T extends AbstractVoidLasererEntity<T>> extends AbstractVoidwalkerRenderer<T> {
     protected static final float HALF_PI = (float) (Math.PI / 2);
     protected final int renderCount;
 
@@ -90,13 +91,54 @@ public abstract class AbstractVoidLasererRenderer<T extends AbstractVoidLasererE
         return super.shouldRender(laserer, helper, x, y, z) || laserer.getLaserTarget() != null;
     }
 
-    protected abstract RenderType makeRenderType(T laserer, Entity target);
+    protected RenderType makeRenderType(T laserer, Entity target) {
+        AbstractVoidLasererEntity.ILaserProvider<? super T> provider = laserer.provideLaser();
+        if (provider == null) {
+            throwErrorIfFailhard();
+            return RenderType.cutout();
+        }
+        return RenderType.entitySmoothCutout(provider.getTextureLocation(laserer, target));
+    }
 
-    protected abstract int getSrcColor(T laserer, Entity target);
+    protected int getSrcColor(T laserer, Entity target) {
+        AbstractVoidLasererEntity.ILaserProvider<? super T> provider = laserer.provideLaser();
+        if (provider == null) {
+            throwErrorIfFailhard();
+            return 0;
+        }
+        return provider.getSrcColor(laserer, target);
+    }
 
-    protected abstract int getDestColor(T laserer, Entity target);
+    protected int getDestColor(T laserer, Entity target) {
+        AbstractVoidLasererEntity.ILaserProvider<? super T> provider = laserer.provideLaser();
+        if (provider == null) {
+            throwErrorIfFailhard();
+            return 0;
+        }
+        return provider.getDestColor(laserer, target);
+    }
 
-    protected abstract float getSrcScale(T laserer, Entity target);
+    protected float getSrcScale(T laserer, Entity target) {
+        AbstractVoidLasererEntity.ILaserProvider<? super T> provider = laserer.provideLaser();
+        if (provider == null) {
+            throwErrorIfFailhard();
+            return AbstractVoidLasererEntity.ILaserProvider.DEFAULT_LASER_SCALE;
+        }
+        return provider.getSrcScale(laserer, target);
+    }
 
-    protected abstract float getDestScale(T laserer, Entity target);
+    protected float getDestScale(T laserer, Entity target) {
+        AbstractVoidLasererEntity.ILaserProvider<? super T> provider = laserer.provideLaser();
+        if (provider == null) {
+            throwErrorIfFailhard();
+            return AbstractVoidLasererEntity.ILaserProvider.DEFAULT_LASER_SCALE;
+        }
+        return provider.getDestScale(laserer, target);
+    }
+
+    private static void throwErrorIfFailhard() {
+        if (ConfigHelper.shouldFailhard()) {
+            throw new AssertionError(ConfigHelper.FAILHARD_MESSAGE + "Laser target is non-null but Laser provider is null. This should never happen");
+        }
+    }
 }

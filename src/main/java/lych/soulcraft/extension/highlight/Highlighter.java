@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-public interface IHighlighter extends Comparable<IHighlighter> {
+public interface Highlighter extends Comparable<Highlighter> {
     @Nullable
     Color getColor(ServerWorld level);
 
@@ -23,7 +23,7 @@ public interface IHighlighter extends Comparable<IHighlighter> {
     }
 
     @Override
-    default int compareTo(IHighlighter o) {
+    default int compareTo(Highlighter o) {
         return Integer.compare(getPriority(), o.getPriority());
     }
 }

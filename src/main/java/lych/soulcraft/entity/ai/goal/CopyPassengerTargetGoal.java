@@ -1,4 +1,4 @@
-package lych.soulcraft.entity.ai;
+package lych.soulcraft.entity.ai.goal;
 
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;

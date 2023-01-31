@@ -4,18 +4,17 @@ import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
+import lych.soulcraft.api.shield.IShieldUser;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 final class SoulCraftAPIDummyImpl implements SoulCraftAPI {
@@ -98,4 +97,7 @@ final class SoulCraftAPIDummyImpl implements SoulCraftAPI {
     public ISharedShield loadShield(CompoundNBT compoundNBT) {
         return null;
     }
+
+    @Override
+    public void disableShield(World world, IShieldUser user, @Nullable Random random) {}
 }

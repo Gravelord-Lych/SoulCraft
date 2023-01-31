@@ -37,11 +37,11 @@ public class HighlighterType {
         this.loader = loader;
     }
 
-    public IHighlighter create(UUID entity, long highlightTicksRemaining) {
+    public Highlighter create(UUID entity, long highlightTicksRemaining) {
         return creator.create(entity, highlightTicksRemaining);
     }
 
-    public IHighlighter load(UUID entityUUID, CompoundNBT compoundNBT) throws NotLoadedException {
+    public Highlighter load(UUID entityUUID, CompoundNBT compoundNBT) throws NotLoadedException {
         return loader.load(entityUUID, compoundNBT);
     }
 
@@ -59,11 +59,11 @@ public class HighlighterType {
 
     @FunctionalInterface
     public interface HighlighterCreator {
-        IHighlighter create(UUID entity, long highlightTicksRemaining);
+        Highlighter create(UUID entity, long highlightTicksRemaining);
     }
 
     @FunctionalInterface
     public interface HighlighterLoader {
-        IHighlighter load(UUID entityUUID, CompoundNBT nbt) throws NotLoadedException;
+        Highlighter load(UUID entityUUID, CompoundNBT nbt) throws NotLoadedException;
     }
 }

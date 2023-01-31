@@ -2,11 +2,9 @@ package lych.soulcraft.listener;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.capability.ISoulEnergyStorage;
-import lych.soulcraft.capability.IChallengeMob;
 import lych.soulcraft.dispenser.ModDispenserBehaviors;
 import lych.soulcraft.entity.ModEntities;
 import lych.soulcraft.extension.fire.Fires;
-import lych.soulcraft.extension.soulpower.control.controller.ControlledMobBehavior;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
 import lych.soulcraft.potion.ModPotions;
 import net.minecraft.nbt.INBT;
@@ -28,13 +26,11 @@ public class ModEventListener {
         registerCapabilities(event);
         Reinforcements.init();
         Fires.init();
-        ControlledMobBehavior.init();
     }
 
     private static void registerCapabilities(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             CapabilityManager.INSTANCE.register(ISoulEnergyStorage.class, new DummyCapabilityStorage<>(), () -> null);
-            CapabilityManager.INSTANCE.register(IChallengeMob.class, new DummyCapabilityStorage<>(), () -> null);
         });
     }
 

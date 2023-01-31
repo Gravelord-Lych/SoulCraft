@@ -1,6 +1,8 @@
 package lych.soulcraft.entity.monster.voidwalker;
 
 import com.google.common.base.Preconditions;
+import lych.soulcraft.api.shield.ISharedShieldUser;
+import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.ai.ModCreatureAttributes;
 import lych.soulcraft.entity.ai.controller.VoidwalkerMovementController;
@@ -13,6 +15,7 @@ import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.monster.boss.esv.SoulControllerEntity;
 import lych.soulcraft.entity.passive.IllusoryHorseEntity;
 import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.*;
@@ -47,6 +50,8 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -59,12 +64,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements IHasOwner<SoulControllerEntity>, IEtherealable, ESVMob {
+@OnlyIn(value = Dist.CLIENT, _interface = IChargeableMob.class)
+public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements IHasOwner<SoulControllerEntity>, IEtherealable, ISharedShieldUser, IChargeableMob, ESVMob {
     public static final Marker VOIDWALKER = MarkerManager.getMarker("Voidwalker");
     public static final int SHORT_ETHEREAL_COOLDOWN = 20 * 5;
     public static final int LONG_ETHEREAL_COOLDOWN = 20 * 10;
     private static final UUID ILLUSORY_HORSE_SPEED_MODIFIER_UUID = UUID.fromString("974EA2A6-89D2-DA8C-4608-69317DFB960D");
     private static final AttributeModifier ILLUSORY_HORSE_SPEED_MODIFIER = new AttributeModifier(ILLUSORY_HORSE_SPEED_MODIFIER_UUID, "Illusory horse speed modifier", 0.05, AttributeModifier.Operation.ADDITION);
+    protected static final DataParameter<Boolean> DATA_SHIELDED = EntityDataManager.defineId(AbstractVoidwalkerEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_ETHEREAL = EntityDataManager.defineId(AbstractVoidwalkerEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> DATA_TIER = EntityDataManager.defineId(AbstractVoidwalkerEntity.class, DataSerializers.INT);
     private GlobalPos lastSafePos;
@@ -80,6 +87,8 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
     private VoidwalkerTier tier;
     @Nullable
     private VoidwalkerTier strengthenedTo;
+    @Nullable
+    private UUID shieldProvider;
 
     protected AbstractVoidwalkerEntity(EntityType<? extends AbstractVoidwalkerEntity> type, World world) {
         super(type, world);
@@ -135,6 +144,7 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(DATA_ETHEREAL, false);
+        entityData.define(DATA_SHIELDED, false);
     }
 
     @Override
@@ -154,6 +164,16 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
 
     public EntityPredicate customizeTargetConditions(EntityPredicate targetConditions) {
         return targetConditions.allowUnseeable();
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        syncShield();
+    }
+
+    protected void syncShield() {
+        entityData.set(DATA_SHIELDED, getSharedShield() != null);
     }
 
     @Override
@@ -178,6 +198,11 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         if (!level.isClientSide() && getSneakTarget() == null && isEtherealClientSide()) {
             setEthereal(false);
         }
+    }
+
+    @Override
+    public boolean isPowered() {
+        return entityData.get(DATA_SHIELDED);
     }
 
     public double getActualFallDistance() {
@@ -241,6 +266,23 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         setEtherealCooldown(0);
         setSneakTarget(sneakTarget);
         setEtherealCooldown(oldCooldown);
+    }
+
+    @Nullable
+    @Override
+    public IShieldUser getShieldProvider() {
+        if (level.isClientSide()) {
+            return null;
+        }
+        Entity entity = ((ServerWorld) level).getEntity(shieldProvider);
+        return entity instanceof IShieldUser ? (IShieldUser) entity : null;
+    }
+
+    public void setShieldProvider(@Nullable IShieldUser shieldProvider) {
+        if (shieldProvider != null && !(shieldProvider instanceof Entity)) {
+            throw new IllegalArgumentException("ShieldProvider must be an entity");
+        }
+        this.shieldProvider = Utils.applyIfNonnull(shieldProvider, sp -> ((Entity) sp).getUUID());
     }
 
     protected Vector3d offsetForVehicle(Vector3d pos) {
@@ -412,6 +454,9 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         if (strengthenedTo != null) {
             compoundNBT.putInt("StrengthenedTo", strengthenedTo.getId());
         }
+        if (getShieldProvider() != null && getShieldProvider() != this) {
+            compoundNBT.putUUID("ShieldProvider", ((Entity) getShieldProvider()).getUUID());
+        }
     }
 
     @Override
@@ -437,6 +482,9 @@ public abstract class AbstractVoidwalkerEntity extends MonsterEntity implements 
         }
         if (compoundNBT.contains("StrengthenedTo")) {
             strengthenedTo = VoidwalkerTier.byId(compoundNBT.getInt("StrengthenedTo"));
+        }
+        if (compoundNBT.contains("ShieldProvider") && !level.isClientSide()) {
+            shieldProvider = compoundNBT.getUUID("ShieldProvider");
         }
     }
 

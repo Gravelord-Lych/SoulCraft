@@ -72,8 +72,8 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 5);
     public static final IExtraAbility WITHER_REACH = createSpecial(prefix(SCExaNames.WITHER_REACH));
 
-    private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>();
-    private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>();
+    private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>(64);
+    private static final Map<EntityType<?>, IExtraAbility> ENTITY_TO_EXA_MAP = new HashMap<>(64);
     private static final int DEFAULT_COST = 4;
     @NotNull
     private final ResourceLocation registryName;

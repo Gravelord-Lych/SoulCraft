@@ -4,6 +4,7 @@ import lych.soulcraft.entity.ai.goal.LaserAttackGoal;
 import lych.soulcraft.entity.iface.ILaserAttacker;
 import lych.soulcraft.extension.laser.LaserData;
 import lych.soulcraft.util.Lasers;
+import lych.soulcraft.util.ModSoundEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -50,6 +51,14 @@ public class WandererEntity extends MonsterEntity implements ILaserAttacker {
     }
 
     @Override
+    protected float getBlockSpeedFactor() {
+        if (onSoulSpeedBlock()) {
+            return 1;
+        }
+        return super.getBlockSpeedFactor();
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         goalSelector.addGoal(0, new SwimGoal(this));
@@ -80,6 +89,11 @@ public class WandererEntity extends MonsterEntity implements ILaserAttacker {
     @Override
     public void setAttacking(boolean attacking) {
         entityData.set(DATA_ATTACKING, attacking);
+    }
+
+    @Override
+    public void playLaserSound() {
+        playSound(ModSoundEvents.WANDERER_LASER.get(), 1, 1 + random.nextFloat() * 0.1f);
     }
 
     @Override

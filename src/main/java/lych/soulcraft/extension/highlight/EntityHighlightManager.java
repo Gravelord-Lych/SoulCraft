@@ -28,7 +28,7 @@ public class EntityHighlightManager extends WorldSavedData {
     private static final String NAME = "EntityHighlightManager";
     private static final int SAVE_FREQ = 40;
     public static final Marker HIGHLIGHTER = MarkerManager.getMarker(NAME);
-    private final Map<UUID, PriorityQueue<IHighlighter>> preparatoryHighlighters = new HashMap<>(64);
+    private final Map<UUID, PriorityQueue<Highlighter>> preparatoryHighlighters = new HashMap<>(64);
     private final Map<UUID, Long> invalidUUIDs = new HashMap<>();
     private final ServerWorld level;
     private int dataSaver = SAVE_FREQ;
@@ -56,30 +56,30 @@ public class EntityHighlightManager extends WorldSavedData {
     }
 
     @Nullable
-    private PriorityQueue<IHighlighter> getHighlighterQueue(Entity entity) {
+    private PriorityQueue<Highlighter> getHighlighterQueue(Entity entity) {
         return getHighlighterQueue(entity.getUUID());
     }
 
     @Nullable
-    private PriorityQueue<IHighlighter> getHighlighterQueue(UUID uuid) {
+    private PriorityQueue<Highlighter> getHighlighterQueue(UUID uuid) {
         return preparatoryHighlighters.get(uuid);
     }
 
     /**
-     * @return True if added new {@link IHighlighter highlighter}
+     * @return True if added new {@link Highlighter highlighter}
      */
     public boolean highlight(HighlighterType type, Entity entity, long highlightTicks) {
         UUID uuid = entity.getUUID();
-        PriorityQueue<IHighlighter> queue = getHighlighterQueue(uuid);
+        PriorityQueue<Highlighter> queue = getHighlighterQueue(uuid);
 //      There have already been some highlighters on the entity.
         if (queue != null && !queue.isEmpty()) {
-            IHighlighter activeHighlighter = queue.peek();
+            Highlighter activeHighlighter = queue.peek();
 //          The active highlighter's type is the specified type
             if (activeHighlighter.getType() == type) {
                 activeHighlighter.setHighlightTicks(highlightTicks);
                 return false;
             } else {
-                IHighlighter highlighter = queue.stream().filter(h -> h.getType() == type).findFirst().orElse(null);
+                Highlighter highlighter = queue.stream().filter(h -> h.getType() == type).findFirst().orElse(null);
 //              A preparatory highlighter's type is the specified type
                 if (highlighter != null) {
                     highlighter.setHighlightTicks(highlightTicks);
@@ -105,7 +105,7 @@ public class EntityHighlightManager extends WorldSavedData {
     }
 
     public boolean unhighlightActive(Entity entity) {
-        PriorityQueue<IHighlighter> queue = getHighlighterQueue(entity);
+        PriorityQueue<Highlighter> queue = getHighlighterQueue(entity);
         if (queue == null || queue.isEmpty()) {
             return clearExistColor(entity);
         }
@@ -119,7 +119,7 @@ public class EntityHighlightManager extends WorldSavedData {
     }
 
     public boolean unhighlightType(Entity entity, HighlighterType type) {
-        PriorityQueue<IHighlighter> queue = getHighlighterQueue(entity);
+        PriorityQueue<Highlighter> queue = getHighlighterQueue(entity);
         if (queue == null || queue.isEmpty()) {
             return clearExistColor(entity);
         }
@@ -152,7 +152,7 @@ public class EntityHighlightManager extends WorldSavedData {
         while (itr.hasNext()) {
             UUID uuid = itr.next();
             Entity entity = level.getEntity(uuid);
-            PriorityQueue<IHighlighter> queue = getHighlighterQueue(uuid);
+            PriorityQueue<Highlighter> queue = getHighlighterQueue(uuid);
             if (queue == null || queue.isEmpty()) {
                 itr.remove();
                 continue;
@@ -162,7 +162,7 @@ public class EntityHighlightManager extends WorldSavedData {
             } else {
                 invalidUUIDs.remove(entity.getUUID());
             }
-            IHighlighter highlighter = queue.element();
+            Highlighter highlighter = queue.element();
             Color color = highlighter.getColor(level);
             boolean alive = EntityUtils.isAlive(entity);
             if (alive) {
@@ -211,10 +211,10 @@ public class EntityHighlightManager extends WorldSavedData {
     }
 
     private void loadPreparatoryHighlighters(UUID uuid, ListNBT preparatoryHighlightersNBT) throws NotLoadedException {
-        PriorityQueue<IHighlighter> queue = new PriorityQueue<>();
+        PriorityQueue<Highlighter> queue = new PriorityQueue<>();
         for (int i = preparatoryHighlightersNBT.size() - 1; i >= 0; i--) {
             CompoundNBT preparatoryNBT = preparatoryHighlightersNBT.getCompound(i);
-            IHighlighter highlighter = loadSingleHighlighter(preparatoryNBT, uuid);
+            Highlighter highlighter = loadSingleHighlighter(preparatoryNBT, uuid);
             queue.add(highlighter);
         }
         if (!queue.isEmpty()) {
@@ -222,7 +222,7 @@ public class EntityHighlightManager extends WorldSavedData {
         }
     }
 
-    private IHighlighter loadSingleHighlighter(CompoundNBT singleNBT, UUID entityUUID) throws NotLoadedException {
+    private Highlighter loadSingleHighlighter(CompoundNBT singleNBT, UUID entityUUID) throws NotLoadedException {
         UUID highlighterTypeUUID = singleNBT.getUUID("HighlighterTypeUUID");
         HighlighterType type = HighlighterType.get(highlighterTypeUUID);
         CompoundNBT highlighterData = singleNBT.getCompound("HighlighterData");
@@ -232,7 +232,7 @@ public class EntityHighlightManager extends WorldSavedData {
     @Override
     public CompoundNBT save(CompoundNBT compoundNBT) {
         ListNBT listNBT = new ListNBT();
-        for (Map.Entry<UUID, PriorityQueue<IHighlighter>> entry : preparatoryHighlighters.entrySet()) {
+        for (Map.Entry<UUID, PriorityQueue<Highlighter>> entry : preparatoryHighlighters.entrySet()) {
             CompoundNBT singleNBT = new CompoundNBT();
             singleNBT.putUUID("EntityUUID", entry.getKey());
             ListNBT preparatoryHighlightersNBT = new ListNBT();
@@ -245,20 +245,20 @@ public class EntityHighlightManager extends WorldSavedData {
     }
 
     private void savePreparatoryHighlighters(UUID uuid, ListNBT preparatoryHighlightersNBT) {
-        PriorityQueue<IHighlighter> queue = preparatoryHighlighters.get(uuid);
+        PriorityQueue<Highlighter> queue = preparatoryHighlighters.get(uuid);
         if (queue == null || queue.isEmpty()) {
             return;
         }
         queue = new PriorityQueue<>(queue);
         while (!queue.isEmpty()) {
-            IHighlighter highlighter = queue.remove();
+            Highlighter highlighter = queue.remove();
             CompoundNBT preparatoryNBT = new CompoundNBT();
             saveSingleHighlighter(highlighter, preparatoryNBT);
             preparatoryHighlightersNBT.add(preparatoryNBT);
         }
     }
 
-    private void saveSingleHighlighter(IHighlighter highlighter, CompoundNBT singleNBT) {
+    private void saveSingleHighlighter(Highlighter highlighter, CompoundNBT singleNBT) {
         singleNBT.putUUID("HighlighterTypeUUID", highlighter.getType().getUUID());
         singleNBT.put("HighlighterData", highlighter.save());
     }

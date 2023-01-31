@@ -2,6 +2,7 @@ package lych.soulcraft.entity;
 
 public class ModEntityNames {
     public static final String CLONED_SKELETON_KING = "cloned_skeleton_king";
+    public static final String COMPUTER_SCIENTIST = "computer_scientist";
     public static final String DARK_EVOKER = "dark_evoker";
     public static final String DROPPING_MORTAR_SHELL = "dropping_mortar_shell";
     public static final String ENGINEER = "engineer";

@@ -25,6 +25,7 @@ import lych.soulcraft.util.redirectable.RegexRedirectable;
 import lych.soulcraft.util.redirectable.StringRedirectable;
 import lych.soulcraft.world.event.manager.WorldTickerManager;
 import lych.soulcraft.world.event.ticker.WorldTickers;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -48,9 +49,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.LazyValue;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -412,6 +411,32 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
     @Override
     public void setAttacking(boolean attacking) {
         entityData.set(DATA_ATTACKING, attacking);
+    }
+
+    @Override
+    public void playLaserSound() {
+        playSound(ModSoundEvents.META8_LASER.get(), 2, 0.9f + random.nextFloat() * 0.1f);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return getTrait() != null && getTrait().isSpeedy() ? SoundEvents.LIGHTNING_BOLT_IMPACT : null;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSoundEvents.ROBOT_DEATH.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSoundEvents.ROBOT_HURT.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        playSound(ModSoundEvents.ROBOT_STEP.get(), 0.3f, 0.9f);
     }
 
     @Override

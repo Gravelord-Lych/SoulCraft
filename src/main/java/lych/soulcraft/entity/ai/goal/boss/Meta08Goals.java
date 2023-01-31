@@ -11,6 +11,7 @@ import lych.soulcraft.entity.monster.boss.Meta08Entity;
 import lych.soulcraft.extension.shield.SharedShield;
 import lych.soulcraft.util.CollectionUtils;
 import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.util.ModSoundEvents;
 import lych.soulcraft.util.Vectors;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
@@ -274,6 +275,11 @@ public final class Meta08Goals {
             super.start();
             ISharedShield shield = shieldSupplier.get();
             meta8.setSharedShield(shield);
+            if (meta8.getTrait() != null && meta8.getTrait().enhancesShield()) {
+                meta8.playSound(ModSoundEvents.DEFENSIVE_META8_SHARE_SHIELD.get(), 10, 1);
+            } else {
+                meta8.playSound(ModSoundEvents.META8_SHARE_SHIELD.get(), 10, 1);
+            }
             meta8.prepareAttack();
         }
 

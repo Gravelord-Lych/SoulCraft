@@ -135,14 +135,8 @@ public class VoidAlchemistEntity extends AbstractVoidwalkerEntity implements IRa
 
     @Override
     public void doHealTarget(AbstractVoidwalkerEntity healTarget) {
-        Optional<EffectInstance> effect = healTarget.getActiveEffects().stream().filter(ModEffectUtils::isHarmful).reduce(VoidAlchemistEntity::findEffectToClear);
+        Optional<EffectInstance> effect = healTarget.getActiveEffects().stream().filter(ModEffectUtils::isHarmful).reduce(ModEffectUtils::chooseStronger);
         effect.map(EffectInstance::getEffect).ifPresent(healTarget::removeEffect);
-    }
-
-    private static EffectInstance findEffectToClear(EffectInstance ea, EffectInstance eb) {
-        int a = ea.getDuration() * (ea.getAmplifier() + 1);
-        int b = eb.getDuration() * (eb.getAmplifier() + 1);
-        return a > b ? ea : eb;
     }
 
     @Override

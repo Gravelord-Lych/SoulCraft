@@ -1,5 +1,7 @@
 package lych.soulcraft.entity.monster.voidwalker;
 
+import com.google.common.collect.Streams;
+import lych.soulcraft.entity.ai.EtheArmorerAttackType;
 import lych.soulcraft.entity.ai.goal.AdvancedVoidwalkerGoals.*;
 import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.FindTargetExpiringGoal;
 import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.RetreatGoal;
@@ -7,7 +9,6 @@ import lych.soulcraft.entity.ai.goal.VoidwalkerGoals.VoidwalkerRandomWalkingGoal
 import lych.soulcraft.entity.iface.ESVMob;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.extension.soulpower.reinforce.ReinforcementHelper;
-import lych.soulcraft.util.CollectionUtils;
 import lych.soulcraft.util.InventoryUtils;
 import lych.soulcraft.util.WeightedRandom;
 import net.minecraft.enchantment.Enchantment;
@@ -20,9 +21,6 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -31,8 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class EtheArmorerEntity extends AbstractVoidLasererEntity {
-    private static final DataParameter<Integer> DATA_ATTACK_TYPE = EntityDataManager.defineId(EtheArmorerEntity.class, DataSerializers.INT);
+public class EtheArmorerEntity extends AbstractVoidLasererEntity<EtheArmorerEntity> {
     private FindTargetExpiringGoal<AbstractVoidwalkerEntity> reinforceVoidwalkersGoal;
     private boolean canAttack;
 
@@ -41,21 +38,21 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(DATA_ATTACK_TYPE, -1);
+    @Nullable
+    public ILaserProvider<EtheArmorerEntity> provideLaser() {
+        return getAttackType();
     }
 
     @Nullable
     public EtheArmorerAttackType getAttackType() {
-        return EtheArmorerAttackType.byId(entityData.get(DATA_ATTACK_TYPE));
+        return EtheArmorerAttackType.byId(entityData.get(DATA_LASER_ID));
     }
 
     public void setAttackType(@Nullable EtheArmorerAttackType attackType) {
-        entityData.set(DATA_ATTACK_TYPE, attackType == null ? -1 : attackType.getId());
+        entityData.set(DATA_LASER_ID, attackType == null ? -1 : attackType.getId());
     }
 
-    boolean canReinforce(LivingEntity entity) {
+    public boolean canReinforce(LivingEntity entity) {
         if (ESVMob.nonESVMob(entity)) {
             return false;
         }
@@ -87,17 +84,17 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
         return calculateEnchantmentsStrength(enchantments) >= maxLevel;
     }
 
-    boolean canDamage(LivingEntity entity) {
+    public boolean canDamage(LivingEntity entity) {
         if (ESVMob.isESVMob(entity)) {
             return false;
         }
         if (entity instanceof PlayerEntity) {
             return InventoryUtils.getList(((PlayerEntity) entity).inventory).stream().anyMatch(ItemStack::isDamageableItem);
         }
-        return CollectionUtils.list(entity.getAllSlots()).stream().anyMatch(ItemStack::isDamageableItem);
+        return Streams.stream(entity.getAllSlots()).anyMatch(ItemStack::isDamageableItem);
     }
 
-    boolean canReconstruct(LivingEntity entity) {
+    public boolean canReconstruct(LivingEntity entity) {
         if (ESVMob.nonESVMob(entity)) {
             return false;
         }
@@ -107,25 +104,25 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
         return false;
     }
 
-    boolean canRename(LivingEntity entity) {
+    public boolean canRename(LivingEntity entity) {
         if (ESVMob.isESVMob(entity)) {
             return false;
         }
-        return CollectionUtils.list(entity.getAllSlots()).stream().anyMatch(EtheArmorerEntity::renameable);
+        return Streams.stream(entity.getAllSlots()).anyMatch(EtheArmorerEntity::renameable);
     }
 
     public static boolean renameable(ItemStack stack) {
         return !stack.isEmpty() && !stack.isStackable();
     }
 
-    boolean canCurse(LivingEntity entity) {
+    public boolean canCurse(LivingEntity entity) {
         if (ESVMob.isESVMob(entity)) {
             return false;
         }
         if (entity instanceof PlayerEntity) {
             return InventoryUtils.getList(((PlayerEntity) entity).inventory).stream().anyMatch(this::canCurse);
         }
-        return CollectionUtils.list(entity.getAllSlots()).stream().anyMatch(this::canCurse);
+        return Streams.stream(entity.getAllSlots()).anyMatch(this::canCurse);
     }
 
     private boolean canCurse(ItemStack stack) {
@@ -194,7 +191,7 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
         return e.getValue();
     }
 
-    boolean canWoodify(LivingEntity entity) {
+    public boolean canWoodify(LivingEntity entity) {
         if (ESVMob.isESVMob(entity)) {
             return false;
         }
@@ -227,13 +224,14 @@ public class EtheArmorerEntity extends AbstractVoidLasererEntity {
     protected void registerGoals() {
         super.registerGoals();
         goalSelector.addGoal(1, new FindAttackTypeGoal(this));
+//      Priority is not important now because the Ethe-Armorer uses a new "goal selector"
         goalSelector.addGoal(3, new ReinforceFriendlyGoal(this, 1));
         goalSelector.addGoal(3, new DamageWeaponGoal(this, 1));
         goalSelector.addGoal(3, new ReconstructWeaponGoal(this, 1));
         goalSelector.addGoal(3, new RandomlyRenameGoal(this, 1));
         goalSelector.addGoal(3, new WoodifyMainHandItemGoal(this, 1));
         goalSelector.addGoal(3, new DisenchantAndCurseGoal(this, 1));
-        goalSelector.addGoal(4, new RetreatGoal(this, 150));
+        goalSelector.addGoal(4, new RetreatGoal(this, 200));
         goalSelector.addGoal(6, new VoidwalkerRandomWalkingGoal(this, 0.8));
         goalSelector.addGoal(8, new LookAtGoal(this, AbstractVoidwalkerEntity.class, 12));
         goalSelector.addGoal(9, new LookRandomlyGoal(this));

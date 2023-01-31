@@ -35,4 +35,14 @@ public final class ModEffectUtils {
         boolean visible = effect.isVisible();
         return new EffectInstance(effectType, duration, amplifier, ambient, showIcon, visible);
     }
+
+    public static EffectInstance chooseStronger(EffectInstance ea, EffectInstance eb) {
+        int a = calculateEffectStrength(ea);
+        int b = calculateEffectStrength(eb);
+        return a > b ? ea : eb;
+    }
+
+    public static int calculateEffectStrength(EffectInstance effect) {
+        return effect.getDuration() * (effect.getAmplifier() + 1);
+    }
 }

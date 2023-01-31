@@ -85,10 +85,11 @@ public enum VoidwalkerTier implements IIdentifiableEnum {
 
     public String suffixTextureName(boolean ethereal, String commonSuffix, String etherealSuffix) {
         String suffix = ethereal ? etherealSuffix : commonSuffix;
+        suffix = suffix.isEmpty() ? suffix : "_" + suffix;
         if (isOrdinary()) {
-            return "_" + suffix;
+            return suffix;
         }
-        return "_" + toString().toLowerCase() + "_" + suffix;
+        return "_" + toString().toLowerCase() + suffix;
     }
 
     public ITextComponent getDescription(boolean withSpace) {

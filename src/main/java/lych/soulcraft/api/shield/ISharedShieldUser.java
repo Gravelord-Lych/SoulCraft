@@ -9,10 +9,11 @@ import org.jetbrains.annotations.Nullable;
 public interface ISharedShieldUser extends IShieldUser {
     /**
      * Gets the {@link ISharedShieldProvider shield provider} of the shield which is using.
+     *
      * @return The shield provider, <code>null</code> if there's no shield provider
      */
     @Nullable
-    ISharedShieldProvider getShieldProvider();
+    IShieldUser getShieldProvider();
 
     /**
      * If you want this entity to have its own shield, you can override this method.
@@ -33,7 +34,7 @@ public interface ISharedShieldUser extends IShieldUser {
     }
 
     /**
-     * Will not be invoked unless the entity is a {@link ISharedShieldProvider shield provider}.
+     * Will not be invoked unless the entity is a shield provider.
      */
     @Override
     default void onShieldExhausted() {
@@ -41,7 +42,7 @@ public interface ISharedShieldUser extends IShieldUser {
     }
 
     /**
-     * Will not be invoked unless the entity is a {@link ISharedShieldProvider shield provider}.
+     * Will not be invoked unless the entity is a shield provider.
      */
     @Override
     default void onShieldBreak() {
@@ -49,7 +50,7 @@ public interface ISharedShieldUser extends IShieldUser {
     }
 
     /**
-     * Redirect to the {@link ISharedShieldProvider shield provider}.
+     * Redirect to the {@link ISharedShieldUser#getShieldProvider() shield provider}.
      * @param source The damage source.
      * @param amount The amount of the damage.
      * @return True if hit particles should be shown.

@@ -1,8 +1,10 @@
 package lych.soulcraft.util;
 
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.*;
+import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.functional.FangsEntity;
 import lych.soulcraft.entity.iface.ITieredMob;
@@ -424,6 +426,20 @@ public final class  EntityUtils {
         Vector3d targetPos = position.add(viewVector.scale(reachDistance));
         AxisAlignedBB possibleEntities = entity.getBoundingBox().expandTowards(viewVector.scale(reachDistance)).inflate(1);
         return ProjectileHelper.getEntityHitResult(entity, position, targetPos, possibleEntities, entityIn -> !entityIn.isSpectator() && entityIn.isPickable(), reachDistance * reachDistance);
+    }
+
+    public static void disableShield(World world, IShieldUser user, @Nullable Random random) {
+        user.onShieldExhausted();
+        if (user.hasConsumableShield()) {
+            user.setSharedShield(null);
+            user.onShieldBreak();
+            if (random != null && world instanceof ServerWorld) {
+                addParticlesAroundSelfServerside((Entity) user, (ServerWorld) world, ParticleTypes.EXPLOSION, 5 + random.nextInt(3));
+            }
+        }
+        if (random != null && user instanceof Entity) {
+            ((Entity) user).playSound(ModSoundEvents.ENERGY_SOUND_BREAK.get(), 1, 1);
+        }
     }
 
     @FieldsAreNullableByDefault

@@ -126,30 +126,8 @@ public class IllusoryHorseEntity extends AbstractHorseEntity implements ESVMob, 
     @Nullable
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compoundNBT) {
-        double r = random.nextDouble();
         inventory.setItem(0, new ItemStack(Items.SADDLE));
-        EntityType<? extends AbstractVoidwalkerEntity> type;
-        if (r < 0.25) {
-            type = ModEntities.VOIDWALKER;
-        } else if (r < 0.5) {
-            type = ModEntities.VOID_ARCHER;
-        } else if (r < 0.75) {
-            type = ModEntities.VOID_DEFENDER;
-        } else {
-            type = ModEntities.VOID_ALCHEMIST;
-        }
-        spawnRider(type, world, reason);
         return super.finalizeSpawn(world, difficulty, reason, data, compoundNBT);
-    }
-
-    private void spawnRider(EntityType<? extends AbstractVoidwalkerEntity> type, IServerWorld world, SpawnReason reason) {
-        AbstractVoidwalkerEntity voidwalker = type.create(world.getLevel());
-        if (voidwalker != null) {
-            setTamed(true);
-            voidwalker.moveTo(blockPosition(), 0, 0);
-            voidwalker.finalizeSpawn(world, world.getCurrentDifficultyAt(blockPosition()), reason, null, null);
-            voidwalker.startRiding(this);
-        }
     }
 
     @Override

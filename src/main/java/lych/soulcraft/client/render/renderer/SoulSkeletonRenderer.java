@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class SoulSkeletonRenderer extends BipedRenderer<SoulSkeletonEntity, SkeletonModel<SoulSkeletonEntity>> {
+    private static final ResourceLocation PURIFIED_SOUL_SKELETON = SoulCraft.prefixTex("entity/purified_soul_skeleton.png");
     private static final ResourceLocation SOUL_SKELETON = SoulCraft.prefixTex("entity/soul_skeleton.png");
 
     public SoulSkeletonRenderer(EntityRendererManager manager) {
@@ -21,6 +22,6 @@ public class SoulSkeletonRenderer extends BipedRenderer<SoulSkeletonEntity, Skel
 
     @Override
     public ResourceLocation getTextureLocation(SoulSkeletonEntity skeleton) {
-        return SOUL_SKELETON;
+        return skeleton.isPurified() ? PURIFIED_SOUL_SKELETON : SOUL_SKELETON;
     }
 }

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.util.UUID;
 
-public class DummyHighlighter implements IHighlighter {
+public class DummyHighlighter implements Highlighter {
     public DummyHighlighter() {}
 
     public DummyHighlighter(UUID entityUUID, long highlightTicksRemaining) {}

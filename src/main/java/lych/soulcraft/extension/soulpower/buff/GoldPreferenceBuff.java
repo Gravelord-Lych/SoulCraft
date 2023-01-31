@@ -4,13 +4,13 @@ import com.google.common.collect.Streams;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.util.ExtraAbilityConstants;
+import lych.soulcraft.util.ImmutableEffectInstance;
 import lych.soulcraft.util.Utils;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -35,7 +35,7 @@ public enum GoldPreferenceBuff implements PlayerBuff {
 
     private static void tick(PlayerEntity player) {
         if (shouldApplyGoldPreference(player)) {
-            ExtraAbilityConstants.GOLD_PREFERENCE_EFFECTS.stream().map(EffectInstance::new).forEach(player::addEffect);
+            ExtraAbilityConstants.GOLD_PREFERENCE_EFFECTS.stream().map(ImmutableEffectInstance::copy).forEach(player::addEffect);
         }
     }
 

@@ -1,14 +1,16 @@
 package lych.soulcraft.entity.monster;
 
 import lych.soulcraft.api.IMeta08NonAttackable;
-import lych.soulcraft.api.shield.ISharedShieldProvider;
 import lych.soulcraft.api.shield.ISharedShieldUser;
+import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.entity.ai.goal.CopyOwnerTargetGoal;
 import lych.soulcraft.entity.ai.goal.FollowOwnerGoal;
 import lych.soulcraft.entity.iface.IDamageMultipliable;
 import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.monster.boss.Meta08Entity;
 import lych.soulcraft.util.EntityUtils;
+import lych.soulcraft.util.ModSoundEvents;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -26,6 +28,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
@@ -149,7 +153,7 @@ public class RobotEntity extends MonsterEntity implements IMeta08NonAttackable, 
 
     @Nullable
     @Override
-    public ISharedShieldProvider getShieldProvider() {
+    public IShieldUser getShieldProvider() {
         if (getOwner() == null) {
             return null;
         }
@@ -175,5 +179,26 @@ public class RobotEntity extends MonsterEntity implements IMeta08NonAttackable, 
     @Override
     public float getDamageMultiplier() {
         return getOwner() == null ? 1 : getOwner().getDamageMultiplier();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return null;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSoundEvents.ROBOT_DEATH.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSoundEvents.ROBOT_HURT.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        playSound(ModSoundEvents.ROBOT_STEP.get(), 0.15f, 1);
     }
 }

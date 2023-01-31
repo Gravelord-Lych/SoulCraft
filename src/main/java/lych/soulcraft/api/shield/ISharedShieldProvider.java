@@ -17,8 +17,9 @@ public interface ISharedShieldProvider extends ISharedShieldUser {
     /**
      * The entity is sharing its own shield.
      */
+    @Nullable
     @Override
-    default ISharedShieldProvider getShieldProvider() {
+    default IShieldUser getShieldProvider() {
         return this;
     }
 

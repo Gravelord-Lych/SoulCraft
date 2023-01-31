@@ -4,17 +4,20 @@ import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.api.exa.MobDebuff;
 import lych.soulcraft.api.exa.PlayerBuff;
 import lych.soulcraft.api.shield.ISharedShield;
+import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.world.gen.carver.SoulCaveCarver;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -41,7 +44,7 @@ public interface SoulCraftAPI {
      * @param registryName The registry name of the Extra Ability
      * @param cost The Soul Container cost to apply the Extra Ability
      * @param special True if it's special
-     * @return The Extra Ability created by the registry name. {@link lych.soulcraft.api.exa.IExtraAbility.Dummy Dummy} if the API is a dummy
+     * @return The Extra Ability created by the registry name. or a dummy if the API is a dummy
      */
     IExtraAbility createExtraAbility(ResourceLocation registryName, int cost, boolean special);
 
@@ -172,4 +175,14 @@ public interface SoulCraftAPI {
      */
     @Nullable
     ISharedShield loadShield(CompoundNBT compoundNBT);
+
+    /**
+     * Disables the shield user's shield. Also removes the shield if the shield is
+     * {@link ISharedShield#canBeConsumed() consumable}
+     * @param world The world
+     * @param user The shield user
+     * @param random The random used to add particles. <code>null</code> if no particles should
+     *               be added and no sounds should be played
+     */
+    void disableShield(World world, IShieldUser user, @Nullable Random random);
 }

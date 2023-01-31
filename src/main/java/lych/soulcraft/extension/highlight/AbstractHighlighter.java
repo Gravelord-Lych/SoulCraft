@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class AbstractHighlighter implements IHighlighter {
+public abstract class AbstractHighlighter implements Highlighter {
     protected final UUID entityUUID;
     private long highlightTicksRemaining;
 

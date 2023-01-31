@@ -1,10 +1,16 @@
 package lych.soulcraft.util;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.concurrent.Immutable;
+import java.util.Collections;
+import java.util.List;
+
+@Immutable
 public class ImmutableEffectInstance extends EffectInstance {
     public ImmutableEffectInstance(Effect effect) {
         super(effect);
@@ -55,6 +61,16 @@ public class ImmutableEffectInstance extends EffectInstance {
 
     @Override
     public void setNoCounter(boolean noCounter) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<ItemStack> getCurativeItems() {
+        return Collections.unmodifiableList(super.getCurativeItems());
+    }
+
+    @Override
+    public void setCurativeItems(List<ItemStack> curativeItems) {
         throw new UnsupportedOperationException();
     }
 }

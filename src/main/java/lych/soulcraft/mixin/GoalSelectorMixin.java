@@ -1,7 +1,6 @@
 package lych.soulcraft.mixin;
 
 import lych.soulcraft.util.mixin.IGoalSelectorMixin;
-import lych.soulcraft.util.mixin.IMobEntityMixin;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.GoalSelector;
@@ -86,7 +85,7 @@ public abstract class GoalSelectorMixin implements IGoalSelectorMixin {
         if (isAlt()) {
             return false;
         }
-        return ((IMobEntityMixin) mob).isControlled() || ((IMobEntityMixin) mob).hasAdjustments();
+        return false;
     }
 
     @Nullable

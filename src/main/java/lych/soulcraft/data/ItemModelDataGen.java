@@ -40,14 +40,9 @@ public class ItemModelDataGen extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        simple(registryNameToString(ModItems.DIAMOND_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.DIAMOND_CHALLENGE_MEDAL));
-        simple(registryNameToString(ModItems.GOLD_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.GOLD_CHALLENGE_MEDAL));
         halfUsedPotion(registryNameToString(ModItems.HALF_USED_LINGERING_POTION), LINGERING_POTION);
         halfUsedPotion(registryNameToString(ModItems.HALF_USED_POTION), POTION);
         halfUsedPotion(registryNameToString(ModItems.HALF_USED_SPLASH_POTION), SPLASH_POTION);
-        simple(registryNameToString(ModItems.IRON_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.IRON_CHALLENGE_MEDAL));
-        simple(registryNameToString(ModItems.MANIPULATOR), HANDHELD, prefix(ModItems.MANIPULATOR));
-        simple(registryNameToString(ModItems.NETHERITE_CHALLENGE_MEDAL), GENERATED, prefix(ModItems.NETHERITE_CHALLENGE_MEDAL));
         simple(registryNameToString(ModItems.REFINED_SOUL_METAL_AXE), HANDHELD, prefix(ModItems.REFINED_SOUL_METAL_AXE));
         simple(registryNameToString(ModItems.REFINED_SOUL_METAL_BOOTS), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_BOOTS));
         simple(registryNameToString(ModItems.REFINED_SOUL_METAL_CHESTPLATE), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_CHESTPLATE));
@@ -172,6 +167,7 @@ public class ItemModelDataGen extends ItemModelProvider {
     }
 
     private void registerSpawnEggModels() {
+        spawnEgg(ModItems.COMPUTER_SCIENTIST_SPAWN_EGG);
         spawnEgg(ModItems.DARK_EVOKER_SPAWN_EGG);
         spawnEgg(ModItems.ENGINEER_SPAWN_EGG);
         spawnEgg(ModItems.ETHE_ARMORER_SPAWN_EGG);

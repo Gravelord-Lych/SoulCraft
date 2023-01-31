@@ -1,20 +1,19 @@
 package lych.soulcraft.item;
 
-import lych.soulcraft.SoulCraft;
 import lych.soulcraft.entity.ModEntityNames;
 import lych.soulcraft.entity.monster.voidwalker.VoidwalkerTier;
 import lych.soulcraft.util.Utils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class VoidwalkerSpawnEggItem extends ForgeSpawnEggItem {
-    private static final ITextComponent SET_TIER = new TranslationTextComponent(SoulCraft.prefixMsg("change_voidwalker_spawn_egg_tier"));
     private static final String TAG = Utils.snakeToCamel(ModEntityNames.VOIDWALKER + ModItems.SPAWN_EGG_SUFFIX) + ModItems.TAG + VoidwalkerTier.class.getSimpleName();
     private static VoidwalkerTier currentTier;
 
@@ -49,19 +47,22 @@ public class VoidwalkerSpawnEggItem extends ForgeSpawnEggItem {
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (player.isShiftKeyDown() && hand == Hand.MAIN_HAND) {
-            ItemStack stack = player.getItemInHand(hand);
-            setTier(stack, getTier(stack).next());
-            if (!world.isClientSide()) {
-                player.sendMessage(SET_TIER.copy().append(getTier(stack).getDescription(false)), Util.NIL_UUID);
-            }
-            return ActionResult.sidedSuccess(stack, world.isClientSide());
-        }
         ItemStack stack = player.getItemInHand(hand);
         setCurrentTier(getTier(stack));
         ActionResult<ItemStack> result = super.use(world, player, hand);
         setCurrentTier(null);
         return result;
+    }
+
+    @Override
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> stacks) {
+        if (allowdedIn(group)) {
+            for (VoidwalkerTier tier : VoidwalkerTier.values()) {
+                ItemStack stack = new ItemStack(this);
+                setTier(stack, tier);
+                stacks.add(stack);
+            }
+        }
     }
 
     @Override
@@ -90,5 +91,10 @@ public class VoidwalkerSpawnEggItem extends ForgeSpawnEggItem {
 
     public static void setTier(ItemStack stack, VoidwalkerTier tier) {
         stack.getOrCreateTag().putInt(TAG, tier.getId());
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return super.isFoil(stack) || getTier(stack).strongerThan(VoidwalkerTier.EXTRAORDINARY);
     }
 }

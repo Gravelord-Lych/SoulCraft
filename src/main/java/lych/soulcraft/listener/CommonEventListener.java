@@ -10,14 +10,10 @@ import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.block.IArmoredBlock;
 import lych.soulcraft.block.ModBlocks;
 import lych.soulcraft.block.plant.SoulifiedBushBlock;
-import lych.soulcraft.capability.ChallengeMobProvider;
-import lych.soulcraft.capability.IChallengeMob;
-import lych.soulcraft.capability.NonAPICapabilities;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.effect.ModEffects;
 import lych.soulcraft.effect.SoulPollutionHandler;
 import lych.soulcraft.entity.ModEntities;
-import lych.soulcraft.entity.ai.goal.wrapper.Goals;
 import lych.soulcraft.entity.iface.*;
 import lych.soulcraft.entity.monster.boss.SkeletonKingEntity;
 import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
@@ -27,7 +23,6 @@ import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
 import lych.soulcraft.extension.skull.ModSkulls;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
-import lych.soulcraft.extension.soulpower.control.SoulManager;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
 import lych.soulcraft.extension.soulpower.reinforce.WandererReinforcement;
 import lych.soulcraft.extension.superlink.SuperLinkManager;
@@ -43,10 +38,6 @@ import lych.soulcraft.util.*;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import lych.soulcraft.world.CommandData;
-import lych.soulcraft.world.event.challenge.Challenge;
-import lych.soulcraft.world.event.challenge.ChallengeType;
-import lych.soulcraft.world.event.challenge.SurvivalChallenge;
-import lych.soulcraft.world.event.manager.ChallengeManager;
 import lych.soulcraft.world.event.manager.EventManager;
 import lych.soulcraft.world.event.manager.WorldTickerManager;
 import lych.soulcraft.world.gen.feature.ModConfiguredFeatures;
@@ -56,14 +47,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherrackBlock;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
@@ -71,7 +60,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.GameType;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.MobSpawnInfo;
@@ -79,7 +67,6 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -99,7 +86,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 import static lych.soulcraft.util.ExtraAbilityConstants.FALL_BUFFER_AMOUNT;
 
@@ -210,35 +196,11 @@ public final class CommonEventListener {
                     if (event.getEntity() instanceof ISharedShieldUser) {
                         ISharedShieldUser user = (ISharedShieldUser) event.getEntity();
                         if (user.getShieldProvider() instanceof Entity) {
-                            user.getShieldProvider().onShieldExhausted();
-                            if (user.hasConsumableShield()) {
-                                user.getShieldProvider().setSharedShield(null);
-                                user.getShieldProvider().onShieldBreak();
-                                if (event.getEntity().level instanceof ServerWorld) {
-                                    EntityUtils.addParticlesAroundSelfServerside((Entity) user.getShieldProvider(), (ServerWorld) event.getEntity().level, ParticleTypes.EXPLOSION, 5 + event.getEntityLiving().getRandom().nextInt(3));
-                                }
-                            }
+                            EntityUtils.disableShield(event.getEntityLiving().level, user.getShieldProvider(), event.getEntityLiving().getRandom());
                         }
                     } else {
                         IShieldUser user = (IShieldUser) event.getEntity();
-                        user.onShieldExhausted();
-                        if (user.hasConsumableShield()) {
-                            user.setSharedShield(null);
-                            user.onShieldBreak();
-                            if (event.getEntity().level instanceof ServerWorld) {
-                                EntityUtils.addParticlesAroundSelfServerside(event.getEntity(), (ServerWorld) event.getEntity().level, ParticleTypes.EXPLOSION, 5 + event.getEntityLiving().getRandom().nextInt(3));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (event.getEntity() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-            for (SurvivalChallenge challenge : ChallengeManager.byType(ChallengeType.SURVIVAL, player.getLevel())) {
-                if (challenge.hasChallenger(player)) {
-                    if (event.getSource().getEntity() != null && event.getSource().getEntity().getCapability(NonAPICapabilities.CHALLENGE_MOB).map(cap -> Objects.equals(cap.getChallenge(), challenge)).orElse(false)) {
-                        challenge.addDamageFor(player.getUUID(), event.getAmount());
+                        EntityUtils.disableShield(event.getEntityLiving().level, user, event.getEntityLiving().getRandom());
                     }
                 }
             }
@@ -469,7 +431,6 @@ public final class CommonEventListener {
                     necromancer.addSoulIfPossible(event.getEntity(), world);
                 }
             });
-            event.getEntity().getCapability(NonAPICapabilities.CHALLENGE_MOB).filter(cap -> cap.getChallenge() != null).map(IChallengeMob::getChallenge).ifPresent(challenge -> challenge.onChallengeMobDeath(event.getSource(), event.getEntity()));
         }
     }
 
@@ -526,42 +487,14 @@ public final class CommonEventListener {
     }
 
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject().level instanceof ServerWorld) {
-            event.addCapability(SoulCraft.prefix("challenge_mob"), new ChallengeMobProvider((ServerWorld) event.getObject().level));
-        }
-    }
-
-    @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isClientSide() && event.getEntity() instanceof MobEntity) {
             MobEntity mob = (MobEntity) event.getEntity();
-            if (mob instanceof CreatureEntity) {
-                mob.goalSelector.addGoal(100, Goals.of(new MoveTowardsRestrictionGoal((CreatureEntity) mob, 1)).executeIf(() -> event.getEntity().getCapability(NonAPICapabilities.CHALLENGE_MOB).map(cap -> cap.getChallenge() != null).orElse(false)).get());
-            }
             if (mob instanceof SoulCrystalEntity) {
                 if (!((SoulCrystalEntity) mob).isValid()) {
                     event.setCanceled(true);
                 }
             }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onPlayerChangeGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
-        if (event.getPlayer() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-            if (event.getNewGameMode() == GameType.CREATIVE || event.getNewGameMode() == GameType.SPECTATOR) {
-                makeChallengesDefeated(player, true, Challenge.GAME_MODE);
-            }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onChallengerDeath(LivingDeathEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-            makeChallengesDefeated(player, false, Challenge.EMPTY);
         }
     }
 
@@ -617,19 +550,9 @@ public final class CommonEventListener {
     }
 
     private static void tick(ServerWorld world) {
-        ChallengeManager.all(world).forEach(EventManager::tick);
         CommandData.get(world.getServer()).update(world);
         EntityHighlightManager.get(world).tick();
-        SoulManager.get(world).tick();
         SuperLinkManager.get(world).tick(world.getServer());
         WorldTickerManager.get(world).tick();
-    }
-
-    private static void makeChallengesDefeated(ServerPlayerEntity player, boolean onlyStrictChallenges, Challenge.LoseReason reason) {
-        ChallengeManager.all(player.getLevel()).stream()
-                .flatMap(manager -> StreamSupport.stream(manager.spliterator(), false))
-                .filter(challenge -> challenge.hasChallenger(player))
-                .filter(challenge -> !onlyStrictChallenges || challenge.isStrict())
-                .forEach(challenge -> challenge.lose(reason, reason, null));
     }
 }
