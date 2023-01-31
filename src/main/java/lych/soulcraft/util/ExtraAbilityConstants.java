@@ -27,7 +27,8 @@ public final class ExtraAbilityConstants {
     public static final double SPEEDUP_AMOUNT = 0.15;
     public static final double ULTRAREACH_AMOUNT = 1;
     public static final int RESTORATION_INTERVAL_TICKS = 200;
-    public static final ImmutableEffectInstance POISONER_POISON_EFFECT = new ImmutableEffectInstance(Effects.POISON, 20 * 4, 0);
+    public static final int POISONER_POISON_EFFECT_DURATION = 80;
+    public static final int POISONER_ADDITIONAL_POISON_EFFECT_DURATION = 40;
     public static final double INITIAL_ARMOR_AMOUNT = 4;
     public static final double INITIAL_ARMOR_TOUGHNESS_AMOUNT = 4;
     public static final int NETHERMAN_SET_ON_FIRE_SECONDS =  4;
