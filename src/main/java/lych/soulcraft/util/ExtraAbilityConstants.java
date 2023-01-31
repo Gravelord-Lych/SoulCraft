@@ -27,13 +27,14 @@ public final class ExtraAbilityConstants {
     public static final double SPEEDUP_AMOUNT = 0.15;
     public static final double ULTRAREACH_AMOUNT = 1;
     public static final int RESTORATION_INTERVAL_TICKS = 200;
-    public static final EffectInstance POISONER_POISON_EFFECT = new ImmutableEffectInstance(Effects.POISON, 20 * 4, 0);
+    public static final ImmutableEffectInstance POISONER_POISON_EFFECT = new ImmutableEffectInstance(Effects.POISON, 20 * 4, 0);
     public static final double INITIAL_ARMOR_AMOUNT = 4;
+    public static final double INITIAL_ARMOR_TOUGHNESS_AMOUNT = 4;
     public static final int OVERDRIVE_FOOD_LEVEL_REQUIREMENT = 14;
     public static final int OVERDRIVE_REGEN_INTERVAL = 60;
     public static final double IMITATOR_VISIBILITY_MODIFIER = 0.6;
     public static final float NUTRITIONIST_NUTRITION_AND_SATURATION_MODIFIER = 1.25f;
-    public static final ImmutableList<EffectInstance> GOLD_PREFERENCE_EFFECTS = ImmutableList.of(
+    public static final ImmutableList<ImmutableEffectInstance> GOLD_PREFERENCE_EFFECTS = ImmutableList.of(
             new ImmutableEffectInstance(Effects.DIG_SPEED, 10, 1, false, false, true),
             new ImmutableEffectInstance(Effects.MOVEMENT_SPEED, 10, 1, false, false, true));
     public static final int FROST_RESISTANCE_MONSTER_EFFECT_DURATION = 5;
