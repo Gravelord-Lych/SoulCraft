@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.block.ModBlocks;
+import lych.soulcraft.client.gui.screen.ExtraAbilityScreen;
 import lych.soulcraft.client.gui.screen.SEGeneratorScreen;
 import lych.soulcraft.client.gui.screen.SEStorageScreen;
 import lych.soulcraft.client.gui.screen.SoulReinforcementTableScreen;
@@ -210,6 +211,7 @@ public final class ClientEventListener {
 
         private static void bindScreens() {
             ScreenManager.register(ModContainers.DEPTH_SEGEN, SEGeneratorScreen.Depth::new);
+            ScreenManager.register(ModContainers.EXA, ExtraAbilityScreen::new);
             ScreenManager.register(ModContainers.HEAT_SEGEN, SEGeneratorScreen.Heat::new);
             ScreenManager.register(ModContainers.NETHER_SEGEN, SEGeneratorScreen.Nether::new);
             ScreenManager.register(ModContainers.SEGEN, SEGeneratorScreen.Common::new);

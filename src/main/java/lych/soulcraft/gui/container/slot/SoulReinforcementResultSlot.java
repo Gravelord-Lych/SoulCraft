@@ -1,9 +1,12 @@
 package lych.soulcraft.gui.container.slot;
 
 import com.google.common.collect.ImmutableList;
+import lych.soulcraft.api.exa.IExtraAbility;
+import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
 import lych.soulcraft.gui.container.inventory.SoulReinforcementTableIngredientInventory;
+import lych.soulcraft.item.ExtraAbilityCarrierItem;
 import lych.soulcraft.item.SoulContainerItem;
 import lych.soulcraft.util.SoulEnergies;
 import net.minecraft.entity.EntityType;
@@ -30,39 +33,56 @@ public class SoulReinforcementResultSlot extends Slot {
         ItemStack seContainer = ingredientSlots.getItem(2);
         consume(stack, seContainer);
         ingredientSlots.setItem(0, ItemStack.EMPTY);
-
         return super.onTake(player, stack);
     }
 
-    public void consume(ItemStack result, ItemStack seContainer) {
+    private void consume(ItemStack result, ItemStack seContainer) {
         EntityType<?> type = SoulContainerItem.getType(ingredientSlots.getItem(1));
         if (type != null) {
-            Reinforcement reinforcement = Reinforcements.get(type);
-            if (reinforcement != null) {
-                int oldLevel = reinforcement.getLevel(ingredientSlots.getItem(0));
-                int newLevel = reinforcement.getLevel(result);
-                int soulContainerCost = reinforcement.getCost(oldLevel, newLevel);
-                if (ingredientSlots.getItem(1).getCount() < soulContainerCost) {
-                    throw new AssertionError();
+            if (ingredientSlots.getItem(0).getItem() instanceof ExtraAbilityCarrierItem && ExtraAbilityCarrierItem.getExa(ingredientSlots.getItem(0)) == null) {
+                IExtraAbility exa = ExtraAbility.byEntity(type);
+                if (exa != null) {
+                    int soulContainerCost = exa.getSoulContainerCost();
+                    if (ingredientSlots.getItem(1).getCount() < soulContainerCost) {
+                        throw new AssertionError();
+                    }
+                    handleRemainedSoulContainers(soulContainerCost);
+                    handleEnergyCost(seContainer, exa.getSECost());
+                    return;
                 }
-                ItemStack remainder;
-                if (ingredientSlots.getItem(1).getCount() == soulContainerCost) {
-                    remainder = ItemStack.EMPTY;
-                } else {
-                    remainder = ingredientSlots.getItem(1).copy();
-                    remainder.shrink(soulContainerCost);
+            } else {
+                Reinforcement reinforcement = Reinforcements.get(type);
+                if (reinforcement != null) {
+                    int oldLevel = reinforcement.getLevel(ingredientSlots.getItem(0));
+                    int newLevel = reinforcement.getLevel(result);
+                    int soulContainerCost = reinforcement.getCost(oldLevel, newLevel);
+                    if (ingredientSlots.getItem(1).getCount() < soulContainerCost) {
+                        throw new AssertionError();
+                    }
+                    handleRemainedSoulContainers(soulContainerCost);
+                    handleEnergyCost(seContainer, Reinforcements.getEnergyCost(reinforcement, oldLevel, newLevel));
+                    return;
                 }
-                ingredientSlots.setItem(1, remainder);
-
-                int energyCost = Reinforcements.getEnergyCost(reinforcement, oldLevel, newLevel);
-                if (SoulEnergies.of(seContainer).orElseThrow(AssertionError::new).getSoulEnergyStored() < energyCost) {
-                    throw new AssertionError();
-                }
-
-                SoulEnergies.cost(ImmutableList.of(seContainer), energyCost);
-                return;
             }
         }
         throw new AssertionError();
+    }
+
+    private static void handleEnergyCost(ItemStack stack, int cost) {
+        if (SoulEnergies.of(stack).orElseThrow(AssertionError::new).getSoulEnergyStored() < cost) {
+            throw new AssertionError();
+        }
+        SoulEnergies.cost(ImmutableList.of(stack), cost);
+    }
+
+    private void handleRemainedSoulContainers(int cost) {
+        ItemStack remainder;
+        if (ingredientSlots.getItem(1).getCount() == cost) {
+            remainder = ItemStack.EMPTY;
+        } else {
+            remainder = ingredientSlots.getItem(1).copy();
+            remainder.shrink(cost);
+        }
+        ingredientSlots.setItem(1, remainder);
     }
 }

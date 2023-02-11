@@ -335,10 +335,7 @@ public final class  EntityUtils {
 
     @Nullable
     public static LivingEntity getTarget(MobEntity mob) {
-        if (getTargetFromMemory(mob).isPresent()) {
-            return getTargetFromMemory(mob).get();
-        }
-        return mob.getTarget();
+        return getTargetFromMemory(mob).orElseGet(mob::getTarget);
     }
 
     private static Optional<LivingEntity> getTargetFromMemory(MobEntity mob) {

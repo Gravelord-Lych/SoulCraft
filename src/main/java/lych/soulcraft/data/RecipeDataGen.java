@@ -48,6 +48,7 @@ public class RecipeDataGen extends ForgeRecipeProvider {
         create9(REFINED_SOUL_METAL_INGOT, REFINED_SOUL_METAL_NUGGET).unlockedBy(stHas(ModItemNames.REFINED_SOUL_METAL_NUGGET), has(REFINED_SOUL_METAL_NUGGET)).save(consumer, ModItemNames.REFINED_SOUL_METAL_INGOT + "_from_nuggets");
         to9(REFINED_SOUL_METAL_INGOT, REFINED_SOUL_METAL_BLOCK).unlockedBy(stHas(ModBlockNames.REFINED_SOUL_METAL_BLOCK), has(REFINED_SOUL_METAL_BLOCK)).save(consumer);
         to9(REFINED_SOUL_METAL_NUGGET, REFINED_SOUL_METAL_INGOT).unlockedBy(stHas(ModItemNames.REFINED_SOUL_METAL_INGOT), has(SOUL_METAL_INGOT)).save(consumer);
+        shapeless(REFINED_SOUL_METAL_INGOT).requires(DIAMOND).requires(SOUL_METAL_INGOT).requires(SOUL_BLAZE_POWDER).unlockedBy(stHas(ModItemNames.SOUL_METAL_INGOT), has(SOUL_METAL_INGOT)).save(consumer, ModItemNames.REFINED_SOUL_METAL_INGOT + "_from_refining");
         shapeless(SOUL_BLAZE_POWDER).requires(BLAZE_POWDER).requires(SOUL_POWDER).unlockedBy(stHasTwo(Objects.requireNonNull(BLAZE_POWDER.getRegistryName()).getPath(), ModItemNames.SOUL_POWDER), hasAll(BLAZE_POWDER, SOUL_POWDER)).save(consumer);
         shapeless(SOUL_BLAZE_POWDER, 2).requires(SOUL_BLAZE_ROD).unlockedBy(stHas(ModItemNames.SOUL_BLAZE_ROD), has(SOUL_BLAZE_ROD)).save(consumer, prefix(ModItemNames.SOUL_BLAZE_POWDER + "_from_rod"));
         shapeless(SOUL_BLAZE_ROD).requires(BLAZE_ROD).requires(SOUL_POWDER).unlockedBy(stHasTwo(Objects.requireNonNull(BLAZE_ROD.getRegistryName()).getPath(), ModItemNames.SOUL_POWDER), hasAll(BLAZE_ROD, SOUL_POWDER)).save(consumer);
@@ -61,12 +62,14 @@ public class RecipeDataGen extends ForgeRecipeProvider {
         buildStoneRecipes(consumer);
         buildSmeltingRecipes(consumer);
         shapeless(SOUL_POWDER, 3).requires(SOUL_PIECE).unlockedBy(stHas(ModItemNames.SOUL_PIECE), has(SOUL_PIECE)).save(consumer);
+        shapeless(SOUL_POWDER, 27).requires(SOUL_CONTAINER).unlockedBy(stHas(ModItemNames.SOUL_CONTAINER), has(SOUL_CONTAINER)).save(consumer, ModItemNames.SOUL_POWDER + "_from_soul_container");
         shapeless(SOUL_STONE).requires(SOUL_POWDER).requires(STONE).unlockedBy(stHas(ModItemNames.SOUL_POWDER), has(SOUL_POWDER)).save(consumer, ModBlockNames.SOUL_STONE + "_from_stone");
         shapeless(SOUL_STONE).requires(SOUL_POWDER).requires(COBBLESTONE).unlockedBy(stHas(ModItemNames.SOUL_POWDER), has(SOUL_POWDER)).save(consumer, ModBlockNames.SOUL_STONE + "_from_cobblestone");
         shapeless(SOUL_METAL_INGOT).requires(SOUL_POWDER).requires(IRON_INGOT).unlockedBy(stHas(ModItemNames.SOUL_POWDER), has(SOUL_POWDER)).save(consumer, ModItemNames.SOUL_METAL_INGOT + "_from_powder");
         special(ModRecipeSerializers.SOUL_CONTAINER.get()).save(consumer, ModItemNames.SOUL_CONTAINER + "_creation");
         shaped(SOUL_REINFORCEMENT_TABLE).pattern("---").pattern("#W#").pattern("###").define('-', SOUL_METAL_INGOT).define('#', SOUL_STONE).define('W', CRAFTING_TABLE).unlockedBy(stHas(ModBlockNames.SOUL_REINFORCEMENT_TABLE), has(SOUL_REINFORCEMENT_TABLE)).save(consumer);
         shaped(SEGEN).pattern("---").pattern("-#-").pattern("---").define('-', SOUL_METAL_INGOT).define('#', SOUL_STONE).unlockedBy(stHasTwo(ModItemNames.SOUL_METAL_INGOT, ModBlockNames.SOUL_STONE), hasAll(SOUL_METAL_INGOT, SOUL_STONE)).save(consumer);
+        shaped(EXTRA_ABILITY_CARRIER).pattern("###").pattern("# #").pattern("###").define('#', SOUL_METAL_INGOT).unlockedBy(stHas(ModItemNames.SOUL_METAL_INGOT), has(SOUL_METAL_INGOT)).save(consumer);
     }
 
     private void buildStoneRecipes(Consumer<IFinishedRecipe> consumer) {

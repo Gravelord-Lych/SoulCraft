@@ -5,12 +5,15 @@ import lych.soulcraft.util.ExtraAbilityConstants;
 import lych.soulcraft.util.mixin.IClientPlayerMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.vector.Vector3d;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,6 +25,7 @@ import java.util.Iterator;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin implements IPlayerEntityMixin, IClientPlayerMixin {
+    @Shadow @Final protected Minecraft minecraft;
     @Unique
     private float enhancedJumpFlag = -1;
 

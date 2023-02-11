@@ -32,7 +32,7 @@ public enum MonsterViewBuff implements PlayerBuff {
             Vector3d viewVec = player.getLookAngle();
             double angle = Vectors.getAngle(vec, viewVec);
             if (angle < 0.5 * Math.PI) {
-                EntityHighlightManager.get(world).highlight(HighlighterType.MONSTER_VIEW, entity, 1);
+                EntityHighlightManager.get(world).highlight(HighlighterType.MONSTER_VIEW, entity);
             }
         }
     }

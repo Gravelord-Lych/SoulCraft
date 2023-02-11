@@ -30,7 +30,7 @@ public class SoulCraft {
         SharedConstants.CHECK_DATA_FIXER_SCHEMA = false;
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_CONFIG);
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModRecipeSerializers.RECIPES.register(bus);
+        ModRecipeSerializers.SERIALIZERS.register(bus);
         ModAttributes.ATTRIBUTES.register(bus);
         ModPotions.POTIONS.register(bus);
         ModSoundEvents.SOUNDS.register(bus);

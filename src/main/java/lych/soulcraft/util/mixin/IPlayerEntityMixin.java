@@ -1,6 +1,7 @@
 package lych.soulcraft.util.mixin;
 
 import lych.soulcraft.api.exa.IExtraAbility;
+import lych.soulcraft.gui.container.inventory.ExtraAbilityInventory;
 import lych.soulcraft.util.AdditionalCooldownTracker;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,4 +70,6 @@ public interface IPlayerEntityMixin {
     boolean isStatic();
 
     void setStatic(boolean isStatic);
+
+    ExtraAbilityInventory getExtraAbilityCarrierInventory();
 }

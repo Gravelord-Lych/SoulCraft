@@ -11,7 +11,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public final class DefaultValues {
-    public static final long INFINITY = -1;
     public static final ITextComponent COMMA = new TranslationTextComponent(SoulCraft.prefixMsg("comma"));
     public static final ITextComponent SPACE = new TranslationTextComponent(SoulCraft.prefixMsg("space"));
     public static final ITextComponent TRUE_SPACE = new StringTextComponent(" ");

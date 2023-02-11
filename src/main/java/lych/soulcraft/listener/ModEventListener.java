@@ -4,6 +4,7 @@ import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.capability.ISoulEnergyStorage;
 import lych.soulcraft.dispenser.ModDispenserBehaviors;
 import lych.soulcraft.entity.ModEntities;
+import lych.soulcraft.extension.control.ControllerType;
 import lych.soulcraft.extension.fire.Fires;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcements;
 import lych.soulcraft.potion.ModPotions;
@@ -26,6 +27,7 @@ public class ModEventListener {
         registerCapabilities(event);
         Reinforcements.init();
         Fires.init();
+        ControllerType.init();
     }
 
     private static void registerCapabilities(FMLCommonSetupEvent event) {

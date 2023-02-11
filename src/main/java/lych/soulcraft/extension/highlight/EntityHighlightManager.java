@@ -19,11 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.util.*;
 
-import static lych.soulcraft.util.DefaultValues.INFINITY;
-
-/**
- * An entity highlighter that can
- */
 public class EntityHighlightManager extends WorldSavedData {
     private static final String NAME = "EntityHighlightManager";
     private static final int SAVE_FREQ = 40;
@@ -44,7 +39,7 @@ public class EntityHighlightManager extends WorldSavedData {
     }
 
     public boolean highlight(HighlighterType type, Entity entity) {
-        return highlight(type, entity, INFINITY);
+        return highlight(type, entity, 1);
     }
 
     public boolean isHighlighted(Entity entity) {

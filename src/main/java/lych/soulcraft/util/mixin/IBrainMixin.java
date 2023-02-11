@@ -1,15 +1,15 @@
 package lych.soulcraft.util.mixin;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
 
 public interface IBrainMixin<E extends LivingEntity> {
     boolean isValidBrain();
 
-    <U extends Sensor<? super E>> boolean addExtraSensor(SensorType<? extends U> type);
+    void setDisabled(boolean disabled);
 
-    void clearExtraSensors();
-
-    void clearExtraTasks();
+    default void setDisabledIfValid(boolean disabled) {
+        if (isValidBrain()) {
+            setDisabled(disabled);
+        }
+    }
 }

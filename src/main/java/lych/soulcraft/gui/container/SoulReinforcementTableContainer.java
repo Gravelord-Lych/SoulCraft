@@ -1,7 +1,9 @@
 package lych.soulcraft.gui.container;
 
 import lych.soulcraft.api.capability.ISoulEnergyStorage;
+import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.block.ModBlocks;
+import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.extension.soulpower.reinforce.Reinforcement;
 import lych.soulcraft.extension.soulpower.reinforce.ReinforcementHelper;
 import lych.soulcraft.extension.soulpower.reinforce.ReinforcementHelper.ApplicationStatus;
@@ -10,6 +12,7 @@ import lych.soulcraft.gui.container.inventory.SoulReinforcementTableIngredientIn
 import lych.soulcraft.gui.container.slot.SEContainerSlot;
 import lych.soulcraft.gui.container.slot.SoulContainerSlot;
 import lych.soulcraft.gui.container.slot.SoulReinforcementResultSlot;
+import lych.soulcraft.item.ExtraAbilityCarrierItem;
 import lych.soulcraft.item.SoulContainerItem;
 import lych.soulcraft.util.SoulEnergies;
 import lych.soulcraft.util.Utils;
@@ -23,6 +26,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,6 +41,11 @@ public class SoulReinforcementTableContainer extends Container {
     private static final int GEM_Y = 49;
     private static final int RESULT_X = 142;
     private static final int RESULT_Y = 49;
+    public static final int PROGRESS = 0;
+    public static final int TOTAL = 1;
+    public static final int COST = 2;
+    public static final int STATUS = 3;
+    public static final int OK = 4;
     private final SoulReinforcementTableIngredientInventory ingredientSlots = new SoulReinforcementTableIngredientInventory(this, 3);
     private final Inventory resultSlots = new Inventory(1);
     private final IIntArray seProgress;
@@ -54,7 +63,6 @@ public class SoulReinforcementTableContainer extends Container {
         addSlot(new SoulContainerSlot(ingredientSlots, 1, CONTAINER_X, CONTAINER_Y));
         addSlot(new SEContainerSlot(ingredientSlots, 2, GEM_X, GEM_Y));
         addSlot(new SoulReinforcementResultSlot(resultSlots, ingredientSlots, 0, RESULT_X, RESULT_Y));
-
         ModContainers.addInventory(inventory, 8, 84, this::addSlot);
         addDataSlots(seProgress);
     }
@@ -63,8 +71,8 @@ public class SoulReinforcementTableContainer extends Container {
     public int getSEProgress() {
         final int length = 158;
 
-        int progress = seProgress.get(0);
-        int total = seProgress.get(1);
+        int progress = seProgress.get(PROGRESS);
+        int total = seProgress.get(TOTAL);
         return total != 0 && progress != 0 ? progress * length / total : 0;
     }
 
@@ -77,16 +85,41 @@ public class SoulReinforcementTableContainer extends Container {
     @Override
     public void slotsChanged(IInventory inventory) {
         super.slotsChanged(inventory);
-        access.execute((world, pos) -> {
-            if (!world.isClientSide) {
-                ApplicationStatus status = null;
-                ItemStack stack = ItemStack.EMPTY;
-                int energy = 0;
-                int energyCost = 0;
+        access.execute((world, pos) -> onSlotsChanged(world, inventory));
+    }
 
-                if (inventory.getItem(1).getItem() instanceof SoulContainerItem) {
-                    EntityType<?> type = SoulContainerItem.getType(inventory.getItem(1));
-                    if (type != null) {
+    protected void onSlotsChanged(World world, IInventory inventory) {
+        if (!world.isClientSide) {
+            ApplicationStatus status = null;
+            ItemStack stack = ItemStack.EMPTY;
+            int energy;
+            int energyCost = 0;
+
+            if (inventory.getItem(1).getItem() instanceof SoulContainerItem) {
+                EntityType<?> type = SoulContainerItem.getType(inventory.getItem(1));
+                if (type != null) {
+                    if (inventory.getItem(0).getItem() instanceof ExtraAbilityCarrierItem) {
+                        if (ExtraAbilityCarrierItem.getExa(inventory.getItem(0)) == null) {
+                            IExtraAbility exa = ExtraAbility.byEntity(type);
+                            if (exa != null) {
+                                ItemStack copy = inventory.getItem(0).copy();
+                                int count = inventory.getItem(1).getCount();
+                                ISoulEnergyStorage ses = SoulEnergies.of(ingredientSlots.getItem(2)).resolve().orElse(null);
+
+                                if (ses != null && count >= exa.getSoulContainerCost()) {
+                                    int maxExtract = ses.getMaxExtract();
+                                    energy = ses.getSoulEnergyStored();
+                                    energyCost = exa.getSECost();
+
+                                    boolean canCostEnergy = energy >= energyCost && energy <= maxExtract;
+                                    if (canCostEnergy) {
+                                        ExtraAbilityCarrierItem.setExa(copy, exa);
+                                        stack = copy;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
                         Reinforcement reinforcement = Reinforcements.get(type);
                         if (reinforcement != null) {
                             ItemStack copy = inventory.getItem(0).copy();
@@ -126,31 +159,31 @@ public class SoulReinforcementTableContainer extends Container {
                         }
                     }
                 }
-                resultSlots.setItem(0, stack);
-
-                final int finalEnergyCost = energyCost;
-                Optional<ISoulEnergyStorage> optional = SoulEnergies.of(ingredientSlots.getItem(2)).resolve();
-                if (optional.isPresent()) {
-                    ISoulEnergyStorage ses = optional.get();
-                    seProgress.set(0, ses.getSoulEnergyStored());
-                    seProgress.set(1, ses.getMaxSoulEnergyStored());
-                } else {
-                    seProgress.set(0, 0);
-                    seProgress.set(1, 0);
-                }
-
-                seProgress.set(3, Utils.getOrDefault(status, -1, Enum::ordinal));
-                if (!ingredientSlots.getItem(0).isEmpty() && finalEnergyCost > 0) {
-                    seProgress.set(2, finalEnergyCost);
-                    seProgress.set(4, stack.isEmpty() ? 0 : 1);
-                } else {
-                    seProgress.set(2, -1);
-                    seProgress.set(4, 0);
-                }
-
-                broadcastChanges();
             }
-        });
+            resultSlots.setItem(0, stack);
+
+            final int finalEnergyCost = energyCost;
+            Optional<ISoulEnergyStorage> optional = SoulEnergies.of(ingredientSlots.getItem(2)).resolve();
+            if (optional.isPresent()) {
+                ISoulEnergyStorage ses = optional.get();
+                seProgress.set(PROGRESS, ses.getSoulEnergyStored());
+                seProgress.set(TOTAL, ses.getMaxSoulEnergyStored());
+            } else {
+                seProgress.set(PROGRESS, 0);
+                seProgress.set(TOTAL, 0);
+            }
+
+            seProgress.set(STATUS, Utils.getOrDefault(status, -1, Enum::ordinal));
+            if (!ingredientSlots.getItem(0).isEmpty() && finalEnergyCost > 0) {
+                seProgress.set(COST, finalEnergyCost);
+                seProgress.set(OK, stack.isEmpty() ? 0 : 1);
+            } else {
+                seProgress.set(COST, -1);
+                seProgress.set(OK, 0);
+            }
+
+            broadcastChanges();
+        }
     }
 
     @Override

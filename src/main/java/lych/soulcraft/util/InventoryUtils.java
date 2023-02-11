@@ -8,12 +8,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.NonNullList;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
 
 public final class InventoryUtils {
     private InventoryUtils() {}
+
+    public static List<ItemStack> listView(IInventory inventory) {
+        return new InventoryList(inventory);
+    }
 
     public static NonNullList<ItemStack> getList(IInventory inventory) {
         NonNullList<ItemStack> list = CollectionUtils.createMutableNonNullListWithSize(inventory.getContainerSize(), ItemStack.EMPTY);
@@ -91,5 +96,60 @@ public final class InventoryUtils {
         }
         PlayerEntity player = (PlayerEntity) entity;
         return new ArrayList<>(player.inventory.items);
+    }
+
+    private static class InventoryList extends AbstractList<ItemStack> implements RandomAccess {
+        private final IInventory inventory;
+
+        private InventoryList(IInventory inventory) {
+            this.inventory = inventory;
+        }
+
+        @Override
+        public ItemStack get(int index) {
+            return inventory.getItem(index);
+        }
+
+        @Override
+        public ItemStack set(int index, ItemStack element) {
+            ItemStack prev = inventory.getItem(index);
+            inventory.setItem(index, element);
+            return prev;
+        }
+
+        @Override
+        public int size() {
+            return inventory.getContainerSize();
+        }
+
+        @Override
+        public void clear() {
+            inventory.clearContent();
+        }
+
+        @SuppressWarnings("ConstantValue")
+        @Override
+        public int indexOf(@Nullable Object o) {
+            IInventory inventory = this.inventory;
+            if (o == null) {
+                for (int i = 0; i < inventory.getContainerSize(); i++) {
+                    if (inventory.getItem(i) == null) {
+                        return i;
+                    }
+                }
+            } else {
+                for (int i = 0; i < inventory.getContainerSize(); i++) {
+                    if (o.equals(inventory.getItem(i))) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return indexOf(o) != -1;
+        }
     }
 }

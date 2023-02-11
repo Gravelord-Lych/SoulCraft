@@ -14,6 +14,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.Nullable;
 
+import static lych.soulcraft.gui.container.SoulReinforcementTableContainer.*;
+
 public class SoulReinforcementTableScreen extends ContainerScreen<SoulReinforcementTableContainer> {
     private static final ResourceLocation SOUL_REINFORCEMENT_TABLE = SoulCraft.prefixTex("gui/container/soul_reinforcement_table.png");
 
@@ -41,10 +43,10 @@ public class SoulReinforcementTableScreen extends ContainerScreen<SoulReinforcem
     protected void renderLabels(MatrixStack stack, int x, int y) {
         super.renderLabels(stack, x, y);
         font.draw(stack,
-                format(menu.getSEProgressArray().get(0),
-                        menu.getSEProgressArray().get(2),
-                        menu.getSEProgressArray().get(4) > 0,
-                        ApplicationStatus.byId(menu.getSEProgressArray().get(3))),
+                format(menu.getSEProgressArray().get(PROGRESS),
+                        menu.getSEProgressArray().get(COST),
+                        menu.getSEProgressArray().get(OK) > 0,
+                        ApplicationStatus.byId(menu.getSEProgressArray().get(STATUS))),
                 titleLabelX,
                 titleLabelY + 10,
                 0);

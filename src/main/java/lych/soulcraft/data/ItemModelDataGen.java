@@ -2,7 +2,6 @@ package lych.soulcraft.data;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.block.ModBlocks;
-import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SEGemItem;
 import lych.soulcraft.item.SoulBowItem;
 import lych.soulcraft.util.SoulEnergies;
@@ -22,6 +21,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import java.util.Objects;
 
 import static lych.soulcraft.data.ModDataGens.registryNameToString;
+import static lych.soulcraft.item.ModItems.*;
 
 public class ItemModelDataGen extends ItemModelProvider {
     private static final ModelFile GENERATED = new UncheckedModelFile("item/generated");
@@ -40,40 +40,42 @@ public class ItemModelDataGen extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        halfUsedPotion(registryNameToString(ModItems.HALF_USED_LINGERING_POTION), LINGERING_POTION);
-        halfUsedPotion(registryNameToString(ModItems.HALF_USED_POTION), POTION);
-        halfUsedPotion(registryNameToString(ModItems.HALF_USED_SPLASH_POTION), SPLASH_POTION);
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_AXE), HANDHELD, prefix(ModItems.REFINED_SOUL_METAL_AXE));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_BOOTS), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_BOOTS));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_CHESTPLATE), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_CHESTPLATE));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_HELMET), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_HELMET));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_HOE), HANDHELD, prefix(ModItems.REFINED_SOUL_METAL_HOE));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_HORSE_ARMOR), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_HORSE_ARMOR));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_INGOT), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_INGOT));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_LEGGINGS), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_LEGGINGS));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_NUGGET), GENERATED, prefix(ModItems.REFINED_SOUL_METAL_NUGGET));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_PICKAXE), HANDHELD, prefix(ModItems.REFINED_SOUL_METAL_PICKAXE));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_SHOVEL), HANDHELD, prefix(ModItems.REFINED_SOUL_METAL_SHOVEL));
-        simple(registryNameToString(ModItems.REFINED_SOUL_METAL_SWORD), HANDHELD, prefix(ModItems.REFINED_SOUL_METAL_SWORD));
-        simple(registryNameToString(ModItems.SOUL_ARROW), GENERATED, prefix(ModItems.SOUL_ARROW));
-        simple(registryNameToString(ModItems.SOUL_BLAZE_POWDER), GENERATED, prefix(ModItems.SOUL_BLAZE_POWDER));
-        simple(registryNameToString(ModItems.SOUL_BLAZE_ROD), HANDHELD, prefix(ModItems.SOUL_BLAZE_ROD));
-        getBuilder(registryNameToString(ModItems.SOUL_BOW)).parent(new UncheckedModelFile(new ResourceLocation("item/" + Objects.requireNonNull(Items.BOW.getRegistryName()).getPath()))).texture(LAYER0, prefix(ModItems.SOUL_BOW)).override()
-                .predicate(SoulBowItem.PULLING, 1).model(new UncheckedModelFile(prefix(ModItems.SOUL_BOW, "_pulling_0"))).end().override()
-                .predicate(SoulBowItem.PULLING, 1).predicate(SoulBowItem.PULL, 0.65f).model(new UncheckedModelFile(prefix(ModItems.SOUL_BOW, "_pulling_1"))).end().override()
-                .predicate(SoulBowItem.PULLING, 1).predicate(SoulBowItem.PULL, 0.9f).model(new UncheckedModelFile(prefix(ModItems.SOUL_BOW, "_pulling_2"))).end();
-        simple(registryNameToString(ModItems.SOUL_BOW) + "_pulling_0", new UncheckedModelFile(prefix(ModItems.SOUL_BOW)), prefix(ModItems.SOUL_BOW, "_pulling_0"));
-        simple(registryNameToString(ModItems.SOUL_BOW) + "_pulling_1", new UncheckedModelFile(prefix(ModItems.SOUL_BOW)), prefix(ModItems.SOUL_BOW, "_pulling_1"));
-        simple(registryNameToString(ModItems.SOUL_BOW) + "_pulling_2", new UncheckedModelFile(prefix(ModItems.SOUL_BOW)), prefix(ModItems.SOUL_BOW, "_pulling_2"));
-        simple(registryNameToString(ModItems.SOUL_CONTAINER), GENERATED, prefix(ModItems.SOUL_CONTAINER));
-        SEGem(ModItems.SOUL_ENERGY_GEM);
-        SEGem(ModItems.SOUL_ENERGY_GEM_II);
-        simple(registryNameToString(ModItems.SOUL_LAVA_BUCKET), GENERATED, prefix(ModItems.SOUL_LAVA_BUCKET));
-        simple(registryNameToString(ModItems.SOUL_METAL_INGOT), GENERATED, prefix(ModItems.SOUL_METAL_INGOT));
-        simple(registryNameToString(ModItems.SOUL_METAL_NUGGET), GENERATED, prefix(ModItems.SOUL_METAL_NUGGET));
-        simple(registryNameToString(ModItems.SOUL_METAL_PARTICLE), GENERATED, prefix(ModItems.SOUL_METAL_PARTICLE));
-        simple(registryNameToString(ModItems.SOUL_PIECE), GENERATED, prefix(ModItems.SOUL_PIECE));
-        simple(registryNameToString(ModItems.SOUL_POWDER), GENERATED, prefix(ModItems.SOUL_POWDER));
+        simple(registryNameToString(EXTRA_ABILITY_CARRIER), GENERATED, prefix(EXTRA_ABILITY_CARRIER));
+        simple(registryNameToString(EXTRA_ABILITY_WAND), HANDHELD, prefix(EXTRA_ABILITY_WAND));
+        halfUsedPotion(registryNameToString(HALF_USED_LINGERING_POTION), LINGERING_POTION);
+        halfUsedPotion(registryNameToString(HALF_USED_POTION), POTION);
+        halfUsedPotion(registryNameToString(HALF_USED_SPLASH_POTION), SPLASH_POTION);
+        simple(registryNameToString(REFINED_SOUL_METAL_AXE), HANDHELD, prefix(REFINED_SOUL_METAL_AXE));
+        simple(registryNameToString(REFINED_SOUL_METAL_BOOTS), GENERATED, prefix(REFINED_SOUL_METAL_BOOTS));
+        simple(registryNameToString(REFINED_SOUL_METAL_CHESTPLATE), GENERATED, prefix(REFINED_SOUL_METAL_CHESTPLATE));
+        simple(registryNameToString(REFINED_SOUL_METAL_HELMET), GENERATED, prefix(REFINED_SOUL_METAL_HELMET));
+        simple(registryNameToString(REFINED_SOUL_METAL_HOE), HANDHELD, prefix(REFINED_SOUL_METAL_HOE));
+        simple(registryNameToString(REFINED_SOUL_METAL_HORSE_ARMOR), GENERATED, prefix(REFINED_SOUL_METAL_HORSE_ARMOR));
+        simple(registryNameToString(REFINED_SOUL_METAL_INGOT), GENERATED, prefix(REFINED_SOUL_METAL_INGOT));
+        simple(registryNameToString(REFINED_SOUL_METAL_LEGGINGS), GENERATED, prefix(REFINED_SOUL_METAL_LEGGINGS));
+        simple(registryNameToString(REFINED_SOUL_METAL_NUGGET), GENERATED, prefix(REFINED_SOUL_METAL_NUGGET));
+        simple(registryNameToString(REFINED_SOUL_METAL_PICKAXE), HANDHELD, prefix(REFINED_SOUL_METAL_PICKAXE));
+        simple(registryNameToString(REFINED_SOUL_METAL_SHOVEL), HANDHELD, prefix(REFINED_SOUL_METAL_SHOVEL));
+        simple(registryNameToString(REFINED_SOUL_METAL_SWORD), HANDHELD, prefix(REFINED_SOUL_METAL_SWORD));
+        simple(registryNameToString(SOUL_ARROW), GENERATED, prefix(SOUL_ARROW));
+        simple(registryNameToString(SOUL_BLAZE_POWDER), GENERATED, prefix(SOUL_BLAZE_POWDER));
+        simple(registryNameToString(SOUL_BLAZE_ROD), HANDHELD, prefix(SOUL_BLAZE_ROD));
+        getBuilder(registryNameToString(SOUL_BOW)).parent(new UncheckedModelFile(new ResourceLocation("item/" + Objects.requireNonNull(Items.BOW.getRegistryName()).getPath()))).texture(LAYER0, prefix(SOUL_BOW)).override()
+                .predicate(SoulBowItem.PULLING, 1).model(new UncheckedModelFile(prefix(SOUL_BOW, "_pulling_0"))).end().override()
+                .predicate(SoulBowItem.PULLING, 1).predicate(SoulBowItem.PULL, 0.65f).model(new UncheckedModelFile(prefix(SOUL_BOW, "_pulling_1"))).end().override()
+                .predicate(SoulBowItem.PULLING, 1).predicate(SoulBowItem.PULL, 0.9f).model(new UncheckedModelFile(prefix(SOUL_BOW, "_pulling_2"))).end();
+        simple(registryNameToString(SOUL_BOW) + "_pulling_0", new UncheckedModelFile(prefix(SOUL_BOW)), prefix(SOUL_BOW, "_pulling_0"));
+        simple(registryNameToString(SOUL_BOW) + "_pulling_1", new UncheckedModelFile(prefix(SOUL_BOW)), prefix(SOUL_BOW, "_pulling_1"));
+        simple(registryNameToString(SOUL_BOW) + "_pulling_2", new UncheckedModelFile(prefix(SOUL_BOW)), prefix(SOUL_BOW, "_pulling_2"));
+        simple(registryNameToString(SOUL_CONTAINER), GENERATED, prefix(SOUL_CONTAINER));
+        SEGem(SOUL_ENERGY_GEM);
+        SEGem(SOUL_ENERGY_GEM_II);
+        simple(registryNameToString(SOUL_LAVA_BUCKET), GENERATED, prefix(SOUL_LAVA_BUCKET));
+        simple(registryNameToString(SOUL_METAL_INGOT), GENERATED, prefix(SOUL_METAL_INGOT));
+        simple(registryNameToString(SOUL_METAL_NUGGET), GENERATED, prefix(SOUL_METAL_NUGGET));
+        simple(registryNameToString(SOUL_METAL_PARTICLE), GENERATED, prefix(SOUL_METAL_PARTICLE));
+        simple(registryNameToString(SOUL_PIECE), GENERATED, prefix(SOUL_PIECE));
+        simple(registryNameToString(SOUL_POWDER), GENERATED, prefix(SOUL_POWDER));
         registerBlockItemModels();
         registerSpawnEggModels();
     }
@@ -111,76 +113,76 @@ public class ItemModelDataGen extends ItemModelProvider {
     }
 
     private void registerBlockItemModels() {
-        blockItem(ModItems.CHISELED_SOUL_STONE_BRICKS);
-        blockItem(ModItems.CRACKED_DECAYED_STONE_BRICK_SLAB);
-        blockItem(ModItems.CRACKED_DECAYED_STONE_BRICK_STAIRS);
-        blockItem(ModItems.CRACKED_DECAYED_STONE_BRICK_WALL);
-        blockItem(ModItems.CRACKED_DECAYED_STONE_BRICKS);
-        blockItem(ModItems.CRACKED_SOUL_STONE_BRICK_SLAB);
-        blockItem(ModItems.CRACKED_SOUL_STONE_BRICK_STAIRS);
-        blockItem(ModItems.CRACKED_SOUL_STONE_BRICK_WALL);
-        blockItem(ModItems.CRACKED_SOUL_STONE_BRICKS);
-        blockItem(ModItems.CRIMSON_HYPHAL_SOIL);
-        blockItem(ModItems.DECAYED_STONE);
-        blockItem(ModItems.DECAYED_STONE_BRICK_SLAB);
-        blockItem(ModItems.DECAYED_STONE_BRICK_STAIRS);
-        blockItem(ModItems.DECAYED_STONE_BRICK_WALL);
-        blockItem(ModItems.DECAYED_STONE_BRICKS);
-        blockItem(ModItems.DECAYED_STONE_SLAB);
-        blockItem(ModItems.DECAYED_STONE_STAIRS);
-        blockItem(ModItems.DECAYED_STONE_WALL);
-        segenBlockItem(ModItems.DEPTH_SEGEN);
-        segenBlockItem(ModItems.DEPTH_SEGEN_II);
-        segenBlockItem(ModItems.HEAT_SEGEN);
-        segenBlockItem(ModItems.HEAT_SEGEN_II);
-        segenBlockItem(ModItems.NETHER_SEGEN);
-        segenBlockItem(ModItems.NETHER_SEGEN_II);
-        blockItem(ModItems.PARCHED_SOIL);
-        blockItem(ModItems.REFINED_SOUL_METAL_BLOCK);
-        blockItem(ModItems.REFINED_SOUL_SAND);
-        blockItem(ModItems.REFINED_SOUL_SOIL);
-        segenBlockItem(ModItems.SEGEN);
-        segenBlockItem(ModItems.SEGEN_II);
-        segenBlockItem(ModItems.SKY_SEGEN);
-        segenBlockItem(ModItems.SKY_SEGEN_II);
-        blockItem(ModItems.SMOOTH_SOUL_STONE);
-        blockItem(ModItems.SMOOTH_SOUL_STONE_SLAB);
-        blockItem(ModItems.SMOOTH_SOUL_STONE_STAIRS);
-        blockItem(ModItems.SMOOTH_SOUL_STONE_WALL);
-        segenBlockItem(ModItems.SOLAR_SEGEN);
-        segenBlockItem(ModItems.SOLAR_SEGEN_II);
-        blockItem(registryNameToString(ModItems.SOUL_ENERGY_STORAGE), new UncheckedModelFile(BlockModelDataGen.prefix(Utils.getRegistryName(ModItems.SOUL_ENERGY_STORAGE.getBlock()).getPath() + "_0")));
-        blockItem(registryNameToString(ModItems.SOUL_ENERGY_STORAGE_II), new UncheckedModelFile(BlockModelDataGen.prefix(Utils.getRegistryName(ModItems.SOUL_ENERGY_STORAGE_II.getBlock()).getPath() + "_0")));
-        blockItem(ModItems.SOUL_METAL_BLOCK);
-        blockItem(ModItems.SOUL_REINFORCEMENT_TABLE);
-        blockItem(ModItems.SOUL_STONE);
-        blockItem(ModItems.SOUL_STONE_BRICK_SLAB);
-        blockItem(ModItems.SOUL_STONE_BRICK_STAIRS);
-        blockItem(ModItems.SOUL_STONE_BRICK_WALL);
-        blockItem(ModItems.SOUL_STONE_BRICKS);
-        blockItem(ModItems.SOUL_STONE_SLAB);
-        blockItem(ModItems.SOUL_STONE_STAIRS);
-        blockItem(ModItems.SOUL_STONE_WALL);
-        simple(registryNameToString(ModItems.SOUL_WART), GENERATED, prefix(ModItems.SOUL_WART));
-        simple(registryNameToString(ModItems.SOULIFIED_BUSH), GENERATED, BlockModelDataGen.prefix(ModBlocks.SOULIFIED_BUSH));
-        blockItem(ModItems.WARPED_HYPHAL_SOIL);
+        blockItem(CHISELED_SOUL_STONE_BRICKS);
+        blockItem(CRACKED_DECAYED_STONE_BRICK_SLAB);
+        blockItem(CRACKED_DECAYED_STONE_BRICK_STAIRS);
+        blockItem(CRACKED_DECAYED_STONE_BRICK_WALL);
+        blockItem(CRACKED_DECAYED_STONE_BRICKS);
+        blockItem(CRACKED_SOUL_STONE_BRICK_SLAB);
+        blockItem(CRACKED_SOUL_STONE_BRICK_STAIRS);
+        blockItem(CRACKED_SOUL_STONE_BRICK_WALL);
+        blockItem(CRACKED_SOUL_STONE_BRICKS);
+        blockItem(CRIMSON_HYPHAL_SOIL);
+        blockItem(DECAYED_STONE);
+        blockItem(DECAYED_STONE_BRICK_SLAB);
+        blockItem(DECAYED_STONE_BRICK_STAIRS);
+        blockItem(DECAYED_STONE_BRICK_WALL);
+        blockItem(DECAYED_STONE_BRICKS);
+        blockItem(DECAYED_STONE_SLAB);
+        blockItem(DECAYED_STONE_STAIRS);
+        blockItem(DECAYED_STONE_WALL);
+        segenBlockItem(DEPTH_SEGEN);
+        segenBlockItem(DEPTH_SEGEN_II);
+        segenBlockItem(HEAT_SEGEN);
+        segenBlockItem(HEAT_SEGEN_II);
+        segenBlockItem(NETHER_SEGEN);
+        segenBlockItem(NETHER_SEGEN_II);
+        blockItem(PARCHED_SOIL);
+        blockItem(REFINED_SOUL_METAL_BLOCK);
+        blockItem(REFINED_SOUL_SAND);
+        blockItem(REFINED_SOUL_SOIL);
+        segenBlockItem(SEGEN);
+        segenBlockItem(SEGEN_II);
+        segenBlockItem(SKY_SEGEN);
+        segenBlockItem(SKY_SEGEN_II);
+        blockItem(SMOOTH_SOUL_STONE);
+        blockItem(SMOOTH_SOUL_STONE_SLAB);
+        blockItem(SMOOTH_SOUL_STONE_STAIRS);
+        blockItem(SMOOTH_SOUL_STONE_WALL);
+        segenBlockItem(SOLAR_SEGEN);
+        segenBlockItem(SOLAR_SEGEN_II);
+        blockItem(registryNameToString(SOUL_ENERGY_STORAGE), new UncheckedModelFile(BlockModelDataGen.prefix(Utils.getRegistryName(SOUL_ENERGY_STORAGE.getBlock()).getPath() + "_0")));
+        blockItem(registryNameToString(SOUL_ENERGY_STORAGE_II), new UncheckedModelFile(BlockModelDataGen.prefix(Utils.getRegistryName(SOUL_ENERGY_STORAGE_II.getBlock()).getPath() + "_0")));
+        blockItem(SOUL_METAL_BLOCK);
+        blockItem(SOUL_REINFORCEMENT_TABLE);
+        blockItem(SOUL_STONE);
+        blockItem(SOUL_STONE_BRICK_SLAB);
+        blockItem(SOUL_STONE_BRICK_STAIRS);
+        blockItem(SOUL_STONE_BRICK_WALL);
+        blockItem(SOUL_STONE_BRICKS);
+        blockItem(SOUL_STONE_SLAB);
+        blockItem(SOUL_STONE_STAIRS);
+        blockItem(SOUL_STONE_WALL);
+        simple(registryNameToString(SOUL_WART), GENERATED, prefix(SOUL_WART));
+        simple(registryNameToString(SOULIFIED_BUSH), GENERATED, BlockModelDataGen.prefix(ModBlocks.SOULIFIED_BUSH));
+        blockItem(WARPED_HYPHAL_SOIL);
     }
 
     private void registerSpawnEggModels() {
-        spawnEgg(ModItems.COMPUTER_SCIENTIST_SPAWN_EGG);
-        spawnEgg(ModItems.DARK_EVOKER_SPAWN_EGG);
-        spawnEgg(ModItems.ENGINEER_SPAWN_EGG);
-        spawnEgg(ModItems.ETHE_ARMORER_SPAWN_EGG);
-        spawnEgg(ModItems.ILLUSORY_HORSE_SPAWN_EGG);
-        spawnEgg(ModItems.REDSTONE_MORTAR_SPAWN_EGG);
-        spawnEgg(ModItems.REDSTONE_TURRET_SPAWN_EGG);
-        spawnEgg(ModItems.SOUL_RABBIT_SPAWN_EGG);
-        spawnEgg(ModItems.SOUL_SKELETON_SPAWN_EGG);
-        spawnEgg(ModItems.VOID_ALCHEMIST_SPAWN_EGG);
-        spawnEgg(ModItems.VOID_ARCHER_SPAWN_EGG);
-        spawnEgg(ModItems.VOID_DEFENDER_SPAWN_EGG);
-        spawnEgg(ModItems.VOIDWALKER_SPAWN_EGG);
-        spawnEgg(ModItems.WANDERER_SPAWN_EGG);
+        spawnEgg(COMPUTER_SCIENTIST_SPAWN_EGG);
+        spawnEgg(DARK_EVOKER_SPAWN_EGG);
+        spawnEgg(ENGINEER_SPAWN_EGG);
+        spawnEgg(ETHE_ARMORER_SPAWN_EGG);
+        spawnEgg(ILLUSORY_HORSE_SPAWN_EGG);
+        spawnEgg(REDSTONE_MORTAR_SPAWN_EGG);
+        spawnEgg(REDSTONE_TURRET_SPAWN_EGG);
+        spawnEgg(SOUL_RABBIT_SPAWN_EGG);
+        spawnEgg(SOUL_SKELETON_SPAWN_EGG);
+        spawnEgg(VOID_ALCHEMIST_SPAWN_EGG);
+        spawnEgg(VOID_ARCHER_SPAWN_EGG);
+        spawnEgg(VOID_DEFENDER_SPAWN_EGG);
+        spawnEgg(VOIDWALKER_SPAWN_EGG);
+        spawnEgg(WANDERER_SPAWN_EGG);
     }
 
     private void spawnEgg(Item item) {

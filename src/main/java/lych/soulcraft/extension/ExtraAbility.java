@@ -34,15 +34,15 @@ import static lych.soulcraft.SoulCraft.prefix;
 public class ExtraAbility implements IExtraAbility {
     public static final Marker MARKER = MarkerManager.getMarker("ExtraAbilities");
     public static final IExtraAbility ARMOR_PIERCER = create(prefix(SCExaNames.ARMOR_PIERCER));
-    public static final IExtraAbility BOW_EXPERT = create(prefix(SCExaNames.BOW_EXPERT), 5);
+    public static final IExtraAbility BOW_EXPERT = create(prefix(SCExaNames.BOW_EXPERT));
     public static final IExtraAbility CHEMIST = create(prefix(SCExaNames.CHEMIST));
     public static final IExtraAbility CLIMBER = create(prefix(SCExaNames.CLIMBER), 6);
-    public static final IExtraAbility DESTROYER = create(prefix(SCExaNames.DESTROYER), 5);
+    public static final IExtraAbility DESTROYER = create(prefix(SCExaNames.DESTROYER));
     public static final IExtraAbility DRAGON_WIZARD = createSpecial(prefix(SCExaNames.DRAGON_WIZARD));
     public static final IExtraAbility ENHANCED_AUTO_JUMP = create(prefix(SCExaNames.ENHANCED_AUTO_JUMP));
-    public static final IExtraAbility ESCAPER = create(prefix(SCExaNames.ESCAPER), 5);
+    public static final IExtraAbility ESCAPER = create(prefix(SCExaNames.ESCAPER));
     public static final IExtraAbility EXPLOSION_MASTER = create(prefix(SCExaNames.EXPLOSION_MASTER));
-    public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER));
+    public static final IExtraAbility FALLING_BUFFER = create(prefix(SCExaNames.FALLING_BUFFER), 6);
     public static final IExtraAbility FANGS_SUMMONER = createSpecial(prefix(SCExaNames.FANGS_SUMMONER));
     public static final IExtraAbility FAVORED_TRADER = create(prefix(SCExaNames.FAVORED_TRADER));
     public static final IExtraAbility FIRE_RESISTANCE = create(prefix(SCExaNames.FIRE_RESISTANCE), 6);
@@ -52,24 +52,24 @@ public class ExtraAbility implements IExtraAbility {
     public static final IExtraAbility INITIAL_ARMOR = create(prefix(SCExaNames.INITIAL_ARMOR));
     public static final IExtraAbility MONSTER_SABOTAGE = createSpecial(prefix(SCExaNames.MONSTER_SABOTAGE));
     public static final IExtraAbility MONSTER_VIEW = create(prefix(SCExaNames.MONSTER_VIEW));
-    public static final IExtraAbility NETHERMAN = create(prefix(SCExaNames.NETHERMAN));
-    public static final IExtraAbility NUTRITIONIST = create(prefix(SCExaNames.NUTRITIONIST), 5);
+    public static final IExtraAbility NETHERMAN = create(prefix(SCExaNames.NETHERMAN), 6);
+    public static final IExtraAbility NUTRITIONIST = create(prefix(SCExaNames.NUTRITIONIST), 6);
     public static final IExtraAbility OVERDRIVE = create(prefix(SCExaNames.OVERDRIVE));
-    public static final IExtraAbility PERMANENT_SLOWDOWN = create(prefix(SCExaNames.PERMANENT_SLOWDOWN), 5);
+    public static final IExtraAbility PERMANENT_SLOWDOWN = create(prefix(SCExaNames.PERMANENT_SLOWDOWN));
     public static final IExtraAbility PILLAGER = create(prefix(SCExaNames.PILLAGER));
     public static final IExtraAbility POISONER = create(prefix(SCExaNames.POISONER));
-    public static final IExtraAbility PURIFICATION = create(prefix(SCExaNames.PURIFICATION), 5);
+    public static final IExtraAbility PURIFICATION = create(prefix(SCExaNames.PURIFICATION), 6);
     public static final IExtraAbility RESTORATION = create(prefix(SCExaNames.RESTORATION));
-    public static final IExtraAbility SLIME_POWER = create(prefix(SCExaNames.SLIME_POWER), 5);
+    public static final IExtraAbility SLIME_POWER = create(prefix(SCExaNames.SLIME_POWER));
     public static final IExtraAbility SOUL_INVULNERABILITY = create(prefix(SCExaNames.SOUL_INVULNERABILITY));
     public static final IExtraAbility SPEEDUP = create(prefix(SCExaNames.SPEEDUP));
-    public static final IExtraAbility STATIC_DEFENDER = create(prefix(SCExaNames.STATIC_DEFENDER), 5);
-    public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER), 6);
-    public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION), 5);
+    public static final IExtraAbility STATIC_DEFENDER = create(prefix(SCExaNames.STATIC_DEFENDER));
+    public static final IExtraAbility SWIMMER = create(prefix(SCExaNames.SWIMMER));
+    public static final IExtraAbility TELEPORTATION = create(prefix(SCExaNames.TELEPORTATION));
     public static final IExtraAbility THORNS_MASTER = create(prefix(SCExaNames.THORNS_MASTER));
-    public static final IExtraAbility TRANSFORMATION = create(prefix(SCExaNames.TRANSFORMATION), 5);
+    public static final IExtraAbility TRANSFORMATION = create(prefix(SCExaNames.TRANSFORMATION));
     public static final IExtraAbility ULTRAREACH = create(prefix(SCExaNames.ULTRAREACH));
-    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 5);
+    public static final IExtraAbility WATER_BREATHING = create(prefix(SCExaNames.WATER_BREATHING), 6);
     public static final IExtraAbility WITHER_REACH = createSpecial(prefix(SCExaNames.WITHER_REACH));
 
     private static final Map<ResourceLocation, IExtraAbility> ABILITIES = new HashMap<>(64);
@@ -128,12 +128,15 @@ public class ExtraAbility implements IExtraAbility {
     }
 
     @Nullable
-    public static IExtraAbility get(ResourceLocation registryName) {
+    public static IExtraAbility get(@Nullable ResourceLocation registryName) {
+        if (registryName == null) {
+            return null;
+        }
         return ABILITIES.get(registryName);
     }
 
-    public static Optional<IExtraAbility> getOptional(ResourceLocation registryName) {
-        return Optional.ofNullable(ABILITIES.get(registryName));
+    public static Optional<IExtraAbility> getOptional(@Nullable ResourceLocation registryName) {
+        return Optional.ofNullable(get(registryName));
     }
 
     @SuppressWarnings("unused")

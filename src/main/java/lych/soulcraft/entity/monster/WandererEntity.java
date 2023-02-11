@@ -5,6 +5,7 @@ import lych.soulcraft.entity.iface.ILaserAttacker;
 import lych.soulcraft.extension.laser.LaserData;
 import lych.soulcraft.util.Lasers;
 import lych.soulcraft.util.ModSoundEvents;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -17,8 +18,12 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -104,5 +109,26 @@ public class WandererEntity extends MonsterEntity implements ILaserAttacker {
     @Override
     public Vector3d getTargetPosition(LivingEntity target) {
         return target.getBoundingBox().getCenter();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSoundEvents.WANDERER_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSoundEvents.WANDERER_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSoundEvents.WANDERER_DEATH.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        playSound(ModSoundEvents.WANDERER_STEP.get(), 0.15f, 1);
     }
 }

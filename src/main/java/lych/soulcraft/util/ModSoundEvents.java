@@ -15,13 +15,21 @@ public final class ModSoundEvents {
     public static final RegistryObject<SoundEvent> ROBOT_DEATH = register("mob.robot.death");
     public static final RegistryObject<SoundEvent> ROBOT_HURT = register("mob.robot.hurt");
     public static final RegistryObject<SoundEvent> ROBOT_STEP = register("mob.robot.step");
-    public static final RegistryObject<SoundEvent> SOUL_RABBIT_AMBIENT = register("mob.soul_rabbit_ambient");
+    public static final RegistryObject<SoundEvent> SOUL_RABBIT_AMBIENT = register("mob.soul_rabbit.ambient");
+    public static final RegistryObject<SoundEvent> SOUL_RABBIT_ATTACK = register("mob.soul_rabbit.attack");
+    public static final RegistryObject<SoundEvent> SOUL_RABBIT_DEATH = register("mob.soul_rabbit.death");
+    public static final RegistryObject<SoundEvent> SOUL_RABBIT_HURT = register("mob.soul_rabbit.hurt");
+    public static final RegistryObject<SoundEvent> SOUL_RABBIT_JUMP = register("mob.soul_rabbit.jump");
     public static final RegistryObject<SoundEvent> SOUL_SKELETON_AMBIENT = register("mob.soul_skeleton.ambient");
     public static final RegistryObject<SoundEvent> SOUL_SKELETON_DEATH = register("mob.soul_skeleton.death");
     public static final RegistryObject<SoundEvent> SOUL_SKELETON_HURT = register("mob.soul_skeleton.hurt");
     public static final RegistryObject<SoundEvent> SOUL_SKELETON_SHOOT = register("mob.soul_skeleton.shoot");
     public static final RegistryObject<SoundEvent> SOUL_SKELETON_STEP = register("mob.soul_skeleton.step");
+    public static final RegistryObject<SoundEvent> WANDERER_AMBIENT = register("mob.wanderer.ambient");
+    public static final RegistryObject<SoundEvent> WANDERER_DEATH = register("mob.wanderer.death");
+    public static final RegistryObject<SoundEvent> WANDERER_HURT = register("mob.wanderer.hurt");
     public static final RegistryObject<SoundEvent> WANDERER_LASER = register("mob.wanderer.laser");
+    public static final RegistryObject<SoundEvent> WANDERER_STEP = register("mob.wanderer.step");
 
     private ModSoundEvents() {}
 

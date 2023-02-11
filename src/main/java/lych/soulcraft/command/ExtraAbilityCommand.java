@@ -24,7 +24,7 @@ public final class ExtraAbilityCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(literal("exa").requires(source -> source.hasPermission(2))
-                .then(literal("add")
+                /*.then(literal("add")
                         .then(argument("player", EntityArgument.player())
                                 .then(argument("exa", new ExtraAbilityArgument())
                                         .executes(context -> addExtraAbility(context, EntityArgument.getPlayer(context, "player"))))))
@@ -33,7 +33,7 @@ public final class ExtraAbilityCommand {
                         .then(argument("player", EntityArgument.player())
                                 .executes(context -> removeAllExtraAbilities(context, EntityArgument.getPlayer(context, "player")))
                                 .then(argument("exa", new ExtraAbilityArgument())
-                                        .executes(context -> removeExtraAbility(context, EntityArgument.getPlayer(context, "player"))))))
+                                        .executes(context -> removeExtraAbility(context, EntityArgument.getPlayer(context, "player"))))))*/
                 .then(literal("show")
                         .executes(context -> showExtraAbilities(context, context.getSource().getPlayerOrException(), false))
                         .then(argument("player", EntityArgument.player())

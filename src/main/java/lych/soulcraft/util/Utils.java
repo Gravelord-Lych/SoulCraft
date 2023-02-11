@@ -104,14 +104,14 @@ public final class Utils {
         return builder.toString();
     }
 
-    public static Color lerpColor(float partialTicks, Color colorO, Color color) {
+    public static Color lerpColor(float amount, Color colorO, Color color) {
         int ro = colorO.getRed();
         int go = colorO.getGreen();
         int bo = colorO.getBlue();
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
-        return new Color((int) MathHelper.lerp(partialTicks, ro, r), (int) MathHelper.lerp(partialTicks, go, g), (int) MathHelper.lerp(partialTicks, bo, b));
+        return new Color((int) MathHelper.lerp(amount, ro, r), (int) MathHelper.lerp(amount, go, g), (int) MathHelper.lerp(amount, bo, b));
     }
 
     public static int randomlyCast(float num, Random random) {

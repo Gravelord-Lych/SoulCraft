@@ -11,14 +11,12 @@ import java.util.UUID;
 public class HighlighterType {
     public static final HighlighterType NO_HIGHLIGHT = new HighlighterType(Util.NIL_UUID, DummyHighlighter::new, DummyHighlighter::new);
     public static final HighlighterType MONSTER_VIEW = new HighlighterType("C9A92E28-1765-40AB-853A-F3874408A039", MonsterViewHighlighter::new, MonsterViewHighlighter::new);
-    public static final HighlighterType NO_FLASH_SOUL_CONTROL = new HighlighterType("93F0A568-26FF-4674-95DE-59FCDD4B010D", SoulControlHighlighter.NoFlash::new, SoulControlHighlighter.NoFlash::new);
     public static final HighlighterType SOUL_CONTROL = new HighlighterType("9855C4A0-2B69-C250-92D2-A9230193F2BC", SoulControlHighlighter::new, SoulControlHighlighter::new);
 
     static {
         HIGHLIGHTERS = new HashMap<>();
         registerHighlighter(NO_HIGHLIGHT);
         registerHighlighter(MONSTER_VIEW);
-        registerHighlighter(NO_FLASH_SOUL_CONTROL);
         registerHighlighter(SOUL_CONTROL);
     }
 

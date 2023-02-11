@@ -1,6 +1,8 @@
 package lych.soulcraft.item;
 
 public final class ModItemNames {
+    public static final String EXTRA_ABILITY_CARRIER = "extra_ability_carrier";
+    public static final String EXTRA_ABILITY_WAND = "extra_ability_wand";
     public static final String HALF_USED_LINGERING_POTION = "half_used_lingering_potion";
     public static final String HALF_USED_POTION = "half_used_potion";
     public static final String HALF_USED_SPLASH_POTION = "half_used_splash_potion";

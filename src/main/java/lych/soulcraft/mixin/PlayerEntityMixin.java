@@ -5,7 +5,9 @@ import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.extension.ExtraAbility;
+import lych.soulcraft.gui.container.inventory.ExtraAbilityInventory;
 import lych.soulcraft.util.AdditionalCooldownTracker;
+import lych.soulcraft.util.InventoryUtils;
 import lych.soulcraft.util.ModDataSerializers;
 import lych.soulcraft.util.mixin.IFoodStatsMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
@@ -46,6 +48,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
     @Shadow protected FoodStats foodData;
     private static final DataParameter<Set<IExtraAbility>> DATA_EXTRA_ABILITIES = EntityDataManager.defineId(PlayerEntity.class, ModDataSerializers.EXA);
     private boolean isStatic = true;
+    private final ExtraAbilityInventory extraAbilityCarrierInventory = new ExtraAbilityInventory(6);
     @Unique
     private final Map<EntityType<?>, Integer> bossTierMap = new HashMap<>();
     @Unique
@@ -143,6 +146,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
         }
 
         compoundNBT.put("SCAdditionalCooldowns", getAdditionalCooldowns().save());
+
+        ListNBT exaInventoryNBT = new ListNBT();
+        for (ItemStack stack : InventoryUtils.listView(getExtraAbilityCarrierInventory())) {
+            exaInventoryNBT.add(stack.save(new CompoundNBT()));
+        }
+        compoundNBT.put("ExtraAbilityCarrierInventory", exaInventoryNBT);
     }
 
     @SuppressWarnings("all")
@@ -190,6 +199,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
         if (compoundNBT.contains("SCAdditionalCooldowns", Constants.NBT.TAG_COMPOUND)) {
             additionalCooldowns.reloadFrom(compoundNBT.getCompound("SCAdditionalCooldowns"));
         }
+
+        if (compoundNBT.contains("ExtraAbilityCarrierInventory", Constants.NBT.TAG_LIST)) {
+            extraAbilityCarrierInventory.clearContent();
+            ListNBT exaInventoryNBT = compoundNBT.getList("ExtraAbilityCarrierInventory", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < exaInventoryNBT.size(); i++) {
+                CompoundNBT itemNBT = exaInventoryNBT.getCompound(i);
+                extraAbilityCarrierInventory.setItem(i, ItemStack.of(itemNBT));
+            }
+        }
+    }
+
+    @Override
+    public ExtraAbilityInventory getExtraAbilityCarrierInventory() {
+        return extraAbilityCarrierInventory;
     }
 
     @Override

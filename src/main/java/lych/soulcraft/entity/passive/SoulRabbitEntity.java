@@ -9,6 +9,7 @@ import lych.soulcraft.item.ModItems;
 import lych.soulcraft.tag.ModBlockTags;
 import lych.soulcraft.util.EnumConstantNotFoundException;
 import lych.soulcraft.util.IIdentifiableEnum;
+import lych.soulcraft.util.ModSoundEvents;
 import lych.soulcraft.util.WeightedRandom;
 import lych.soulcraft.util.mixin.IGoalSelectorMixin;
 import lych.soulcraft.world.gen.biome.ModBiomes;
@@ -23,9 +24,7 @@ import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -106,6 +105,31 @@ public class SoulRabbitEntity extends RabbitEntity {
         }
         initialSet = false;
         super.setRabbitType(Type.byId(type).getId());
+    }
+
+    @Override
+    protected SoundEvent getJumpSound() {
+        return ModSoundEvents.SOUL_RABBIT_JUMP.get();
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSoundEvents.SOUL_RABBIT_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSoundEvents.SOUL_RABBIT_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSoundEvents.SOUL_RABBIT_DEATH.get();
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        super.playSound(sound == SoundEvents.RABBIT_ATTACK ? ModSoundEvents.SOUL_RABBIT_ATTACK.get() : sound, volume, pitch);
     }
 
     @Override

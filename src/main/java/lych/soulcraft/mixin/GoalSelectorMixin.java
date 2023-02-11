@@ -85,7 +85,7 @@ public abstract class GoalSelectorMixin implements IGoalSelectorMixin {
         if (isAlt()) {
             return false;
         }
-        return false;
+        return !((IGoalSelectorMixin) alt).getAvailableGoals().isEmpty();
     }
 
     @Nullable

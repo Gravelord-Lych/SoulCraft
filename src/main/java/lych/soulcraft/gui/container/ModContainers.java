@@ -2,6 +2,7 @@ package lych.soulcraft.gui.container;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.block.ModBlockNames;
+import lych.soulcraft.item.ModItemNames;
 import lych.soulcraft.util.ProgressArray;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,6 +29,7 @@ import static net.minecraftforge.common.extensions.IForgeContainerType.create;
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModContainers {
     public static final ContainerType<DepthSEGeneratorContainer> DEPTH_SEGEN = createSimply(DepthSEGeneratorContainer::new);
+    public static final ContainerType<ExtraAbilityContainer> EXA = create((id, inventory, data) -> new ExtraAbilityContainer(id, inventory, 2));
     public static final ContainerType<HeatSEGeneratorContainer> HEAT_SEGEN = createSimply(HeatSEGeneratorContainer::new);
     public static final ContainerType<NetherSEGeneratorContainer> NETHER_SEGEN = createSimply(NetherSEGeneratorContainer::new);
     public static final ContainerType<SEGeneratorContainer> SEGEN = createSimply(SEGeneratorContainer::new);
@@ -51,6 +53,7 @@ public class ModContainers {
     public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
         IForgeRegistry<ContainerType<?>> registry = event.getRegistry();
         registry.register(make(DEPTH_SEGEN, ModBlockNames.DEPTH_SEGEN));
+        registry.register(make(EXA, ModItemNames.EXTRA_ABILITY_WAND));
         registry.register(make(HEAT_SEGEN, ModBlockNames.HEAT_SEGEN));
         registry.register(make(NETHER_SEGEN, ModBlockNames.NETHER_SEGEN));
         registry.register(make(SEGEN, ModBlockNames.SEGEN));
