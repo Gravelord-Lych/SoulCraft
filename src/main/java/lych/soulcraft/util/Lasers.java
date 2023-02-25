@@ -16,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Objects;
@@ -45,22 +44,6 @@ public final class Lasers {
         result.getPassedEntities().forEach(consumer);
     }
 
-    public static void destroyHitBlocks(LaserAttackResult result, boolean dropItem) {
-        destroyHitBlocks(result, dropItem, null);
-    }
-
-    public static void destroyHitBlocks(LaserAttackResult result, boolean dropItem, @Nullable Entity destroyer) {
-        acceptHitBlocks(result, pos -> result.getWorld().destroyBlock(pos, dropItem, destroyer));
-    }
-
-    public static void acceptHitBlocks(LaserAttackResult result, Consumer<? super BlockPos> consumer) {
-        result.getHitBlockPos().forEach(consumer);
-    }
-
-    public static void acceptPositions(LaserAttackResult result, Consumer<? super Vector3d> consumer) {
-        result.getPassedPositions().forEach(consumer);
-    }
-
     public static void renderLaser(LaserAttackResult result, Entity laserOwner, int renderTickCount) {
         renderLaser(result, laserOwner, renderTickCount, true);
     }
@@ -69,9 +52,8 @@ public final class Lasers {
         renderCustomColoredLaser(result, laserOwner, result.getData().getColor(), renderTickCount, fixedDestination);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void renderCustomColoredLaser(LaserAttackResult result, Entity laserOwner, Color color, int renderTickCount, boolean fixedDestination) {
-        if (result.getPassedPositions().isEmpty()) {
+        if (!result.getLastHitPos().isPresent()) {
             return;
         }
         Vector3d src = laserOwner instanceof ILaserAttacker ? ((ILaserAttacker) laserOwner).getAttackerPosition() : new Vector3d(laserOwner.getX(), laserOwner.getEyeY(), laserOwner.getZ());

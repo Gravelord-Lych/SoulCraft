@@ -6,10 +6,12 @@ import lych.soulcraft.client.ModRenderTypes;
 import lych.soulcraft.util.mixin.IEntityMixin;
 import lych.soulcraft.util.mixin.IWorldRendererMixin;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.util.math.vector.Matrix4f;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -41,6 +43,8 @@ public abstract class WorldRendererMixin implements IWorldRendererMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Shadow protected abstract boolean shouldShowEntityOutlines();
+
+    @Shadow @Nullable protected abstract Particle addParticleInternal(IParticleData particle, boolean alwaysVisible, boolean canDecreaseStatus, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed);
 
     @Unique
     private final LaserRenderingManager laserManager = new LaserRenderingManager(() -> level, () -> ticks);
@@ -109,5 +113,11 @@ public abstract class WorldRendererMixin implements IWorldRendererMixin {
     @Override
     public LaserRenderingManager getLaserRenderingManager() {
         return laserManager;
+    }
+
+    @Nullable
+    @Override
+    public Particle callAddParticleInternal(IParticleData particle, boolean alwaysVisible, boolean canDecreaseStatus, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        return addParticleInternal(particle, alwaysVisible, canDecreaseStatus, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 }

@@ -4,9 +4,7 @@ import lych.soulcraft.SoulCraft;
 import lych.soulcraft.entity.functional.FangsEntity;
 import lych.soulcraft.entity.functional.SoulBoltEntity;
 import lych.soulcraft.entity.monster.*;
-import lych.soulcraft.entity.monster.boss.GiantXEntity;
-import lych.soulcraft.entity.monster.boss.Meta08Entity;
-import lych.soulcraft.entity.monster.boss.SkeletonKingEntity;
+import lych.soulcraft.entity.monster.boss.*;
 import lych.soulcraft.entity.monster.boss.esv.SoulControllerEntity;
 import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
 import lych.soulcraft.entity.monster.raider.DarkEvokerEntity;
@@ -42,6 +40,7 @@ public final class ModEntities {
     public static final EntityType<ComputerScientistEntity> COMPUTER_SCIENTIST = Builder.of(ComputerScientistEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.COMPUTER_SCIENTIST);
     public static final EntityType<DarkEvokerEntity> DARK_EVOKER = Builder.of(DarkEvokerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(8).build(ModEntityNames.DARK_EVOKER);
     public static final EntityType<DroppingMortarShellEntity> DROPPING_MORTAR_SHELL = Builder.<DroppingMortarShellEntity>of(DroppingMortarShellEntity::new, EntityClassification.MISC).sized(1.2f, 1.2f).clientTrackingRange(12).updateInterval(10).build(ModEntityNames.DROPPING_MORTAR_SHELL);
+    public static final EntityType<EnergizedBlazeEntity> ENERGIZED_BLAZE = Builder.of(EnergizedBlazeEntity::new, EntityClassification.MONSTER).fireImmune().sized(0.6f, 1.8f).clientTrackingRange(10).build(ModEntityNames.ENERGIZED_BLAZE);
     public static final EntityType<EngineerEntity> ENGINEER = Builder.of(EngineerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.ENGINEER);
     public static final EntityType<EtheArmorerEntity> ETHE_ARMORER = Builder.of(EtheArmorerEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.ETHE_ARMORER);
     public static final EntityType<EtherealArrowEntity> ETHEREAL_ARROW = Builder.<EtherealArrowEntity>of(EtherealArrowEntity::new, EntityClassification.MISC).sized(0.5f, 0.5f).clientTrackingRange(8).updateInterval(10).build(ModEntityNames.ETHEREAL_ARROW);
@@ -65,6 +64,7 @@ public final class ModEntities {
     public static final EntityType<SoulCrystalEntity> SOUL_CRYSTAL = Builder.of(SoulCrystalEntity::new, EntityClassification.MONSTER).sized(1, 4).clientTrackingRange(24).build(ModEntityNames.SOUL_CRYSTAL);
     public static final EntityType<SoulRabbitEntity> SOUL_RABBIT = Builder.of(SoulRabbitEntity::new, EntityClassification.CREATURE).sized(0.4F, 0.5F).fireImmune().clientTrackingRange(8).build(ModEntityNames.SOUL_RABBIT);
     public static final EntityType<SoulSkeletonEntity> SOUL_SKELETON = Builder.of(SoulSkeletonEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.99f).fireImmune().clientTrackingRange(8).build(ModEntityNames.SOUL_SKELETON);
+    public static final EntityType<SoulSkeletonKingEntity> SOUL_SKELETON_KING = Builder.of(SoulSkeletonKingEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.99f).fireImmune().clientTrackingRange(10).build(ModEntityNames.SOUL_SKELETON_KING);
     public static final EntityType<SubZombieEntity> SUB_ZOMBIE = Builder.of(SubZombieEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(8).build(ModEntityNames.SUB_ZOMBIE);
     public static final EntityType<VoidAlchemistEntity> VOID_ALCHEMIST = Builder.of(VoidAlchemistEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.VOID_ALCHEMIST);
     public static final EntityType<VoidArcherEntity> VOID_ARCHER = Builder.of(VoidArcherEntity::new, EntityClassification.MONSTER).sized(0.6f, 1.95f).clientTrackingRange(10).build(ModEntityNames.VOID_ARCHER);
@@ -81,6 +81,7 @@ public final class ModEntities {
         registry.register(make(COMPUTER_SCIENTIST, ModEntityNames.COMPUTER_SCIENTIST));
         registry.register(make(DARK_EVOKER, ModEntityNames.DARK_EVOKER));
         registry.register(make(DROPPING_MORTAR_SHELL, ModEntityNames.DROPPING_MORTAR_SHELL));
+        registry.register(make(ENERGIZED_BLAZE, ModEntityNames.ENERGIZED_BLAZE));
         registry.register(make(ENGINEER, ModEntityNames.ENGINEER));
         registry.register(make(ETHE_ARMORER, ModEntityNames.ETHE_ARMORER));
         registry.register(make(ETHEREAL_ARROW, ModEntityNames.ETHEREAL_ARROW));
@@ -104,6 +105,7 @@ public final class ModEntities {
         registry.register(make(SOUL_CRYSTAL, ModEntityNames.SOUL_CRYSTAL));
         registry.register(make(SOUL_RABBIT, ModEntityNames.SOUL_RABBIT));
         registry.register(make(SOUL_SKELETON, ModEntityNames.SOUL_SKELETON));
+        registry.register(make(SOUL_SKELETON_KING, ModEntityNames.SOUL_SKELETON_KING));
         registry.register(make(SUB_ZOMBIE, ModEntityNames.SUB_ZOMBIE));
         registry.register(make(VOID_ALCHEMIST, ModEntityNames.VOID_ALCHEMIST));
         registry.register(make(VOID_ARCHER, ModEntityNames.VOID_ARCHER));
@@ -117,6 +119,7 @@ public final class ModEntities {
         event.put(CLONED_SKELETON_KING, SkeletonKingEntity.createAttributes().build());
         event.put(COMPUTER_SCIENTIST, ComputerScientistEntity.createAttributes().build());
         event.put(DARK_EVOKER, EvokerEntity.createAttributes().build());
+        event.put(ENERGIZED_BLAZE, EnergizedBlazeEntity.createAttributes().build());
         event.put(ENGINEER, EngineerEntity.createAttributes().build());
         event.put(ETHE_ARMORER, AbstractVoidwalkerEntity.createVoidwalkerAttributes().build());
         event.put(GIANT_X, GiantXEntity.createAttributes().build());
@@ -131,6 +134,7 @@ public final class ModEntities {
         event.put(SOUL_CRYSTAL, SoulCrystalEntity.createAttributes().build());
         event.put(SOUL_RABBIT, RabbitEntity.createAttributes().build());
         event.put(SOUL_SKELETON, SoulSkeletonEntity.createAttributes().build());
+        event.put(SOUL_SKELETON_KING, SoulSkeletonKingEntity.createAttributes().build());
         event.put(SUB_ZOMBIE, ZombieEntity.createAttributes().build());
         event.put(VOID_ALCHEMIST, VoidAlchemistEntity.createAttributes().build());
         event.put(VOID_ARCHER, AbstractVoidwalkerEntity.createVoidwalkerAttributes().build());
@@ -142,6 +146,7 @@ public final class ModEntities {
     public static void registerEntitySpawnPlacements() {
         register(COMPUTER_SCIENTIST, PlacementType.NO_RESTRICTIONS, Type.MOTION_BLOCKING, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(DARK_EVOKER, PlacementType.NO_RESTRICTIONS, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
+        register(ENERGIZED_BLAZE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(ENGINEER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(ETHE_ARMORER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(ILLUSORY_HORSE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::checkAnimalSpawnRules);
@@ -153,6 +158,7 @@ public final class ModEntities {
         register(SOUL_CRYSTAL, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(SOUL_RABBIT, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, SoulRabbitEntity::checkSoulRabbitSpawnRules);
         register(SOUL_SKELETON, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
+        register(SOUL_SKELETON_KING, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(SUB_ZOMBIE, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
         register(VOID_ALCHEMIST, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         register(VOID_ARCHER, PlacementType.ON_GROUND, Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);

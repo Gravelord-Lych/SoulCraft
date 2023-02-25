@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SEGeneratorBlockItem extends BlockItem implements ItemSEContainer {
-    public static final String ENERGY_TAG = "SEStorageBlockItem.SoulEnergy";
+    public static final String ENERGY_TAG = "SEGeneratorBlockItem.SoulEnergy";
     private final int capacity;
 
     public SEGeneratorBlockItem(Block block, int capacity, Properties properties) {

@@ -34,10 +34,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -289,7 +286,7 @@ public final class  EntityUtils {
         return getEntitiesInRange(type, mainEntity, range, entity -> true);
     }
 
-    public static <T extends Entity> List<T> getEntitiesInRange(Class<T> type, Entity mainEntity, double range, Predicate<? super Entity> predicate) {
+    public static <T extends Entity> List<T> getEntitiesInRange(Class<T> type, Entity mainEntity, double range, Predicate<? super T> predicate) {
         List<T> entities = mainEntity.level.getEntitiesOfClass(type, mainEntity.getBoundingBox().inflate(range), predicate);
         entities.removeIf(e -> e.distanceTo(mainEntity) > range);
         return entities;
@@ -418,9 +415,20 @@ public final class  EntityUtils {
 
     @Nullable
     public static EntityRayTraceResult getEntityRayTraceResult(Entity entity, double reachDistance) {
+        return getEntityRayTraceResult(entity, reachDistance, true);
+    }
+
+    @Nullable
+    public static EntityRayTraceResult getEntityRayTraceResult(Entity entity, double reachDistance, boolean testBlock) {
         Vector3d position = entity.getEyePosition(0);
         Vector3d viewVector = entity.getViewVector(1);
         Vector3d targetPos = position.add(viewVector.scale(reachDistance));
+        if (testBlock) {
+            BlockRayTraceResult blockRay = entity.level.clip(new RayTraceContext(position, targetPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, entity));
+            if (blockRay.getType() != RayTraceResult.Type.MISS) {
+                return null;
+            }
+        }
         AxisAlignedBB possibleEntities = entity.getBoundingBox().expandTowards(viewVector.scale(reachDistance)).inflate(1);
         return ProjectileHelper.getEntityHitResult(entity, position, targetPos, possibleEntities, entityIn -> !entityIn.isSpectator() && entityIn.isPickable(), reachDistance * reachDistance);
     }

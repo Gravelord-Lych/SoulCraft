@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.SoftOverride;
 
 public class ExtraAbilityCarrierItem extends Item {
-    public static final String TAG = Utils.snakeToCamel(ModItemNames.EXTRA_ABILITY_CARRIER) + ModItems.TAG;
+    public static final String TAG = Utils.snakeToCamel(ModItemNames.EXTRA_ABILITY_CARRIER) + ".";
 
     public ExtraAbilityCarrierItem(Properties properties) {
         super(properties);
@@ -42,7 +42,7 @@ public class ExtraAbilityCarrierItem extends Item {
                 case EPIC:
                     return ModRarities.LEGENDARY;
                 default:
-                    return rarity;
+                    return rarity == ModRarities.LEGENDARY ? ModRarities.MAX : rarity;
             }
         }
         return rarity;

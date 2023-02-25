@@ -33,8 +33,9 @@ import static lych.soulcraft.util.ModConstants.VOIDWALKER_SPAWN_EGG_BACKGROUND_C
 
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModItems {
-    public static final String TAG = ".Tag.";
     public static final String SPAWN_EGG_SUFFIX = "_spawn_egg";
+    public static final Item ENTITY_CARRIER = new EntityCarrierItem(common(), 1);
+    public static final Item ENTITY_CARRIER_II = new EntityCarrierItem(common(), 8);
     public static final Item EXTRA_ABILITY_CARRIER = new ExtraAbilityCarrierItem(common().stacksTo(1));
     public static final Item EXTRA_ABILITY_WAND = new ExtraAbilityWandItem(common().stacksTo(1), 2);
     public static final Item HALF_USED_LINGERING_POTION = new HalfUsedLingeringPotionItem(common().stacksTo(1).tab(ItemGroup.TAB_BREWING));
@@ -168,6 +169,8 @@ public final class ModItems {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
+        registry.register(make(ENTITY_CARRIER, ModItemNames.ENTITY_CARRIER));
+        registry.register(make(ENTITY_CARRIER_II, ModItemNames.ENTITY_CARRIER_II));
         registry.register(make(EXTRA_ABILITY_CARRIER, ModItemNames.EXTRA_ABILITY_CARRIER));
         registry.register(make(EXTRA_ABILITY_WAND, ModItemNames.EXTRA_ABILITY_WAND));
         registry.register(make(HALF_USED_LINGERING_POTION, ModItemNames.HALF_USED_LINGERING_POTION));

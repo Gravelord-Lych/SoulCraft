@@ -36,6 +36,7 @@ public class SoulBoltEntity extends Entity implements IHasOwner<LivingEntity> {
     private UUID ownerUUID;
     private double knockbackStrength = 5;
     private double knockbackModifier;
+    private float damage = 10;
 
     public SoulBoltEntity(EntityType<? extends SoulBoltEntity> type, World world) {
         super(type, world);
@@ -104,6 +105,9 @@ public class SoulBoltEntity extends Entity implements IHasOwner<LivingEntity> {
             knockbackStrength = compoundNBT.getDouble("KnockbackStrength");
         }
         knockbackModifier = compoundNBT.getDouble("KnockbackModifier");
+        if (compoundNBT.contains("Damage")) {
+            setDamage(compoundNBT.getFloat("Damage"));
+        }
         loadOwner(compoundNBT);
     }
 
@@ -116,6 +120,7 @@ public class SoulBoltEntity extends Entity implements IHasOwner<LivingEntity> {
         compoundNBT.putInt("FireRadius", fireRadius);
         compoundNBT.putDouble("KnockbackStrength", knockbackStrength);
         compoundNBT.putDouble("KnockbackModifier", knockbackModifier);
+        compoundNBT.putFloat("Damage", getDamage());
         saveOwner(compoundNBT);
     }
 
@@ -124,7 +129,6 @@ public class SoulBoltEntity extends Entity implements IHasOwner<LivingEntity> {
             return;
         }
         double knockbackRadius = 5 + knockbackStrength * 0.8;
-        float damage = (float) (knockbackStrength * 1.5);
         Vector3d pos = position();
         LivingEntity owner = getOwner();
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, BoundingBoxUtils.inflate(pos, knockbackRadius, knockbackRadius / 2, knockbackRadius))) {
@@ -177,6 +181,14 @@ public class SoulBoltEntity extends Entity implements IHasOwner<LivingEntity> {
 
     public void setFireRadius(int fireRadius) {
         this.fireRadius = fireRadius;
+    }
+
+    public float getDamage() {
+        return damage;
+    }
+
+    public void setDamage(float damage) {
+        this.damage = damage;
     }
 
     @Nullable

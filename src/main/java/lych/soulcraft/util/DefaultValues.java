@@ -14,7 +14,6 @@ public final class DefaultValues {
     public static final ITextComponent COMMA = new TranslationTextComponent(SoulCraft.prefixMsg("comma"));
     public static final ITextComponent SPACE = new TranslationTextComponent(SoulCraft.prefixMsg("space"));
     public static final ITextComponent TRUE_SPACE = new StringTextComponent(" ");
-    private static final StringTextComponent DUMMY_TEXT_COMPONENT = new StringTextComponent("");
     private static final Consumer<?> DUMMY_CONSUMER = o -> {};
     private static final Runnable DUMMY_RUNNABLE = () -> {};
     private static final Supplier<?> DUMMY_SUPPLIER = () -> null;
@@ -44,7 +43,7 @@ public final class DefaultValues {
     }
 
     public static StringTextComponent dummyTextComponent() {
-        return DUMMY_TEXT_COMPONENT;
+        return (StringTextComponent) StringTextComponent.EMPTY;
     }
 
     @SuppressWarnings("unchecked")

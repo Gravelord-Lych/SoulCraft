@@ -40,6 +40,8 @@ public class ItemModelDataGen extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+        simple(registryNameToString(ENTITY_CARRIER), HANDHELD, prefix(ENTITY_CARRIER));
+        simple(registryNameToString(ENTITY_CARRIER_II), HANDHELD, prefix(ENTITY_CARRIER_II));
         simple(registryNameToString(EXTRA_ABILITY_CARRIER), GENERATED, prefix(EXTRA_ABILITY_CARRIER));
         simple(registryNameToString(EXTRA_ABILITY_WAND), HANDHELD, prefix(EXTRA_ABILITY_WAND));
         halfUsedPotion(registryNameToString(HALF_USED_LINGERING_POTION), LINGERING_POTION);

@@ -65,7 +65,7 @@ public class SoulCraft {
     }
 
     public static String prefixKeyCategory(String name) {
-        return String.format("key.category.%s.%s", MOD_ID, name);
+        return String.format("key.categories.%s.%s", MOD_ID, name);
     }
 
     public static ResourceLocation prefixShader(String name) {

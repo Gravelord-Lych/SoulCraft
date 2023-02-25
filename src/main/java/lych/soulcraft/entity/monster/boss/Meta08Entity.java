@@ -262,6 +262,9 @@ public class Meta08Entity extends MonsterEntity implements ILaserAttacker, IShar
         if (getTrait() != null) {
             xpReward *= 3;
         }
+        if (getTrait() == SpecialTrait.ALL_ROUND) {
+            xpReward *= 3;
+        }
         return super.getExperienceReward(player);
     }
 

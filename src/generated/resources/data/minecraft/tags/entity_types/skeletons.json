@@ -4,6 +4,7 @@
     "minecraft:skeleton",
     "minecraft:stray",
     "minecraft:wither_skeleton",
-    "soulcraft:soul_skeleton"
+    "soulcraft:soul_skeleton",
+    "soulcraft:soul_skeleton_king"
   ]
 }

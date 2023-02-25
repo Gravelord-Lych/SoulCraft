@@ -13,6 +13,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EtherealArrowEntity extends SoulArrowEntity {
@@ -80,7 +81,7 @@ public class EtherealArrowEntity extends SoulArrowEntity {
     }
 
     @Override
-    protected void doAreaOfEffectDamage(EntityRayTraceResult result) {}
+    protected void doAreaOfEffectDamage(RayTraceResult result) {}
 
     @Override
     public void playerTouch(PlayerEntity player) {}

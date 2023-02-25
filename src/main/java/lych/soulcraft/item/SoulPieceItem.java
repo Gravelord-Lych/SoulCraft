@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.SoftOverride;
 
 public class SoulPieceItem extends Item {
-    public static final String TAG = Utils.snakeToCamel(ModItemNames.SOUL_PIECE) + ModItems.TAG;
+    public static final String TAG = Utils.snakeToCamel(ModItemNames.SOUL_PIECE) + ".";
 
     public SoulPieceItem(Properties properties) {
         super(properties);
@@ -41,7 +41,7 @@ public class SoulPieceItem extends Item {
                 case EPIC:
                     return ModRarities.LEGENDARY;
                 default:
-                    return rarity;
+                    return rarity == ModRarities.LEGENDARY ? ModRarities.MAX : rarity;
             }
         }
         return rarity;

@@ -17,7 +17,7 @@ public class EntityTagDataGen extends EntityTypeTagsProvider {
     @Override
     protected void addTags() {
         super.addTags();
-        tag(EntityTypeTags.SKELETONS).add(ModEntities.SOUL_SKELETON);
+        tag(EntityTypeTags.SKELETONS).add(ModEntities.SOUL_SKELETON, ModEntities.SOUL_SKELETON_KING);
         tag(EntityTypeTags.ARROWS).add(ModEntities.FANGS_SUMMONER, ModEntities.SOUL_ARROW);
         tag(ModEntityTags.TIERED_BOSS).add(ModEntities.SKELETON_KING, ModEntities.GIANT_X);
         tag(EntityTypeTags.RAIDERS).add(ModEntities.DARK_EVOKER, ModEntities.ENGINEER);

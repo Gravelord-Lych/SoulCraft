@@ -343,6 +343,11 @@ public class GiantXEntity extends ZombieEntity implements ITieredBoss {
         }
     }
 
+    @Override
+    public boolean canChangeDimensions() {
+        return false;
+    }
+
     @Nullable
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance instance, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compoundNBT) {

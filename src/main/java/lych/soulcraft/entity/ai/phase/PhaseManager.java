@@ -78,6 +78,6 @@ public class PhaseManager<E extends Enum<E> & IIdentifiableEnum> {
     }
 
     protected Random getRandom() {
-        return Objects.requireNonNull(randomSupplier.get(), "WeightedPhaseManager requires a randomSupplier that always returns non-null");
+        return Objects.requireNonNull(randomSupplier.get(), String.format("%s requires a randomSupplier that always returns non-null", getClass().getSimpleName()));
     }
 }

@@ -102,7 +102,6 @@ public class SoulManager extends WorldSavedData {
         return true;
     }
 
-    @Nullable
     public Set<MobEntity> getControllingMobs(PlayerEntity player) {
         return controllers.entrySet().stream().filter(e -> Objects.equals(getPlayerUUID(e), player.getUUID())).map(this::getMob).filter(EntityUtils::isAlive).collect(Collectors.toSet());
     }

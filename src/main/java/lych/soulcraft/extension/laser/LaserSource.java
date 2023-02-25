@@ -1,5 +1,6 @@
 package lych.soulcraft.extension.laser;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -9,8 +10,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.TriPredicate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class LaserSource {
     private final LaserData data;
@@ -40,22 +41,22 @@ public class LaserSource {
         final Vector3d stepVec = vecToTarget.normalize().scale(stepLen);
         final ImmutableSortedMap<LaserHitPredicate<?>, Integer> predicates = data.getPredicates();
 
-        final List<Object> listToAvoid = Arrays.asList(toAvoid);
+        final Set<Object> listToAvoid = ImmutableSet.copyOf(toAvoid);
         final List<LivingEntity> passedEntities = new ArrayList<>();
-        final List<BlockPos> passedBlockPos = new ArrayList<>(50);
-        final List<Vector3d> passedPositions = new ArrayList<>(100);
+        BlockPos passedBlockPos = null;
+        Vector3d passedPosition = null;
 
         int durabilityRemaining = data.getDurability();
         for (int i = 1; durabilityRemaining > 0; i++) {
             Vector3d vec = src.add(stepVec.scale(i));
             for (LaserHitPredicate<?> predicate : predicates.keySet()) {
                 if (!listToAvoid.contains(vec)) {
-                    passedPositions.add(vec);
+                    passedPosition = vec;
                 }
                 Object result = predicate.apply(vec, level);
                 BlockPos pos = new BlockPos(vec);
-                if (!listToAvoid.contains(pos) && !passedBlockPos.contains(pos)) {
-                    passedBlockPos.add(pos);
+                if (!listToAvoid.contains(pos)) {
+                    passedBlockPos = pos;
                 }
                 final boolean passed = predicate.test(result);
                 if (predicate.getHitType() == LaserHitType.ENTITY && !listToAvoid.contains(result) && passed) {
@@ -71,7 +72,7 @@ public class LaserSource {
                 }
             }
         }
-        return new LaserAttackResult(passedEntities, passedBlockPos, passedPositions, data, level);
+        return new LaserAttackResult(passedEntities, passedBlockPos, passedPosition, data, level);
     }
 
     public LaserAttackResult attackAndStopIfHit(Entity target, double dist, Object... toAvoid) {
@@ -91,10 +92,10 @@ public class LaserSource {
         final Vector3d stepVec = vecToTarget.normalize().scale(stepLen);
         final ImmutableSortedMap<LaserHitPredicate<?>, Integer> predicates = data.getPredicates();
 
-        final List<Object> listToAvoid = Arrays.asList(toAvoid);
+        final Set<Object> listToAvoid = ImmutableSet.copyOf(toAvoid);
         final List<LivingEntity> passedEntities = new ArrayList<>();
-        final List<BlockPos> passedBlockPos = new ArrayList<>(50);
-        final List<Vector3d> passedPositions = new ArrayList<>(100);
+        BlockPos passedBlockPos = null;
+        Vector3d passedPosition = null;
 
         int durabilityRemaining = data.getDurability();
         for (int i = 1; durabilityRemaining > 0; i++) {
@@ -102,12 +103,12 @@ public class LaserSource {
             boolean shouldBreak = shouldBreakPredicate.test(vec, target, dist);
             for (LaserHitPredicate<?> predicate : predicates.keySet()) {
                 if (!listToAvoid.contains(vec)) {
-                    passedPositions.add(vec);
+                    passedPosition = vec;
                 }
                 Object result = predicate.apply(vec, level);
                 BlockPos pos = new BlockPos(vec);
-                if (!listToAvoid.contains(pos) && !passedBlockPos.contains(pos)) {
-                    passedBlockPos.add(pos);
+                if (!listToAvoid.contains(pos)) {
+                    passedBlockPos = pos;
                 }
 
                 final boolean passed = predicate.test(result);
@@ -133,6 +134,6 @@ public class LaserSource {
                 }
             }
         }
-        return new LaserAttackResult(passedEntities, passedBlockPos, passedPositions, data, level);
+        return new LaserAttackResult(passedEntities, passedBlockPos, passedPosition, data, level);
     }
 }

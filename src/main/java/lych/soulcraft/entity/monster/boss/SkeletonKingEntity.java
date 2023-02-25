@@ -14,6 +14,7 @@ import lych.soulcraft.util.EntityUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -110,8 +111,8 @@ public class SkeletonKingEntity extends AbstractSkeletonKingEntity {
     protected final ServerBossInfo bossInfo = new ServerBossInfo(getDisplayName(), BossInfo.Color.WHITE, BossInfo.Overlay.PROGRESS);
     private boolean killedByCommand;
 
-    public SkeletonKingEntity(EntityType<? extends SkeletonKingEntity> skeleton, World world) {
-        super(skeleton, world);
+    public SkeletonKingEntity(EntityType<? extends SkeletonKingEntity> type, World world) {
+        super(type, world);
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
@@ -133,6 +134,7 @@ public class SkeletonKingEntity extends AbstractSkeletonKingEntity {
         goalSelector.addGoal(6, new CloneSkeletonGoal(this));
         goalSelector.addGoal(7, new BoostSkeletonGoal(this));
         goalSelector.addGoal(8, new ArrowAttackGoal(this));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
 
     @Override

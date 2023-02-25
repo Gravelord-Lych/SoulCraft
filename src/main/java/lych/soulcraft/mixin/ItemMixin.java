@@ -41,7 +41,7 @@ public abstract class ItemMixin implements IItemMixin {
                     newRarity = ModRarities.LEGENDARY;
                     break;
                 default:
-                    newRarity = oldRarity;
+                    newRarity = oldRarity == ModRarities.LEGENDARY ? ModRarities.MAX : oldRarity;
             }
             cir.setReturnValue(newRarity);
         }

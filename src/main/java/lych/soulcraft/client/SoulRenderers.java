@@ -10,11 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.BannerPattern;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -72,5 +74,18 @@ public class SoulRenderers {
     public static void translate(MatrixStack matrixStack) {
         Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         matrixStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
+    }
+
+    public static void rotateArmsToCastSpell(BipedModel<?> model, float ageInTicks) {
+        model.rightArm.z = 0.0F;
+        model.rightArm.x = -5.0F;
+        model.leftArm.z = 0.0F;
+        model.leftArm.x = 5.0F;
+        model.rightArm.xRot = MathHelper.cos(ageInTicks * 0.6662F) * 0.25F;
+        model.leftArm.xRot = MathHelper.cos(ageInTicks * 0.6662F) * 0.25F;
+        model.rightArm.zRot = 2.3561945F;
+        model.leftArm.zRot = -2.3561945F;
+        model.rightArm.yRot = 0.0F;
+        model.leftArm.yRot = 0.0F;
     }
 }

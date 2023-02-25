@@ -5,6 +5,7 @@ public class ModEntityNames {
     public static final String COMPUTER_SCIENTIST = "computer_scientist";
     public static final String DARK_EVOKER = "dark_evoker";
     public static final String DROPPING_MORTAR_SHELL = "dropping_mortar_shell";
+    public static final String ENERGIZED_BLAZE = "energized_blaze";
     public static final String ENGINEER = "engineer";
     public static final String ETHE_ARMORER = "ethe_armorer";
     public static final String ETHEREAL_ARROW = "ethereal_arrow";
@@ -28,6 +29,7 @@ public class ModEntityNames {
     public static final String SOUL_CRYSTAL = "soul_crystal";
     public static final String SOUL_RABBIT = "soul_rabbit";
     public static final String SOUL_SKELETON = "soul_skeleton";
+    public static final String SOUL_SKELETON_KING = "soul_skeleton_king";
     public static final String SUB_ZOMBIE = "sub_zombie";
     public static final String VOID_ALCHEMIST = "void_alchemist";
     public static final String VOID_ARCHER = "void_archer";

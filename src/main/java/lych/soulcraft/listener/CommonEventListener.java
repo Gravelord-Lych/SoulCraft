@@ -20,7 +20,6 @@ import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
 import lych.soulcraft.entity.monster.voidwalker.AbstractVoidwalkerEntity;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.extension.ExtraAbility;
-import lych.soulcraft.extension.control.ControllerType;
 import lych.soulcraft.extension.control.SoulManager;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
 import lych.soulcraft.extension.skull.ModSkulls;
@@ -94,13 +93,6 @@ import static lych.soulcraft.util.ExtraAbilityConstants.FALL_BUFFER_AMOUNT;
 @Mod.EventBusSubscriber(modid = SoulCraft.MOD_ID)
 public final class CommonEventListener {
     private CommonEventListener() {}
-
-    @SubscribeEvent
-    public static void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
-        if (event.getTarget() instanceof MobEntity && !event.getTarget().level.isClientSide()) {
-            SoulManager.get((ServerWorld) event.getTarget().level).add((MobEntity) event.getTarget(), event.getPlayer(), ControllerType.DEFAULT);
-        }
-    }
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {

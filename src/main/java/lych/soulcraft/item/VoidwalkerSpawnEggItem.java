@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class VoidwalkerSpawnEggItem extends ForgeSpawnEggItem {
-    private static final String TAG = Utils.snakeToCamel(ModEntityNames.VOIDWALKER + ModItems.SPAWN_EGG_SUFFIX) + ModItems.TAG + VoidwalkerTier.class.getSimpleName();
+    private static final String TAG = Utils.snakeToCamel(ModEntityNames.VOIDWALKER + ModItems.SPAWN_EGG_SUFFIX) + "." + VoidwalkerTier.class.getSimpleName();
     private static VoidwalkerTier currentTier;
 
     public VoidwalkerSpawnEggItem(Supplier<? extends EntityType<?>> type, int backgroundColor, int highlightColor, Properties props) {

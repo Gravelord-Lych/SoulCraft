@@ -9,10 +9,7 @@ import lych.soulcraft.entity.iface.IHasOwner;
 import lych.soulcraft.entity.monster.RobotEntity;
 import lych.soulcraft.entity.monster.boss.Meta08Entity;
 import lych.soulcraft.extension.shield.SharedShield;
-import lych.soulcraft.util.CollectionUtils;
-import lych.soulcraft.util.EntityUtils;
-import lych.soulcraft.util.ModSoundEvents;
-import lych.soulcraft.util.Vectors;
+import lych.soulcraft.util.*;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -22,7 +19,6 @@ import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.server.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
@@ -207,7 +203,7 @@ public final class Meta08Goals {
 //          Summon 8 robots instead of 6 if creative.
             for (int degree = 0; degree < 360; degree += meta8.isCreative() ? 45 : 60) {
                 Vector3d rotated = Vectors.rotateTo(targetPos, srcPos, Math.toRadians(degree), true);
-                summonPositions.add(new Vector3d(rotated.x, level.getHeightmapPos(Heightmap.Type.WORLD_SURFACE, new BlockPos(rotated)).getY(), rotated.z));
+                summonPositions.add(new Vector3d(rotated.x, PositionCalculators.smart(new BlockPos(rotated), level, pos), rotated.z));
             }
         }
 
@@ -296,7 +292,7 @@ public final class Meta08Goals {
     }
 
     public static class SpawnLightningGoal extends Goal implements IPhaseableGoal {
-        private static final double CREATIVE_KNOCKBACK_STRENGTH = 4;
+        private static final double CREATIVE_KNOCKBACK_STRENGTH = 0.4;
         private static final float DAMAGE = 10;
         private final Meta08Entity meta8;
         private final ServerWorld level;
@@ -377,14 +373,14 @@ public final class Meta08Goals {
                             bolt.setOwner(meta8);
                             bolt.setKnockbackStrength(CREATIVE_KNOCKBACK_STRENGTH);
                             bolt.setKnockbackModifier(0.1);
-                            bolt.moveTo(new Vector3d(pos.x, level.getHeightmapPos(Heightmap.Type.WORLD_SURFACE, new BlockPos(pos)).getY(), pos.z));
+                            bolt.moveTo(new Vector3d(pos.x, PositionCalculators.smart(new BlockPos(pos), level, meta8.blockPosition()), pos.z));
                             level.addFreshEntity(bolt);
                         }
                     } else {
                         LightningBoltEntity bolt = EntityType.LIGHTNING_BOLT.create(level);
                         if (bolt != null) {
                             ((IHasOwner<LivingEntity>) bolt).setOwner(meta8);
-                            bolt.moveTo(new Vector3d(pos.x, level.getHeightmapPos(Heightmap.Type.WORLD_SURFACE, new BlockPos(pos)).getY(), pos.z));
+                            bolt.moveTo(new Vector3d(pos.x, PositionCalculators.smart(new BlockPos(pos), level, meta8.blockPosition()), pos.z));
                             bolt.setDamage(DAMAGE);
                             level.addFreshEntity(bolt);
                         }

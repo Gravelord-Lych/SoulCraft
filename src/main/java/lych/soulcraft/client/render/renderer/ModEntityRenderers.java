@@ -19,6 +19,7 @@ public final class ModEntityRenderers {
         registerEntityRenderingHandler(COMPUTER_SCIENTIST, ComputerScientistRenderer::new);
         registerEntityRenderingHandler(DARK_EVOKER, DarkEvokerRenderer::new);
         registerEntityRenderingHandler(DROPPING_MORTAR_SHELL, ModEntityRenderers::createRenderForMortarShells);
+        registerEntityRenderingHandler(ENERGIZED_BLAZE, EnergizedBlazeRenderer::new);
         registerEntityRenderingHandler(ENGINEER, EngineerRenderer::new);
         registerEntityRenderingHandler(ETHE_ARMORER, EtheArmorerRenderer::new);
         registerEntityRenderingHandler(ETHEREAL_ARROW, EtherealArrowRenderer::new);
@@ -42,6 +43,7 @@ public final class ModEntityRenderers {
         registerEntityRenderingHandler(SOUL_CRYSTAL, SoulCrystalRenderer::new);
         registerEntityRenderingHandler(SOUL_RABBIT, SoulRabbitRenderer::new);
         registerEntityRenderingHandler(SOUL_SKELETON, SoulSkeletonRenderer::new);
+        registerEntityRenderingHandler(SOUL_SKELETON_KING, SoulSkeletonKingRenderer::new);
         registerEntityRenderingHandler(SUB_ZOMBIE, ZombieRenderer::new);
         registerEntityRenderingHandler(VOID_ALCHEMIST, VoidAlchemistRenderer::new);
         registerEntityRenderingHandler(VOID_ARCHER, VoidArcherRenderer::new);

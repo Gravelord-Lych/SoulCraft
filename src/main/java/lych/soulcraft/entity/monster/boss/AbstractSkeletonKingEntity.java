@@ -37,8 +37,8 @@ public abstract class AbstractSkeletonKingEntity extends AbstractSkeletonEntity 
     private boolean canModifyTier = true;
     private SpellType currentSpell = SpellType.NONE;
 
-    protected AbstractSkeletonKingEntity(EntityType<? extends AbstractSkeletonEntity> skeleton, World world) {
-        super(skeleton, world);
+    protected AbstractSkeletonKingEntity(EntityType<? extends AbstractSkeletonKingEntity> type, World world) {
+        super(type, world);
     }
 
     @Override
@@ -53,14 +53,13 @@ public abstract class AbstractSkeletonKingEntity extends AbstractSkeletonEntity 
         goalSelector.addGoal(9, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         goalSelector.addGoal(10, new LookRandomlyGoal(this));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this));
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
     }
 
     @Override
     public boolean isCastingSpell() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return getSpellId() > 0;
         }
         return spellCastingTickCount > 0;
@@ -126,7 +125,7 @@ public abstract class AbstractSkeletonKingEntity extends AbstractSkeletonEntity 
         return result;
     }
 
-    protected void onSpawn(IServerWorld world, DifficultyInstance instance, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compoundNBT) {};
+    protected void onSpawn(IServerWorld world, DifficultyInstance instance, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compoundNBT) {}
 
     protected boolean shouldClearSlots(IServerWorld world, DifficultyInstance instance, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compoundNBT) {
         return true;

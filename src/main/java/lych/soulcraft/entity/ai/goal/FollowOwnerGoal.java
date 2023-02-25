@@ -27,7 +27,7 @@ public class FollowOwnerGoal<T extends MobEntity & IHasOwner<?>> extends Goal {
     private final boolean canFly;
 
     public FollowOwnerGoal(T mob, double speedModifier, float startDistance, float stopDistance, boolean canFly) {
-        this(mob, speedModifier, startDistance, stopDistance, 0, canFly);
+        this(mob, speedModifier, startDistance, stopDistance, -1, canFly);
     }
 
     public FollowOwnerGoal(T mob, double speedModifier, float startDistance, float stopDistance, double teleportDistance, boolean canFly) {
