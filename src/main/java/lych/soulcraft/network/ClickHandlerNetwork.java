@@ -2,7 +2,6 @@ package lych.soulcraft.network;
 
 import lych.soulcraft.SoulCraft;
 import lych.soulcraft.listener.CommonEventListener;
-import net.minecraft.util.Unit;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -19,16 +18,21 @@ public class ClickHandlerNetwork {
 
     public static void register() {
         INSTANCE = NetworkRegistry.newSimpleChannel(SoulCraft.prefix("clicks"), () -> VERSION, ClickHandlerNetwork::isCorrectVersion, ClickHandlerNetwork::isCorrectVersion);
-        INSTANCE.messageBuilder(Unit.class, nextID())
-                .encoder((o, buf) -> {})
-                .decoder(buf -> Unit.INSTANCE)
+        INSTANCE.messageBuilder(Type.class, nextID())
+                .encoder((hand, buf) -> buf.writeEnum(hand))
+                .decoder(buf -> buf.readEnum(Type.class))
                 .consumer((key, ctx) -> {
-                    CommonEventListener.handleEmptyClickServerside(Objects.requireNonNull(ctx.get().getSender(), "Packets that are sent from a client to the server must have a sender"));
+                    CommonEventListener.handleEmptyClickServerside(Objects.requireNonNull(ctx.get().getSender(), "Packets that are sent from a client to the server must have a sender"), key);
                 })
                 .add();
     }
 
     private static boolean isCorrectVersion(String version) {
         return version.equals(VERSION);
+    }
+
+    public enum Type {
+        LEFT,
+        RIGHT
     }
 }

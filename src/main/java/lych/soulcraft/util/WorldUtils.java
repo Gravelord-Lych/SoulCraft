@@ -1,7 +1,7 @@
 package lych.soulcraft.util;
 
 import com.google.common.base.Preconditions;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -56,4 +56,5 @@ public final class WorldUtils {
         int y = calculator.calculate(new BlockPos(pos), world);
         return new Vector3d(pos.x, y, pos.z);
     }
+
 }

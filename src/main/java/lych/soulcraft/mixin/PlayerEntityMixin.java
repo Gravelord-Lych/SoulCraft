@@ -7,26 +7,29 @@ import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.extension.ExtraAbility;
 import lych.soulcraft.gui.container.inventory.ExtraAbilityInventory;
 import lych.soulcraft.util.AdditionalCooldownTracker;
+import lych.soulcraft.util.EntityUtils;
 import lych.soulcraft.util.InventoryUtils;
 import lych.soulcraft.util.ModDataSerializers;
 import lych.soulcraft.util.mixin.IFoodStatsMixin;
 import lych.soulcraft.util.mixin.IPlayerEntityMixin;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -46,6 +49,12 @@ import static lych.soulcraft.util.ExtraAbilityConstants.ULTRAREACH_VERTICAL_BONU
 public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerEntityMixin {
     @Shadow @Final public PlayerInventory inventory;
     @Shadow protected FoodStats foodData;
+
+    @Shadow public abstract ItemStack eat(World p_213357_1_, ItemStack p_213357_2_);
+
+    @Shadow public abstract void playNotifySound(SoundEvent p_213823_1_, SoundCategory p_213823_2_, float p_213823_3_, float p_213823_4_);
+
+    private static final DataParameter<Integer> DATA_OPERATING_ID = EntityDataManager.defineId(PlayerEntity.class, DataSerializers.INT);
     private static final DataParameter<Set<IExtraAbility>> DATA_EXTRA_ABILITIES = EntityDataManager.defineId(PlayerEntity.class, ModDataSerializers.EXA);
     private boolean isStatic = true;
     private final ExtraAbilityInventory extraAbilityCarrierInventory = new ExtraAbilityInventory(6);
@@ -55,6 +64,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
     private final List<ItemStack> savableItems = new ArrayList<>();
     @Unique
     private final AdditionalCooldownTracker additionalCooldowns = new AdditionalCooldownTracker();
+    @Nullable
+    @Unique
+    private UUID operatingMob;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
@@ -62,7 +74,43 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     private void defineMoreData(CallbackInfo ci) {
+        entityData.define(DATA_OPERATING_ID, -1);
         entityData.define(DATA_EXTRA_ABILITIES, new LinkedHashSet<>());
+    }
+
+    @Nullable
+    @Override
+    public MobEntity getOperatingMob() {
+        Entity entity;
+        if (level.isClientSide()) {
+            entity = level.getEntity(entityData.get(DATA_OPERATING_ID));
+        } else {
+            entity = ((ServerWorld) level).getEntity(operatingMob);
+        }
+        return EntityUtils.isAlive(entity) && entity instanceof MobEntity ? (MobEntity) entity : null;
+    }
+
+    @Override
+    public void setOperatingMob(@Nullable MobEntity mob) {
+        if (mob == null) {
+            operatingMob = null;
+            entityData.set(DATA_OPERATING_ID, -1);
+            return;
+        }
+        operatingMob = mob.getUUID();
+        entityData.set(DATA_OPERATING_ID, mob.getId());
+    }
+
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tick()V", shift = At.Shift.AFTER))
+    private void syncTick(CallbackInfo ci) {
+        if (!level.isClientSide() && operatingMob != null) {
+            Entity entity = ((ServerWorld) level).getEntity(operatingMob);
+            if (EntityUtils.isAlive(entity) && entity instanceof MobEntity) {
+                setOperatingMob((MobEntity) entity);
+            } else {
+                setOperatingMob(null);
+            }
+        }
     }
 
     @Override
@@ -152,6 +200,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
             exaInventoryNBT.add(stack.save(new CompoundNBT()));
         }
         compoundNBT.put("ExtraAbilityCarrierInventory", exaInventoryNBT);
+
+        if (operatingMob != null) {
+            compoundNBT.putUUID("OperatingMob", operatingMob);
+        }
     }
 
     @SuppressWarnings("all")
@@ -207,6 +259,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IPlayerE
                 CompoundNBT itemNBT = exaInventoryNBT.getCompound(i);
                 extraAbilityCarrierInventory.setItem(i, ItemStack.of(itemNBT));
             }
+        }
+
+        if (compoundNBT.contains("OperatingMob")) {
+            operatingMob = compoundNBT.getUUID("OperatingMob");
         }
     }
 

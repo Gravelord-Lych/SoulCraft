@@ -103,11 +103,11 @@ public final class EnergizedBlazeGoals {
                             }
                             AbstractFireballEntity fireball;
                             if (small) {
-                                fireball = new SmallFireballEntity(blaze.level, blaze, tx + blaze.getRandom().nextGaussian() * (double) deviation, ty, tz + blaze.getRandom().nextGaussian() * (double) deviation);
+                                fireball = new SmallFireballEntity(blaze.level, blaze, tx + blaze.getRandom().nextGaussian() * deviation, ty, tz + blaze.getRandom().nextGaussian() * deviation);
                             } else {
-                                fireball = new FireballEntity(blaze.level, blaze, tx + blaze.getRandom().nextGaussian() * (double) deviation, ty, tz + blaze.getRandom().nextGaussian() * (double) deviation);
+                                fireball = new FireballEntity(blaze.level, blaze, tx + blaze.getRandom().nextGaussian() * deviation, ty, tz + blaze.getRandom().nextGaussian() * deviation);
                             }
-                            fireball.setPos(fireball.getX(), blaze.getY(0.5D) + 0.5D, fireball.getZ());
+                            fireball.setPos(fireball.getX(), blaze.getY(0.5) + 0.5, fireball.getZ());
                             blaze.level.addFreshEntity(fireball);
                         }
                     }

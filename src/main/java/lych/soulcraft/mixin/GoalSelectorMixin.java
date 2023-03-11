@@ -110,7 +110,8 @@ public abstract class GoalSelectorMixin implements IGoalSelectorMixin {
     public void removeAllAltGoals() {
         if (alt != null) {
             Set<PrioritizedGoal> goals = new HashSet<>(((IGoalSelectorMixin) alt).getAvailableGoals());
-            goals.forEach(alt::removeGoal);
+            goals.stream().filter(PrioritizedGoal::isRunning).forEach(Goal::stop);
+            ((IGoalSelectorMixin) alt).getAvailableGoals().clear();
         }
     }
 }

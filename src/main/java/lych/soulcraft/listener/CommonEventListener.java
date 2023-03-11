@@ -20,7 +20,8 @@ import lych.soulcraft.entity.monster.boss.esv.SoulCrystalEntity;
 import lych.soulcraft.entity.monster.voidwalker.AbstractVoidwalkerEntity;
 import lych.soulcraft.entity.projectile.SoulArrowEntity;
 import lych.soulcraft.extension.ExtraAbility;
-import lych.soulcraft.extension.control.SoulManager;
+import lych.soulcraft.extension.control.*;
+import lych.soulcraft.extension.control.dict.ControlDictionaries;
 import lych.soulcraft.extension.highlight.EntityHighlightManager;
 import lych.soulcraft.extension.skull.ModSkulls;
 import lych.soulcraft.extension.soulpower.buff.PlayerBuffMap;
@@ -112,6 +113,13 @@ public final class CommonEventListener {
                 event.setCanceled(true);
             }
         }
+
+
+        if (event.getSource().getEntity() instanceof ServerPlayerEntity && event.getEntity() instanceof MobEntity) {
+            ControlDictionaries.MIND_OPERATOR_DICT.control((MobEntity) event.getEntity(), (PlayerEntity) event.getSource().getEntity(), 200);
+        }
+
+
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
@@ -336,24 +344,40 @@ public final class CommonEventListener {
     }
 
     @SubscribeEvent
-    public static void onEmptyClick(PlayerInteractEvent.RightClickEmpty event) {
-        ClickHandlerNetwork.INSTANCE.sendToServer(Unit.INSTANCE);
+    public static void onEmptyLeftClick(PlayerInteractEvent.LeftClickEmpty event) {
+        ClickHandlerNetwork.INSTANCE.sendToServer(ClickHandlerNetwork.Type.LEFT);
+    }
+
+    @SubscribeEvent
+    public static void onEmptyRightClick(PlayerInteractEvent.RightClickEmpty event) {
+        ClickHandlerNetwork.INSTANCE.sendToServer(ClickHandlerNetwork.Type.RIGHT);
     }
 
     @SuppressWarnings("deprecation")
-    public static void handleEmptyClickServerside(ServerPlayerEntity player) {
+    public static void handleEmptyClickServerside(ServerPlayerEntity player, ClickHandlerNetwork.Type type) {
         if (player.isSpectator()) {
             return;
         }
-        if (player.getMainHandItem().isEmpty() && ExtraAbility.TELEPORTATION.isOn(player)) {
-            int cooldown = ((IPlayerEntityMixin) player).getAdditionalCooldowns().getCooldownRemaining(ExtraAbility.TELEPORTATION.getRegistryName());
-            if (cooldown == 0) {
-                BlockRayTraceResult ray = (BlockRayTraceResult) player.pick(player.getAttributeValue(ForgeMod.REACH_DISTANCE.get()) + ExtraAbilityConstants.BASE_TELEPORTATION_RADIUS, 0, false);
-                BlockPos pos = ray.getBlockPos();
-                World world = player.getLevel();
-                if (world.getBlockState(pos).getMaterial().blocksMotion() && world.getBlockState(pos.above()).isAir() && world.getBlockState(pos.above().above()).isAir()) {
-                    player.teleportTo(ray.getLocation().x, ray.getLocation().y, ray.getLocation().z);
-                    ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(ExtraAbility.TELEPORTATION.getRegistryName(), ExtraAbilityConstants.TELEPORTATION_COOLDOWN);
+        if (type == ClickHandlerNetwork.Type.LEFT) {
+            MobEntity operatingMob = MindOperatorSynchronizer.getOperatingMob(player);
+            if (operatingMob != null) {
+                MindOperatorSynchronizer.handleMelee(player, operatingMob);
+            }
+        }
+        if (type == ClickHandlerNetwork.Type.RIGHT) {
+            MobEntity operatingMob = MindOperatorSynchronizer.getOperatingMob(player);
+            if (operatingMob != null) {
+                MindOperatorSynchronizer.handleRightClick(player, operatingMob);
+            } else if (player.getMainHandItem().isEmpty() && ExtraAbility.TELEPORTATION.isOn(player)) {
+                int cooldown = ((IPlayerEntityMixin) player).getAdditionalCooldowns().getCooldownRemaining(ExtraAbility.TELEPORTATION.getRegistryName());
+                if (cooldown == 0) {
+                    BlockRayTraceResult ray = (BlockRayTraceResult) player.pick(player.getAttributeValue(ForgeMod.REACH_DISTANCE.get()) + ExtraAbilityConstants.BASE_TELEPORTATION_RADIUS, 0, false);
+                    BlockPos pos = ray.getBlockPos();
+                    World world = player.getLevel();
+                    if (world.getBlockState(pos).getMaterial().blocksMotion() && world.getBlockState(pos.above()).isAir() && world.getBlockState(pos.above().above()).isAir()) {
+                        player.teleportTo(ray.getLocation().x, ray.getLocation().y, ray.getLocation().z);
+                        ((IPlayerEntityMixin) player).getAdditionalCooldowns().addCooldown(ExtraAbility.TELEPORTATION.getRegistryName(), ExtraAbilityConstants.TELEPORTATION_COOLDOWN);
+                    }
                 }
             }
         }

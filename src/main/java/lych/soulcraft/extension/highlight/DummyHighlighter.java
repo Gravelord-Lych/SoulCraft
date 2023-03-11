@@ -5,6 +5,7 @@ import net.minecraft.world.server.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.PriorityQueue;
 import java.util.UUID;
 
 public class DummyHighlighter implements Highlighter {
@@ -16,7 +17,7 @@ public class DummyHighlighter implements Highlighter {
 
     @Nullable
     @Override
-    public Color getColor(ServerWorld level) {
+    public Color getColor(ServerWorld level, PriorityQueue<Highlighter> queue) {
         return null;
     }
 

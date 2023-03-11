@@ -4,14 +4,13 @@ import lych.soulcraft.api.exa.IExtraAbility;
 import lych.soulcraft.gui.container.inventory.ExtraAbilityInventory;
 import lych.soulcraft.util.AdditionalCooldownTracker;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static lych.soulcraft.entity.iface.ITieredMob.MAX_TIER;
 import static lych.soulcraft.entity.iface.ITieredMob.MIN_TIER;
@@ -20,6 +19,11 @@ public interface IPlayerEntityMixin {
     Set<IExtraAbility> getExtraAbilities();
 
     void setExtraAbilities(Set<IExtraAbility> set);
+
+    @Nullable
+    MobEntity getOperatingMob();
+
+    void setOperatingMob(@Nullable MobEntity mob);
 
     default boolean hasExtraAbility(IExtraAbility exa) {
         return getExtraAbilities().contains(exa);

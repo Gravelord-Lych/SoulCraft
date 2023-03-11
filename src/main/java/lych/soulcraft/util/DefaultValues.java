@@ -1,6 +1,7 @@
 package lych.soulcraft.util;
 
 import lych.soulcraft.SoulCraft;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -20,6 +21,12 @@ public final class DefaultValues {
     private static final Function<?, ?> DUMMY_FUNCTION = o -> null;
     private static final Predicate<?> TRUE = o -> true;
     private static final Predicate<?> FALSE = o -> false;
+    private static final Goal NO_GOAL = new Goal() {
+        @Override
+        public boolean canUse() {
+            return false;
+        }
+    };
 
     private DefaultValues() {}
 
@@ -54,6 +61,10 @@ public final class DefaultValues {
     @SuppressWarnings("unchecked")
     public static <T> Predicate<T> alwaysFalse() {
         return (Predicate<T>) FALSE;
+    }
+
+    public static Goal dummyGoal() {
+        return NO_GOAL;
     }
 
     public static boolean always() {

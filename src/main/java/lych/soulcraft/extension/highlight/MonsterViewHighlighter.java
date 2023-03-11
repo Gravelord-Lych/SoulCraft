@@ -7,8 +7,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.server.ServerWorld;
+import org.jetbrains.annotations.Nullable;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -52,6 +53,16 @@ public class MonsterViewHighlighter extends AbstractHighlighter {
             value--;
         }
         return value;
+    }
+
+    @Override
+    protected float @Nullable [] getDefaultColor(ServerWorld level, Entity entity) {
+        float[] defaultColor = super.getDefaultColor(level, entity);
+        if (defaultColor != null) {
+            defaultColor[0] = Float.NaN;
+            defaultColor[2] = Math.max(0, defaultColor[2] * 2 - 1);
+        }
+        return defaultColor;
     }
 
     @Override

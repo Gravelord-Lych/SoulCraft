@@ -7,6 +7,8 @@ public interface IBrainMixin<E extends LivingEntity> {
 
     void setDisabled(boolean disabled);
 
+    boolean canSwim();
+
     default void setDisabledIfValid(boolean disabled) {
         if (isValidBrain()) {
             setDisabled(disabled);

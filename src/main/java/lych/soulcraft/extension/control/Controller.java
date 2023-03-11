@@ -1,5 +1,6 @@
 package lych.soulcraft.extension.control;
 
+import com.google.common.base.MoreObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.GoalSelector;
@@ -16,7 +17,7 @@ public abstract class Controller<T extends MobEntity> {
     private final ControllerType<T> type;
     private final UUID mob;
     private final UUID player;
-    private final ServerWorld level;
+    protected final ServerWorld level;
     private boolean preparing;
 
     public Controller(ControllerType<T> type, UUID mob, UUID player, ServerWorld level) {
@@ -57,6 +58,12 @@ public abstract class Controller<T extends MobEntity> {
         return level.getPlayerByUUID(player);
     }
 
+    protected SoulManager getSoulManager() {
+        return SoulManager.get(level);
+    }
+
+    public void tick() {}
+
     public CompoundNBT save() {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putUUID("Mob", getMobUUID());
@@ -83,6 +90,8 @@ public abstract class Controller<T extends MobEntity> {
 
     public abstract void startControlling(MobEntity mob, GoalSelector goalSelector, GoalSelector targetSelector);
 
+    public void stopControlling(MobEntity mob, boolean mobAlive) {}
+
     public boolean overrideBehaviorGoals() {
         return false;
     }
@@ -97,5 +106,16 @@ public abstract class Controller<T extends MobEntity> {
 
     public float[] getColor() {
         return getType().getColor();
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("type", type)
+                .add("mob", mob)
+                .add("player", player)
+                .add("level", level)
+                .add("preparing", preparing)
+                .toString();
     }
 }

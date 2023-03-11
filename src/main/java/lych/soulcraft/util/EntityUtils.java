@@ -8,6 +8,7 @@ import lych.soulcraft.api.shield.IShieldUser;
 import lych.soulcraft.config.ConfigHelper;
 import lych.soulcraft.entity.functional.FangsEntity;
 import lych.soulcraft.entity.iface.ITieredMob;
+import lych.soulcraft.util.mixin.IBrainMixin;
 import lych.soulcraft.util.mixin.IGoalSelectorMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -18,6 +19,7 @@ import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.HoglinEntity;
 import net.minecraft.entity.monster.ZoglinEntity;
@@ -429,8 +431,8 @@ public final class  EntityUtils {
                 return null;
             }
         }
-        AxisAlignedBB possibleEntities = entity.getBoundingBox().expandTowards(viewVector.scale(reachDistance)).inflate(1);
-        return ProjectileHelper.getEntityHitResult(entity, position, targetPos, possibleEntities, entityIn -> !entityIn.isSpectator() && entityIn.isPickable(), reachDistance * reachDistance);
+        AxisAlignedBB possibleEntitiesBB = entity.getBoundingBox().expandTowards(viewVector.scale(reachDistance)).inflate(1);
+        return ProjectileHelper.getEntityHitResult(entity, position, targetPos, possibleEntitiesBB, entityIn -> !entityIn.isSpectator() && entityIn.isPickable(), reachDistance * reachDistance);
     }
 
     public static void disableShield(World world, IShieldUser user, @Nullable Random random) {
@@ -445,6 +447,31 @@ public final class  EntityUtils {
         if (random != null && user instanceof Entity) {
             ((Entity) user).playSound(ModSoundEvents.ENERGY_SOUND_BREAK.get(), 1, 1);
         }
+    }
+
+    public static void normalizeYRot(MobEntity operatingMob) {
+        while (operatingMob.yRot >= 360) {
+            operatingMob.yRot -= 360;
+        }
+    }
+
+    public static void normalizeYHeadRot(MobEntity operatingMob) {
+        while (operatingMob.yHeadRot >= 360) {
+            operatingMob.yHeadRot -= 360;
+        }
+    }
+
+    public static void normalizeYBodyRot(MobEntity operatingMob) {
+        while (operatingMob.yBodyRot >= 360) {
+            operatingMob.yBodyRot -= 360;
+        }
+    }
+
+    public static boolean canSwim(MobEntity mob) {
+        if (((IBrainMixin<?>) mob.getBrain()).isValidBrain()) {
+            return ((IBrainMixin<?>) mob.getBrain()).canSwim();
+        }
+        return ((IGoalSelectorMixin) mob.goalSelector).getAvailableGoals().stream().anyMatch(goal -> goal.getGoal() instanceof SwimGoal);
     }
 
     @FieldsAreNullableByDefault

@@ -4,6 +4,8 @@ import lych.soulcraft.SoulCraft;
 import lych.soulcraft.api.event.RegisterControllersEvent;
 import lych.soulcraft.extension.highlight.SoulControlHighlighter;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.monster.BlazeEntity;
+import net.minecraft.entity.monster.GhastEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -21,12 +23,27 @@ public class ControllerType<T extends MobEntity> {
     private static ControllerType<?>[] CONTROLLER_ARRAY = new ControllerType<?>[0];
     private static Map<ResourceLocation, ControllerType<?>> CONTROLLERS;
 
-    public static final ControllerType<MobEntity> DEFAULT = new ControllerType<>(SoulCraft.prefix("default"), SoulControlHighlighter.DEFAULT_COLOR, DefaultController::new, DefaultController::new);
+
+    public static final ControllerType<MobEntity> DEFAULT = new ControllerType<>(SoulCraft.prefix("default"), DefaultController::new, DefaultController::new);
+    public static final ControllerType<MobEntity> DEFAULT_MO = new ControllerType<>(SoulCraft.prefix("default_mo"), DefaultMindOperator::new, DefaultMindOperator::new);
+    public static final ControllerType<MobEntity> AGGRESSIVE_FLYER_MO = new ControllerType<>(SoulCraft.prefix("aggressive_flyer_mo"), AggressiveFlyerMindOperator::new, AggressiveFlyerMindOperator::new);
+    public static final ControllerType<BlazeEntity> BLAZE_MO = new ControllerType<>(SoulCraft.prefix("blaze_mo"), BlazeOperator::new, BlazeOperator::new);
+    public static final ControllerType<MobEntity> FLYER_MO = new ControllerType<>(SoulCraft.prefix("flyer"), FlyerMindOperator::new, FlyerMindOperator::new);
+    public static final ControllerType<GhastEntity> GHAST_MO = new ControllerType<>(SoulCraft.prefix("ghast_mo"), GhastOperator::new, GhastOperator::new);
+    public static final ControllerType<MobEntity> HARMLESS_MO = new ControllerType<>(SoulCraft.prefix("harmless_mo"), HarmlessMindOperator::new, HarmlessMindOperator::new);
+    public static final ControllerType<MobEntity> HARMLESS_SPEED_LIMITED_MO = new ControllerType<>(SoulCraft.prefix("harmless_speed_limited_mo"), HarmlessSpeedLimitedMindOperator::new, HarmlessSpeedLimitedMindOperator::new);
+    public static final ControllerType<MobEntity> SPEED_INDEPENDENT_FLYER_MO = new ControllerType<>(SoulCraft.prefix("speed_independent_flyer"), SpeedIndependentFlyerMindOperator::new, SpeedIndependentFlyerMindOperator::new);
+    public static final ControllerType<MobEntity> SPEED_LIMITED_MO = new ControllerType<>(SoulCraft.prefix("speed_limited_mo"), SpeedLimitedMindOperator::new, SpeedLimitedMindOperator::new);
+
     private final ResourceLocation registryName;
     private final float[] colorHSB;
     private final ControllerFactory<T> factory;
     private final ControllerDeserializer<T> deserializer;
     private final int id;
+
+    public ControllerType(ResourceLocation registryName,  ControllerFactory<T> factory, ControllerDeserializer<T> deserializer) {
+        this(registryName, SoulControlHighlighter.DEFAULT_COLOR, factory, deserializer);
+    }
 
     public ControllerType(ResourceLocation registryName, float[] colorHSB, ControllerFactory<T> factory, ControllerDeserializer<T> deserializer) {
         this.registryName = registryName;

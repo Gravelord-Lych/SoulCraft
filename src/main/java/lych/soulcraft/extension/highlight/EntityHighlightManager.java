@@ -158,7 +158,7 @@ public class EntityHighlightManager extends WorldSavedData {
                 invalidUUIDs.remove(entity.getUUID());
             }
             Highlighter highlighter = queue.element();
-            Color color = highlighter.getColor(level);
+            Color color = highlighter.getColor(level, new PriorityQueue<>(queue));
             boolean alive = EntityUtils.isAlive(entity);
             if (alive) {
                 syncHighlightColor(entity, color);

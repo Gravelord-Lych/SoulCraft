@@ -14,6 +14,7 @@ import lych.soulcraft.client.render.world.dimension.ModDimensionRenderers;
 import lych.soulcraft.client.shader.ModShaders;
 import lych.soulcraft.effect.ModEffects;
 import lych.soulcraft.effect.SoulPollutionHandler;
+import lych.soulcraft.extension.control.MindOperatorSynchronizer;
 import lych.soulcraft.gui.container.ModContainers;
 import lych.soulcraft.item.ModItems;
 import lych.soulcraft.item.SoulBowItem;
@@ -30,6 +31,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.MovementInput;
@@ -39,10 +41,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -130,6 +129,15 @@ public final class ClientEventListener {
         }
 
         @SubscribeEvent
+        public static void onMouseScroll(InputEvent.MouseScrollEvent event) {
+            PlayerEntity player = Minecraft.getInstance().player;
+            MobEntity operatingMob = MindOperatorSynchronizer.getOperatingMob(player);
+            if (operatingMob != null) {
+                MindOperatorSynchronizer.handleRotationOffsetC(operatingMob, event.isRightDown() ? 1 : 0);
+            }
+        }
+
+        @SubscribeEvent
         public static void onInputUpdate(InputUpdateEvent event) {
             MovementInput input = event.getMovementInput();
             if (((IEntityMixin) event.getPlayer()).isReversed()) {
@@ -140,6 +148,30 @@ public final class ClientEventListener {
             StaticStatusHandler.INSTANCE.sendToServer(((IPlayerEntityMixin) event.getPlayer()).isStatic());
             if (event.getPlayer().hasEffect(ModEffects.SOUL_POLLUTION)) {
                 SoulPollutionHandler.handleInput(event.getPlayer(), event.getPlayer().getRandom(), event.getMovementInput());
+            }
+
+            MobEntity operatingMob = MindOperatorSynchronizer.getOperatingMob(event.getPlayer());
+            if (operatingMob != null) {
+                MindOperatorSynchronizer.handleMovementC(operatingMob, event.getPlayer(), event.getMovementInput());
+                MindOperatorSynchronizer.resetPlayerMovement(event.getMovementInput());
+            }
+        }
+
+        @SubscribeEvent
+        public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+            MobEntity operatingMob = MindOperatorSynchronizer.getOperatingMob(player);
+            if (operatingMob != null) {
+                MindOperatorSynchronizer.setupCamera(operatingMob, player, event);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onFOVModify(FOVUpdateEvent event) {
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+            MobEntity operatingMob = MindOperatorSynchronizer.getOperatingMob(player);
+            if (operatingMob != null) {
+                MindOperatorSynchronizer.handleFOVModifier(event);
             }
         }
 
