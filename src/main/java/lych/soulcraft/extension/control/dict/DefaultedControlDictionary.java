@@ -87,7 +87,7 @@ public class DefaultedControlDictionary implements ControlDictionary {
             this.defaultValue = defaultValue;
         }
 
-        public Builder specify(EntityType<?> type, ControllerType<?> ct) {
+        public <T extends MobEntity> Builder specify(EntityType<T> type, ControllerType<? super T> ct) {
             controllerMapBuilder.put(type, ct);
             return this;
         }
